@@ -1,0 +1,99 @@
+/*setting the box-sizing property of all html elements*/
+*{
+    box-sizing:border-box;
+}
+
+
+@keyframes titleMove1{
+    from {left: 0px;}
+    to {left: 30px;}
+}
+@keyframes titleMove2{
+    from {left: 0px;}
+    to {left: 40px;}
+}
+
+
+html{
+    font-size       : 10px;
+    font-family     : "Lucida Sans", sans-serif;
+    background-color: #f0f0f0;
+}
+
+/*this class is for all the columns, tells them all to stack left*/
+[class*="col-"]{
+    float   : left;
+    padding : 0px;
+    border  : 0px solid red;
+}
+
+body{
+    width           : auto;
+    margin          :0 auto;
+    background-color: #ffffff;
+    padding         : 0 0px 0px 0px;
+    border          : 0px;
+}
+
+/*for the menu and name */
+.col-menu{
+    width: 15%;
+    padding: 20px 20px 20px 20px;
+}
+h1{
+    /*using vw units keeps the relative font size constant ;)*/
+    position    :   relative;
+    font-size   :   2.5vw;
+    padding     :   0px 0px 0px 0px;
+}
+/*Animating the titles*/
+.title1{
+    transition: 1s;
+}
+.title1:hover{
+    padding-left: 20px;
+}
+.title2{
+    transition: 1s;
+}
+.title2:hover{
+    padding-left: 40px;
+}
+
+
+/*for the art displays*/
+.col-art{
+    width: 65%;
+}
+.art-img{
+    transition: 500ms;
+}
+/* .art-img:hover{
+
+} */
+
+/*for the side links*/
+.col-links{
+    width: 20%;
+}
+
+.row{
+    display     : flex;
+    flex-wrap   : wrap;
+    padding     : 0;
+}
+
+.column{
+    flex        : 100%;
+    max-width   : 50%;
+    padding     : 0;
+}
+
+.column img{
+    padding         : 10px 10px 10px 10px;
+    vertical-align  : middle;
+    width           : 100%;
+    height          : auto;
+}
+
+
