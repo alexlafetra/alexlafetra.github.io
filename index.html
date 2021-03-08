@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -5,51 +6,67 @@
     <meta charset="utf-8">
     <title>Alex LaFetra</title>
     <link href="styles/styles.css" rel="stylesheet">
-    <script src="scripts/script1.js"></script>
 </head>
-
 
 <body>
 <div class="row">
 <!-- Title + menu-->
-    <div class="col-menu">
-        <h1>
-            <div class="title0">
-                <p>Alex</p>
+    <div id = "col-menu" class="col">
+        <div class = "layer">
+            <h1>
+                <div class="title">
+                    <a href = "index.html">
+                        <p>Alex</p>
+                        <p>LaFetra</p>
+                        <p>Thompson</p>
+                    </a>
+                </div>
+            </h1>
+            <div class = "menu-header">
+                <p>Visual art</p>
             </div>
-            <div class="title1">
-                <p>LaFetra</p>
+            <div class="menu-link">
+              <a href="art.html">paintings</a>
             </div>
-            <div class="title2">
-                <p>Thompson</p>
+            <div class="menu-link">
+                <a href="art.html">drawings</a>
             </div>
-        </h1>
-            <p><a href="art.html">Visual art projects</a></p>
-            <p><a href="music.html">Music</a></p>
+            <div class="menu-link">
+                <a href="art.html">photos</a>
+            </div>
+            <div class="menu-link">
+                <a href="art.html">sketchbook</a>
+            </div>
+            <div class="menu-link">
+                <a href="music.html">music</a>
+            </div>
+            <button type = "button" id = "style-change" onclick = "swapTheme()">Make it professional</button>
+        </div>
     </div>
 <!-- image gallery -->
-    <div class="col-art">
+    <div id = "col-art" class="col">
         <div class="row">
-            <div class="column">
+            <div id = "art-box" class="column">
                 <div class="art-img">
-                    <img src="images/paintings/IMG_8092 copy.png">
-                    <img src="images/paintings/IMG_8143.jpg">
-                </div>
-            </div>
-            <div class="column">
-                <div class="art-img">
-                    <img src="images/drawings/IMG_2484.jpeg">
-                    <img src="images/drawings/IMG_3395 copy.JPG">
-                    <img src="images/drawings/IMG_3401 copy.jpg">
                     <img src="images/drawings/IMG_4029.jpeg">
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-links"></div>
+    <div id = "col-desc" class = "col">
+    </div>
+    <div id = "col-links" class="col">
+        <img id = "baby-pic" src = "images/other/IMG_0219 2 copy.jpg">
+        <a href = "https://soundcloud.com/user-697637496">
+            <p>soundcloud</p>
+        </a>
+        <a href = "https://www.instagram.com/alexlafetra/">
+            <p>instagram (change this)</p>
+        </a>
+    </div>
 </div>
 
 
-
+<script src="scripts/script1.js"></script>
 </body>
 </html>

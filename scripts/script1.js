@@ -1,19 +1,28 @@
 "use strict"
 
+var homeImgSrc = "images/drawings/IMG_4029.jpeg";
+getHomePiece(homeImgSrc);
 
-function get3Pieces(){
+function getHomePiece(){
     //this should load images into an array, then pick 3 at random
-    let imgElements = document.getElementsByClassName("img").getAttribute("src");
-    let img_src_array = Array.from(imgElements);
-    let i;
-    for( i = 0; i<img_src_array.length; i++){
-        show_image(imgArray[i]);
-    }
+    var img_array = document.querySelectorAll(".art-img");
+    var rand = Math.floor(Math.random()*img_array.length);
+    img_array[rand].style.visibility = "visible";
 }
 
-function show_image(src){
-    var img = document.createElement("img");
-    img.src = src;
-    document.body.appendChild(img);
-    alert("displaying image!");
+function getHomePiece(src){
+    var img = document.querySelector("img[src = \""+src+"\"]");
+    img.style.visibility = "visible";
+}
+
+function swapTheme(){
+    let theme = document.getElementsByTagName("link")[0];
+    if(theme.getAttribute("href") == "styles/styles.css"){
+        theme.setAttribute("href","styles/styles-less-cool.css");
+        document.getElementById("style-change").innerText = 'Make it unprofessional';
+    }
+    else{
+        theme.setAttribute("href","styles/styles.css");
+        document.getElementById("style-change").innerText = 'Make it professional';
+    }
 }

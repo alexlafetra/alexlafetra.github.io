@@ -9,10 +9,55 @@
 </head>
 
 <body>
-    <img src = "images/vis-art/lambo.gif" class = "nonsense">
-    <img src = "images/vis-art/IMG_4817.jpg" class = "ap-disp">
-    <img src = "images/vis-art/fan_3.JPG" class = "ap-disp">
-
+    <div class="row">
+   <!-- Title + menu-->
+   <div id = "col-menu" class="col">
+    <div class = "layer">
+        <h1>
+            <div class="title">
+                <a href = "index.html">
+                    <p>Alex</p>
+                    <p>LaFetra</p>
+                    <p>Thompson</p>
+                </a>
+            </div>
+        </h1>
+        <div class = "menu-header">
+            <p>Visual art</p>
+        </div>
+        <div class="menu-link">
+          <a href="art.html">paintings</a>
+        </div>
+        <div class="menu-link">
+            <a href="art.html">drawings</a>
+        </div>
+        <div class="menu-link">
+            <a href="art.html">photos</a>
+        </div>
+        <div class="menu-link">
+            <a href="art.html">sketchbook</a>
+        </div>
+        <div class="menu-link">
+            <a href="music.html">Music</a>
+        </div>
+        <button id = "style-change" onclick = "swapTheme()">Make it professional</button>
+    </div>
+</div>
+    <!-- image gallery -->
+        <div id = "col-art" class="col">
+            <div class="row">
+                <div id = "art-box" class="column">
+                    <div class="art-img">
+                        <img src="images/paintings/IMG_8092.png">
+                    </div>
+                </div>
+                <div id = "decription-box" class="column">
+                    <p>Baby Moose</p>
+                </div>
+            </div>
+        </div>
+        <div id = "col-links" class="col"></div>
+    </div>
     <a href="index.html">Home</a>
 </body>
 </html>
