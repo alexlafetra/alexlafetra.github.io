@@ -1,0 +1,124 @@
+
+/*setting the box-sizing property of all html elements*/
+*{
+    box-sizing:border-box;
+}
+
+html{
+    font-size       : 10px;
+    font-family     : "Lucida Sans", sans-serif;
+    background-color: #f0f0f0;
+}
+
+/*this class is for all the columns, tells them all to stack left*/
+[class*="col"]{
+    float   : left;
+}
+
+body{
+    width           : auto;
+    margin          :0 auto;
+    background-color: #ffffff;
+    padding         : 0 0px 0px 0px;
+    border          : 0px;
+}
+
+/*for the menu and name */
+#col-menu{
+    width: 20%;
+}
+#col-menu h1{
+    padding: 0px 0px 0px 0px;
+    line-height: 5px;
+    margin: 20px;
+    height:fit-content;
+}
+#col-menu h1 a{
+    /*using vw units keeps the relative font size constant ;)*/
+    color: rgba(0, 0, 0);
+    text-decoration: none;
+    position    :   relative;
+    font-size   :   3.5vw;
+}
+#col-menu h1 a:hover{
+    text-shadow: rgba(0, 0, 0, 0.548)
+}
+.menu-header{
+    font-size: 1.2vw;
+    padding-left   :10px;
+}
+.menu-link a{
+    color: rgba(0, 0, 0, 0.548);
+    text-decoration: none;
+    font-size : 3vw;
+    font-style: normal;
+    font-weight: bold;
+    transition: 0.05s;
+    padding   : 0px 0px 0px 35px;
+}
+.menu-link a:hover{
+    color: rgba(0, 0, 0);
+}
+
+/*for the button*/
+#style-change{
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    max-width: 10vw;
+
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    color:rgba(0, 0, 0, 0.781);
+    text-align: left;
+    font-style:oblique;
+}
+#style-change:hover{
+    color:rgba(43, 0, 145, 0.781);
+}
+
+
+/*for the art displays*/
+#col-art{
+    width: 40%;
+    height:100vh;
+}
+.column .art-img img{
+    padding         : 40px 40px 40px 40px;
+    height          : auto;
+    max-height: 100vh;
+    max-width   : 100%;
+    transition  : 500ms;
+    visibility  : hidden;
+}
+
+#col-desc{
+    min-width:20%;
+    height: 100vh;
+}
+/*for the side links*/
+#col-links{
+    height:100vh;
+    width: 20%;
+    background-color: rgb(255, 255, 255);
+
+}
+#baby-pic{
+    margin      : 10px;
+    max-width   : 80%;
+}
+
+.row{
+    display     : flex;
+    flex-wrap   : wrap;
+    padding     : 0;
+}
+
+.column{
+    flex        : 100%;
+    flex-wrap: wrap;
+    max-width   : 100%;
+    padding     : 0;
+}
+
+
