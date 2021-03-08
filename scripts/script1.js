@@ -18,11 +18,11 @@ function getHomePiece(src){
 function swapTheme(){
     let theme = document.getElementsByTagName("link")[0];
     if(theme.getAttribute("href") == "styles/styles.css"){
-        theme.setAttribute("href","styles/styles-less-cool.css");
+        theme.setAttribute("href","styles-less-cool.css");
         document.getElementById("style-change").innerText = 'Make it unprofessional';
     }
     else{
-        theme.setAttribute("href","styles/styles.css");
+        theme.setAttribute("href","styles.css");
         document.getElementById("style-change").innerText = 'Make it professional';
     }
 }
