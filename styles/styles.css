@@ -36,16 +36,15 @@ body{
     width: 20%;
     position:absolute;
     background-color: rgba(255, 245, 225, 0);
-    transition: 0.5s;
+    transition: 0.3s;
 }
 #col-menu .layer:hover{
-    background-color: rgba(248, 243, 232, 0.712);
+    background-color: rgba(248, 243, 232, 0.247);
 }
 #col-menu h1{
     padding: 0px 0px 0px 0px;
     line-height: 5px;
-    margin: 20px;
-    height:fit-content;
+    margin: 2vw;
 }
 #col-menu h1 a{
     /*using vw units keeps the relative font size constant ;)*/
@@ -53,12 +52,16 @@ body{
     text-decoration: none;
     transition: 200ms;
     position    :   relative;
-    font-size   :   3.5vw;
+    font-size   :   3.0vw;
+    text-shadow: none;
 }
-#col-menu h1 a:hover{
+
+/*The old shadows (which look great if you ever don't want them randomly generating*/
+/* #col-menu h1 a:hover{
     text-shadow: 4px 4px rgba(0, 255, 213, 0.616),16px 16px rgba(251, 255, 0, 0.616), -5px 10px rgba(251, 255, 0, 0.616), 40px 40px rgba(251, 255, 0, 0.616);
     color: rgba(105, 59, 211, 0.438);
-}
+} */
+
 .menu-header{
     font-size: 1.2vw;
     padding-left   :10px;
@@ -66,11 +69,11 @@ body{
 .menu-link a{
     color: rgba(0, 0, 0, 0.747);
     text-decoration: none;
-    font-size : 3vw;
+    font-size : 2.5vw;
     font-style: normal;
     font-weight: bold;
     transition: 0.05s;
-    padding   : 0px 0px 0px 35px;
+    padding   : 0px 0px 0px 3vw;
 }
 .menu-link a:hover{
     text-shadow: 2px 2px red ;
@@ -83,7 +86,7 @@ body{
 #style-change{
     position: absolute;
     bottom: 30px;
-    left: 30px;
+    left: 3vw;
     max-width: 10vw;
 
     background-color: rgba(255, 255, 255, 0);

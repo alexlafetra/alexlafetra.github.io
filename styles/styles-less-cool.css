@@ -31,7 +31,7 @@ body{
     padding: 0px 0px 0px 0px;
     line-height: 5px;
     margin: 20px;
-    height:fit-content;
+    /* height:fit-content; */
 }
 #col-menu h1 a{
     /*using vw units keeps the relative font size constant ;)*/
@@ -39,6 +39,7 @@ body{
     text-decoration: none;
     position    :   relative;
     font-size   :   3.5vw;
+    max-width   : 100%;
 }
 #col-menu h1 a:hover{
     text-shadow: rgba(0, 0, 0, 0.548)
