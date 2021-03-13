@@ -1,8 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+'use strict';
 
-function Test(){
-    return <h2> Hello</h2>
+function Test() {
+    return React.createElement(
+        "h2",
+        null,
+        "hey it's a fucking test"
+    );
 }
-
-ReactDOM.render(<Test/>,document.getElementById("gallery"));
+ReactDOM.render(React.createElement(Test, null), document.getElementById("gallery"));

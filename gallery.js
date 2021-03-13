@@ -1,7 +1,7 @@
 'use strict';
 
-import { ProGallery } from '../node_modules/pro-gallery';
-import '../node_modules/pro-gallery/dist/statics/main.css';
+import { ProGallery } from 'pro-gallery';
+import 'pro-gallery/dist/statics/main.css';
 
 export function Gallery() {
   // Add your images here...
@@ -53,6 +53,5 @@ export function Gallery() {
 // For more options, visit https://github.com/wix/pro-gallery
 
 //selecting id to insert react component
-var domContainer = document.querySelector('#gallery');
 //rendering react component
 ReactDOM.render(React.createElement(Gallery, null), document.getElementById("gallery"));
