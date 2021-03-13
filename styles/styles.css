@@ -28,12 +28,13 @@ body{
 #col-menu{
     height: 100vh;
     width: 20%;
+    position: fixed;
     background-image: url("../images/other/bg.jpg");
     transition: 0.5s;
 }
 #col-menu .layer{
-    height:100%;
-    width: 20%;
+    height: 100%;
+    width: 100%;
     position:absolute;
     background-color: rgba(255, 245, 225, 0);
     transition: 0.3s;
@@ -135,6 +136,13 @@ body{
     width: 70%;
 }
 
+#col-gallery{
+    width: 70%;
+}
+
+#col-gallery img{
+    height: 100vh;
+}
 
 /*this was for the img gallery stuff*/
 .row{
