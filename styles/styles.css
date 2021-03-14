@@ -31,7 +31,7 @@ body{
     width: 20%;
     position: sticky;
     top: 0;
-    background-image: url("../images/other/bg.jpg");
+    background-image: url("../images/other/bg2.jpg");
     transition: 0.5s;
 }
 #col-menu .layer{
@@ -134,12 +134,12 @@ body{
 #col-art{
     width: 40%;
     height:100vh;
-    max-width   : 100%;
 
 }
 #col-art img{
     padding   : 40px 40px 40px 40px;
     max-height: 100vh;
+    max-width   : 100%;
     visibility  : hidden;
 }
 
