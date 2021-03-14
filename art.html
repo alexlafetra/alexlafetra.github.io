@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <!-- Title + menu-->
+ <!-- Title + menu-->
     <div id = "col-menu" class="col">
         <div class = "layer">
             <h1>
@@ -21,16 +21,18 @@
                 </div>
             </h1>
             <div class = "menu-header">
-                <p>Visual art</p>
+                <p>/visual art</p>
             </div>
-            <div class="menu-link">
-              <a href="art.html">paintings</a>
-            </div>
-            <div class="menu-link">
-                <a href="art.html">drawings</a>
-            </div>
-            <div class="menu-link">
-                <a href="art.html">photos</a>
+            <div class="submenu">
+                <div class="menu-link" onclick = "createGallery(0)">
+                    <p>paintings</p>
+                </div>
+                <div class="menu-link" onclick = "createGallery(1)">
+                    <p>drawings</p>
+                </div>
+                <div class="menu-link" onclick = "createGallery(2)">
+                    <p>photos</p>
+                </div>
             </div>
             <div class="menu-link">
                 <a href="art.html">sketchbook</a>
@@ -43,25 +45,13 @@
     </div>
     <!-- image gallery -->
     <div id = "col-gallery" class="col">
-        <div class = "art">
-            <img src = "images/drawings/IMG_2484.jpeg">
+        <div id = "gallery-title" class = "row">
         </div>
-        <div class = "art">
-            <img src = "images/drawings/IMG_2484.jpeg">
-        </div>
-        <div class = "art">
-            <img src = "images/drawings/IMG_2484.jpeg">
-        </div>
-        <div class = "art">
-            <img src = "images/drawings/IMG_2484.jpeg">
-        </div>
-        <div class = "art">
-            <img src = "images/drawings/IMG_2484.jpeg">
-        </div>
-        <div class = "art">
-            <img src = "images/paintings/IMG_8092.png">
+        <div id = "gallery-images" class = "row">
+            
         </div>
     </div>
 </body>
-
+<script src="scripts/script1.js"></script>
+<script src = "scripts/gallery-script.js"></script>
 </html>

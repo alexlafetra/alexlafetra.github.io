@@ -1,4 +1,5 @@
 "use strict"
+
 //For genRandoms()
 let x;
 let y;
@@ -76,3 +77,6 @@ function clearShadows(a){
     a.style.color = "black";
 
 }
+
+
+

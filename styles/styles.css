@@ -15,12 +15,14 @@ body{
     background-color: #ffffff;
     padding         : 0 0px 0px 0px;
     border          : 0px;
+    height: 100vh;
+    overflow-y: hidden;
 }
 
 /*this class is for all the columns, tells them all to stack left*/
 [class*="col"]{
     float   : left;
-    border  : 1px solid rgb(255, 0, 0);
+    border  : 0px solid rgb(255, 0, 0);
 }
 
 /*for the menu and name -- 20%*/
@@ -63,8 +65,12 @@ body{
 } */
 
 .menu-header{
-    font-size: 1.2vw;
-    padding-left   :10px;
+    font-size: 2.5vw;
+    padding-left   :3vw;
+    font-weight:bold;
+    font-style:italic;
+    color:rgba(63, 63, 63, 0.747);
+    line-height: 50px;
 }
 .menu-link a{
     color: rgba(0, 0, 0, 0.747);
@@ -78,8 +84,33 @@ body{
 .menu-link a:hover{
     text-shadow: 2px 2px red ;
     font-style: oblique;
-    padding-left: 50px;
+    padding-left: 4vw;
     color: rgba(105, 59, 211, 0.438);
+}
+.menu-link p{
+    color: rgba(0, 0, 0, 0.747);
+    text-decoration: none;
+    font-size : 2.5vw;
+    font-style: normal;
+    font-weight: bold;
+    transition: 0.05s;
+    padding   : 0px 0px 0px 3vw;
+    line-height: 5px;
+}
+.menu-link p:hover{
+    text-shadow: 2px 2px red ;
+    font-style: oblique;
+    padding-left: 4vw;
+    color: rgba(105, 59, 211, 0.438);
+}
+
+.submenu p{
+    color:rgba(0, 0, 0, 0.747);
+    padding-left: 4vw;
+    font-size: 2vw;
+}
+.submenu p:hover{
+    padding-left:5vw;
 }
 
 /*for the button*/
@@ -103,12 +134,12 @@ body{
 #col-art{
     width: 40%;
     height:100vh;
-}
-.column .art-img img{
-    padding         : 40px 40px 40px 40px;
-    height          : auto;
-    max-height: 100vh;
     max-width   : 100%;
+
+}
+#col-art img{
+    padding   : 40px 40px 40px 40px;
+    max-height: 100vh;
     visibility  : hidden;
 }
 
@@ -120,7 +151,7 @@ body{
 /*for the side links -- 20%*/
 #col-links{
     height:100vh;
-    width: 20%;
+    width: 10%;
     background-color: rgb(255, 255, 255);
 
 }
@@ -135,22 +166,25 @@ body{
 }
 
 #col-gallery{
-    width: auto;
+    width: 70%;
     max-height: 100vh;
     overflow:scroll;
-    margin: none;
 }
 
-#col-gallery img{
-    height: 100vh;
+#gallery-images img{
+    max-height: 100vh;
+    max-width: 50%;
+    padding-top: 0px;
+    vertical-align: middle;
 }
 
 /*this was for the img gallery stuff*/
-/* .row{
-    display     : flex;
-    flex-wrap   : nowrap;
+.row{
+    /* display     : flexbox; */
+    flex-wrap   : wrap;
     padding     : 0;
 }
+/*
 .column{
     flex        : 100%;
     flex-wrap   : nowrap;
