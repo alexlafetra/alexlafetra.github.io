@@ -4,56 +4,62 @@
 <head>
 <meta charset="utf-8">
 <title>"Visual Art Projects"</title>
-
 <link href="styles/styles.css" rel="stylesheet">
-
-<script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-<script type="application/javascript" src="https://unpkg.com/babel-standalone@6.26.0/babel.js" crossorigin></script>
-
 </head>
 
 <body>
-    <div class="row">
     <!-- Title + menu-->
     <div id = "col-menu" class="col">
-    <div class = "layer">
-        <h1>
-            <div class="title">
-                <a id = "title" href = "index.html">
-                    <p>Alex</p>
-                    <p>LaFetra</p>
-                    <p>Thompson</p>
-                </a>
+        <div class = "layer">
+            <h1>
+                <div class="title">
+                    <a id = "title" href = "index.html" onmouseover = "setRandomShadows(this)" onmouseout = "clearShadows(this)">
+                        <p>Alex</p>
+                        <p>LaFetra</p>
+                        <p>Thompson</p>
+                    </a>
+                </div>
+            </h1>
+            <div class = "menu-header">
+                <p>Visual art</p>
             </div>
-        </h1>
-        <div class = "menu-header">
-            <p>Visual art</p>
+            <div class="menu-link">
+              <a href="art.html">paintings</a>
+            </div>
+            <div class="menu-link">
+                <a href="art.html">drawings</a>
+            </div>
+            <div class="menu-link">
+                <a href="art.html">photos</a>
+            </div>
+            <div class="menu-link">
+                <a href="art.html">sketchbook</a>
+            </div>
+            <div class="menu-link">
+                <a href="music.html">music</a>
+            </div>
+            <button type = "button" id = "style-change" onclick = "swapTheme()">Make it professional</button>
         </div>
-        <div class="menu-link">
-          <a href="art.html">paintings</a>
-        </div>
-        <div class="menu-link">
-            <a href="art.html">drawings</a>
-        </div>
-        <div class="menu-link">
-            <a href="art.html">photos</a>
-        </div>
-        <div class="menu-link">
-            <a href="art.html">sketchbook</a>
-        </div>
-        <div class="menu-link">
-            <a href="music.html">Music</a>
-        </div>
-        <button id = "style-change" onclick = "swapTheme()">Make it professional</button>
-    </div>
     </div>
     <!-- image gallery -->
-    <div id="like_button_container"></div>
-
     <div id = "col-gallery" class="col">
         <div class = "art">
             <img src = "images/drawings/IMG_2484.jpeg">
+        </div>
+        <div class = "art">
+            <img src = "images/drawings/IMG_2484.jpeg">
+        </div>
+        <div class = "art">
+            <img src = "images/drawings/IMG_2484.jpeg">
+        </div>
+        <div class = "art">
+            <img src = "images/drawings/IMG_2484.jpeg">
+        </div>
+        <div class = "art">
+            <img src = "images/drawings/IMG_2484.jpeg">
+        </div>
+        <div class = "art">
+            <img src = "images/paintings/IMG_8092.png">
         </div>
     </div>
 </body>
