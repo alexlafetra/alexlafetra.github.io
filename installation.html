@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+ 
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- splatter -->
+  <script language="javascript" type="text/javascript" src="scripts/libraries/p5.min.js"></script>
+  <script language="javascript" type="text/javascript" src="scripts/splatter/Cell.js"></script>
+  <script language="javascript" type="text/javascript" src="scripts/splatter/splatter_for_installation.js"></script>
+  
+  <link href="styles/installation_vertical.css" rel="stylesheet">
+    <script>
+        //injecting a big image element in the 'imageDiv' div
+        //which can be removed when it's clicked
+        function displayBigImage(id){
+            //clear out all the other images first
+            let div = document.getElementById('imageDiv');
+            div.innerHTML = "";
+
+            let image = document.getElementById(id);
+            let newImage = document.createElement('img');
+            newImage.src = image.src;
+            //if it's taller than it is wide, set max width
+            if(window.innerWidth<window.innerHeight*(4/3)){
+                newImage.style.width = "80vw";
+            }
+            //else set max height
+            else{
+                newImage.style.height = "80vh";
+            }
+
+            //attach onclick listener
+            function hideImage(){
+                let div = document.getElementById('imageDiv');
+                div.innerHTML = "";
+                // this.remove();
+            }
+
+            newImage.addEventListener('click',hideImage);
+            //add child to div
+            div.appendChild(newImage);
+
+            // adding text
+            let text;
+            switch(id){
+                case 1:
+                    text = "2023, Private Home";
+                    break;
+                case 2:
+                    text = "2021, Malin Gallery";
+                    break;
+                case 3:
+                    text = "2022, Private Home";
+                    break;
+                case 4:
+                    text = "2023, Uptown Gallery";
+                    break;
+            }
+            let newTxt = document.createElement('p');
+            newTxt.append(text);
+
+            div.append(newTxt);
+        }
+    </script>
+</head>
+
+<body>
+    <main>
+
+    </main>
+    <div id = "imageDiv"></div>
+    <!-- title -->
+    <h2>
+        Art Installation
+    </h2>
+    <!-- name -->
+    <h1>
+        Alex
+        LaFetra Thompson
+    </h1>
+    <!-- phone number/contact -->
+    <h3>
+        <a id = "email" href = "mailto: alexlafetra@gmail.com">alexlafetra@gmail.com</a>
+        <a id  = "phone" href="tel:510-517-8186">(510) 517-8186</a>
+    </h3>
+    <div id = "bio_column">
+        <div class = "difference" id = "bio1">
+            <p>
+            Hello! I'm an art handler and installer living and working throughout the Bay Area. I
+            install 2D and sculptural work for gallery shows and private homes, I pack work for transportation,
+           I paint walls, and I build pedestals/display hardware for exhibitition spaces.
+            </p>
+        </div>
+        <div id = "images">
+            <img id = "1" src = "images/installation/IMG_9013.jpeg" onclick = "displayBigImage(1);">
+            <img id = "2" src = "images/installation/IMG_9980.jpeg" onclick = "displayBigImage(2);">
+            <img id = "3" src = "images/installation/IMG_8737.jpeg" onclick = "displayBigImage(3);">
+            <img id = "4" src = "images/installation/IMG_0532.png" onclick = "displayBigImage(4);">
+        </div>
+        <div id = "bio2">
+            I've been working as an art installer in the Bay Area since 2019.
+            I've been installing work in the Bay Area since 2019, right at the beginning of the 2019 pandemic.
+            For the past 4 years I've been installing art for galleries in Manhattan, Brooklyn and the hamptons, Chicago, and the SF Bay Area.
+ 
+            <p>In 2023 I graduated from Wesleyan University, where I studied Biology 
+            and Sociology, but also focused on painting and illustration. Since graduating, I mostly work freelance for local galleries in the East Bay and San Francisco where I grew up.
+            You can see more of me, my work, and some of my projects at my <a href = "https://alexlafetra.github.io/">site</a>.
+            Contact me with any questions or installation requests!
+        </div>
+    </div>
+    <div id = "lists">
+        <div id = "city_list">
+            <h>Cities</h>
+            <a>NYC</a>
+            <a>New Haven</a>
+            <a>Chicago</a>
+            <a>San Francisco</a>
+            <a>Oakland</a>
+            <a>Berkeley</a>
+        </div>
+        <div id = "gallery_list">
+            <h>Galleries</h>
+            <a href = "https://slatecontemporary.com/">SLATE</a>
+            <a href = "https://uptownfineart.net/">Uptown</a>
+            <a href = "https://destagallery.com/">Desta Gallery</a>
+            <a href = "https://www.sugarlift.com/">Sugarlift</a>
+            <a href = "https://www.modernisminc.com/">Modernism</a>
+            <a href = "https://www.gallerywendinorris.com/">Wendi Norris</a>
+        </div>
+    </div>
+    <div id = "portrait">
+        <img src = "images/installation/portrait.png">
+    </div>
+    <div id = "frame"></div>
+    <div id = "frame2"></div>
+</body>
+</html>

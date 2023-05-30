@@ -1,0 +1,223 @@
+html{
+    font-size       : 20px;
+    font-family     :'Courier New', Courier, monospace;
+    background-color: #ffffff;
+    /* background-image: url('https://alexlafetra.github.io/images/backgrounds/background1.jpg'); */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.column{
+    height:100vh;
+    transition: 0.5s;
+}
+
+#options{
+    top:0%;
+}
+
+/* menu column*/
+#menu{
+    display: block;
+    position:absolute;
+    /* width: 0; */
+    float:left;
+    z-index: 2;
+
+    background: #ff6200;
+    border: solid;
+    border-width: 0;
+    border-right-width: 2px;
+
+    transition: 0.5s;
+    transition-timing-function:ease-in-out;
+}
+/* menu options */
+#menu a{
+    display:block;
+    width:100%;
+   /* right:0; */
+    /* margin:auto; */
+
+    color:rgb(0, 0, 0);
+    font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    /* font-size: 83px; */
+    font-size:8.85vh;
+    font-weight:900;
+    font-stretch: 250%;
+    writing-mode:vertical-rl;
+    text-orientation:sideways;
+
+    transition:1s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+    text-decoration:wavy;
+}
+#menu a:hover{
+    color:#0033ff;
+    cursor: pointer;
+    text-decoration:overline;
+}
+/* middle image column*/
+#images{
+    /* background-color:#000000; */
+    float:left;
+    display:block;
+    position:absolute;
+    margin:0;
+    padding:0;
+    left:90px;
+    right:90px;
+    /* overflow:auto; */
+    overflow:hidden;
+    transition: 0.2s;
+    transition-timing-function:ease-in-out;
+}
+#images img{
+    position:absolute;
+    display:block;
+    /* max-width: 50%; */
+    /* object-fit: cover; */
+    z-index:1;
+}
+#images video{
+    display:block;
+    bottom:0;
+    position:absolute;
+    max-height:100%;
+    max-width:100%;
+    /* object-fit: cover; */
+    z-index: 0;
+}
+/* big stepchild logo */
+#stepchild{
+    font-family:'Courier New', Courier, monospace;
+    color:#000000;
+    font-size: 12px;
+    font-weight:bolder;
+    white-space: pre;
+    transition:0.3s;
+    /* text-shadow: rgb(255, 0, 0) 1px 1px 8px, rgb(255, 0, 0) 1px 0 5px; */
+}
+#info{
+    float: right;
+    right:0%;
+    /* width:100%; */
+}
+/* menu class--for each popup */
+.menu{
+    float: right;
+    display: block;
+    position:absolute;
+    right:0%;
+    width:0;
+    z-index: 1;
+    height:100%;
+
+    overflow:auto;
+
+    background: #ffffff;
+    border: solid;
+    border-width: 0;
+    border-left-width: 2px;
+    border-color:#000000;
+
+    transition: 0.1s;
+    transition-timing-function:ease;
+}
+.menu p{
+    text-align:left;
+    margin:20px;
+}
+.menu h1{
+    text-align:center;
+}
+#what{
+    background-color: #ffffff;
+}
+#why{
+    background-color: #ffffff;
+}
+#where{
+    background-color: #ffea00;
+}
+#store{
+    background-color: #ff0000;
+}
+#github{
+    background-color: #0033ff;
+}
+#blog{
+    background-color: #ff6f00;
+}
+
+.video{
+    display:block;
+    max-width:100%;
+    max-height:90%;
+    margin:auto;
+    /* max-width:100%; */
+}
+
+/* scrolling shit */
+#scroll-container {
+    display:block;
+    position:fixed;
+    top:0;
+    right:0;
+    height:100%;
+    width:90px;
+
+    border: 0;
+    border-color: #000000;
+    border-left:3px;
+    /* background-color: #ffffffff; */
+
+    /* overflow: hidden; */
+    color:rgb(0, 0, 0);
+    writing-mode:vertical-rl;
+    text-orientation:sideways-right;
+    font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 80px;
+    font-weight:900;
+    white-space:nowrap;
+    animation: scrollText 20s infinite linear;
+    transition: all 1s ease;
+
+}
+#scroll_text{
+    display:block;
+    width:100%;
+    margin:auto;
+}
+
+/*div:hover {
+animation-play-state: paused;
+}*/
+@keyframes scrollText {
+from   { transform: translateY(0%); }
+to { transform: translateY(-320%); }
+}
+
+/* fun image stuff */
+#img1{
+    right:80px;
+    top:80px;
+    height:30%;
+}
+#img2{
+    left:100px;
+    top:100px;
+    /* height:30%; */
+    width:40%;
+}
+
+canvas{
+    /* z-index:2; */
+    position:absolute;
+}
+iframe{
+    width:100%;
+}

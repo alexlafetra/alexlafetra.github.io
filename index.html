@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Alex LaFetra</title>
+    <link href="styles/index.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- this is the code linking the boids background-->
+    <script language="javascript" type="text/javascript" src="scripts/libraries/p5.min.js"></script>
+    <script language="javascript" type="text/javascript" src="scripts/boids_background.js"></script>
+    <script language="javascript" type="text/javascript" src="scripts/rotate_center_menu.js"></script>
+
+    <!-- this is the code loading each center image -->
+    <script>  
+        //clears all center images
+        function clearImages(){
+            let list = document.getElementsByClassName("main_menu_media");
+            for(let i = 0; i<list.length; i++){
+                list[i].style.display = "none";
+            }
+        }
+        //loads an image
+        function loadCenterImage(which){
+            clearImages();
+            document.getElementById(which).style.display = "block";
+        }
+    </script>
+</head>
+<body>
+    <div id = "center_index">
+        <!-- center media -->
+        <!-- art -->
+        <img id = "0" class = "main_menu_media" src = "main_menu_media/art.jpeg">
+        <!-- cells -->
+        <video id = "1" class = "main_menu_media" autoplay muted>
+            <source src = "main_menu_media/cells.mov">
+        </video>
+        <video id = "2" class = "main_menu_media" autoplay muted>
+            <source src = "main_menu_media/the_red.mov">
+        </video>
+        <video id = "3" class = "main_menu_media" autoplay muted>
+            <source src = "main_menu_media/stepchild_prototype.mov">
+        </video>
+        <!-- circular menu -->
+        <svg id = "text_svg" width="250" height="250" onmouseleave = "clearImages()">
+            <!-- note to self: i made this path using http://complexdan.com/svg-circleellipse-to-path-converter/ -->
+            <path id = "curve" fill = "none" d="M25,125a100,100 0 1,0 200,0a100,100 0 1,0 -200,0"/>
+            <!-- <animateTransform attributeName = "transform" attributeType = "XML" type = "rotate" from = "0 0 0" to = "360 0 0" dur = "10s" repeatCount = "indefinite"/> -->
+            <text>
+                <textPath alignment-baseline = "top" xlink:href="#curve" startOffset = "0" id = "circleText" color = "rgb(255,255,255)">
+                    <a class = "link" href = "art.html" onmouseover = "loadCenterImage(0)">Art</a>
+                    <a>~</a>
+                    <a class = "link" href = "thesis.html" >Map</a>
+                    <a>~</a>
+                    <a class = "link" href = "music.html" onmouseover = "loadCenterImage(2)">Music</a>
+                    <a>~</a>
+                    <a class = "link" href = "blogs/stepchild.html" onmouseover = "loadCenterImage(3)">Stepchild</a>
+                    <a>~</a>
+                    <a class = "link" href = "misc.html" onmouseover = "loadCenterImage(1)">Misc</a>
+                    <a>~</a>
+                    <a class = "link" href = "digital.html" onmouseover = "loadCenterImage(1)">Digital</a>
+                    <a>~</a>
+                    <a class = "link" href = "about.html">About</a>
+                    <a>~</a>
+
+                </textPath>
+            </text>
+        </svg>
+    </div>
+</body>
+</html>

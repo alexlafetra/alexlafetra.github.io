@@ -1,0 +1,49 @@
+html{
+    margin:0;
+    padding:0;
+}
+body{
+    display:block;
+    margin:0;
+    padding:0;
+    /* overflow:hidden; */
+}
+/* gallery */
+#images img{
+    /* 5 images per row */
+    width:22%;
+    margin:1%;
+    vertical-align: middle;
+    /* transition:0.3s; */
+}
+#images img:hover{
+    opacity: 0.4;
+}
+
+/* big image */
+#imageDiv img{
+    /* position:absolute; */
+    max-height:92vh;
+    max-width:100vw;
+    /* vertical-align: middle; */
+}
+/* this holds the text, title, and iamge itself */
+#artInfo{
+    overflow:hidden;
+    position:absolute;
+    display:block;
+    text-align: center;
+    font-family: 'Golos Text', sans-serif;
+    /* bottom:1vh; */
+    /* left:10vw; */
+    margin:auto;
+    /* width:30%; */
+}
+#titleDiv{
+    font-weight:bold;
+    font-size:2vh;
+}
+#descriptionDiv{
+    font-style:italic;
+    font-size:1.5vh;
+}

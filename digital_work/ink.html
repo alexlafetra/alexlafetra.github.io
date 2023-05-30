@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+ 
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;700&display=swap" rel="stylesheet">
+
+  <script>
+    function unhighlightAll(){
+        let links = document.getElementsByClassName("link");
+        for(link of links){
+            link.style.color = "black";
+        }
+    }
+    function highlight(element){
+        unhighlightAll();
+        element.style.color = "rgb(2, 183, 203)";
+    }
+    function highlightFirst(){
+        highlight(document.getElementsByClassName("link")[0]);
+    }
+    //trying to get touch working
+    window.addEventListener('touchstart', {}); // in top window
+  </script>
+  <link href="../styles/digital_sketchbook_page.css" rel="stylesheet">
+</head>
+<body>
+    <div id = "menu">
+        <h1>
+            3.9.23
+        </h1>
+        <h2>ink</h2>
+        <a class = "link" href = "ink/ink_flowers.html" target = "sketch" onclick = "highlight(this);"">flowers</a>
+        <a class = "link" href = "ink/ink_drips.html" target = "sketch" onclick = "highlight(this);"">splash</a>
+        <a class = "link" href = "ink/ink_people.html" target = "sketch" onclick = "highlight(this);"">people</a>
+        <a class = "link" href = "ink/ink_splatter.html" target = "sketch" onclick = "highlight(this);"">splatter</a>
+        <h2>cell</h2>
+        <a class = "link" href = "cells/petri_1.html" target = "sketch" onclick = "highlight(this);"">petri_1</a>
+        <a class = "link" href = "cells/bloom.html" target = "sketch" onclick = "highlight(this);"">bloom</a>
+        <a class = "link" href = "cells/puzzle.html" target = "sketch" onclick = "highlight(this);"">pieces</a>
+    </div>
+    <iframe src = "ink/ink_flowers.html" name = "sketch" id = "sketch"></iframe></iframe>
+</body>
+<script>
+    highlightFirst();
+</script>
+</html>

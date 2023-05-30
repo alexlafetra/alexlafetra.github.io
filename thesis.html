@@ -1,0 +1,153 @@
+<html>
+    <head>
+        
+        <!-- 
+        you'll probably need to just make a new stylesheet so the map can sit on the page nicely.
+        It would also be rad to have some text describing it, and a link to the thesis itself.
+        -->
+        <meta charset="utf-8">
+        <title>"Map for 'Gentrifictions,' my undergrad thesis"</title>
+        <link href="styles/thesis.css" rel="stylesheet">
+    </head>
+    <div id = "menu">
+        <a href = "index.html">Alex LaFetra Thompson</a>
+        <h1>
+            Gentrifictions -- Honors Thesis
+        </h1>
+    </div>
+    <div id = "title">
+        <h1>
+            Research On Gentrification in the Bay Area
+        </h1>
+        <h2>
+            Interactive webmaps for displaying census tract data
+        </h2>
+    </div>
+    <div id = "abstract">
+        <p>
+            For my undergraduate thesis, a year-long research project I completed as part of my Sociology degree, I wanted to learn something about the Bay Area. As part of the research for my undergraduate thesis, I wanted to use census data to explore how the federal government's
+            redlining policies have shaped the racial geography of the Bay Area, and in turn how they might be shaping the ongoing gentrification 
+            and displacement facing Bay Area residents living in communities of color. 
+            Working with ArcGIS, some very crude Python, and several decades of US Census data,
+            I was able to create the following map to help explore WHERE racial change, and gentrification, was taking place in the East Bay.
+            To do this, I used population data for individual census tracts and the historical "redlining" tracts to make the map below. 
+            NOT exhaustive---some limitations are mentioned below, but only data for black and white residents in graphed.
+        </p>
+    </div>
+    <body>
+    <iframe src="https://wesleyan.maps.arcgis.com/apps/instant/basic/index.html?appid=6c3846a2934c4ef48bafdf123a63ed7d" width="90%" height="75%" frameborder="0" style="border:0" allowfullscreen="true" id = "map">iFrames are not supported on this page.</iframe>
+    <div id = "fullscreen_link">
+        <p>(For a fullscreen version, click </p>
+        <a href = "map.html">here</a>
+        <a>)</a>
+    </div>
+    <div id = "ch2">
+        <h1>
+            What This Map Can Show You
+        </h1>
+        <h2>
+            How to read the data
+        </h2>
+        <p>
+            This is a map of each census tract recorded in the 2022 census, for all but 3 of the nine Bay Area counties.*
+            For each tract, this map contains a layer representing the population of Black residents, of white residents,
+            and the change in overall occupancy for Black and white residents over the last 20 years. To activate a layer, 
+            select one from the drop-down menu in the upper right corner of the map and once a layer is active, each tract can be clicked
+            to bring up the data corresponding to that layer. 
+        </p>
+        <div id = "instructions">
+            <img src = "images/thesis/map_instructions.png">
+            <img src = "images/thesis/map_info.png">
+        </div>
+        <p>
+            Equation used for each stat
+        </p>
+        <h2>
+            Patterns in the East Bay
+        </h2>
+        <p>
+            The goal with each of these layers is to find a way to visually look for 'hotspots' of racial change--specific neighborhoods in the East Bay that 
+            are seeing disproportionately large influxes of white people. Before I had even begun getting together census data, my hunch was that neighborhoods in 
+            South Berkeley and West Oakland would be the most dramatically "whitened" neighborhoods. Zooming out to see the entire map reveals that not only are Temescal, Longfellow, and West Oakland/The Bottoms 
+            the most "whitened" neighborhoods in the East Bay, but the West Oakland and North Oakland/South Berkeley tracts have seen THE largest increases in white residency.
+        </p>
+        <div id = "img2">
+        <img src = "images/thesis/zoomout.png"></img>
+        </div>
+        <p>
+            Although my 'hypothesis' was that these neighborhoods, places that I think of as gentrifying due to the large amount of development projects and cultural/economic change taking place within them, 
+            would be highlighted when looking at racial change, I was really surprised to see just how dramatically different these few
+            neighborhoods in the East Bay were from the rest of the Bay Area.
+        </p>
+        <p>
+            surprises:
+            - white people were decreasing almost everywhere
+                - especially significant, because places where white people are increasing is extra unusual
+            - places like the mission, sf had much less change than I thought
+            - the central east bay is SO gentrified
+        </p>
+        <p>
+            This map also has shapefile data for the Home Owners' Loan Corporation (HOLC) census tract appraisals, the federal organization that--literally--put redlining on the map.
+            Going into the HOLC tracts is a little too deep for this write up, but reading through the HOLC's tract appraisals makes it clear that the HOLC used explicitly antiblack and anti-asian
+            criteria to devalue nonwhite neighborhoods.
+        </p>
+        <h2>
+            Significance of redlining/racial change overlap
+        </h2>
+
+    </div>
+    <div id = "ch3">
+        <h1>
+            What This Map Can't Show You
+        </h1>
+        <h2>
+            Limitations of the data & this approach
+        </h2>
+        <p>
+            My process working with Census data, as well as the US Census itself, has some really important limitations when it comes to
+            understanding racial identity. One, the US census continues to underrepresent nonwhite residents.
+        </p>
+        <p>
+            In addition to problems inherent to the US Census and attempts to statistically record racial identity, this is not a map of gentrification.
+            "Gentrification," a term first coined in 1964 by British sociologist Ruth Glass 
+            Looking for gentrification solely through the lens of white and Black populations completely misses the A) dozens of other groups of people who do not fall into literal 
+            "Black" and "white" racial groups and B) the ways that groups of Black and white residents are further divided by class. 
+            Ruth Glass was originally studying was one class of white people displacing another, a process which won't show up in a limited race-only analysis like this and would instead
+            require looking at other class markers, maybe income, property value, education level, health, to be visualized. In the exact same way, gentrification occuring from one
+            socioeconic class of ANY nonwhite person also can't be visualized using these maps.
+
+        </p>
+        <h2>
+            The good & the bad
+        </h2>
+        <p>
+            With that said, I think this approach to exploring gentrification is still a powerful way of visualizing
+            the magnitude of displacement.
+            Areas highlighted by these maps that have very rapid racial change, specifically 'whitening,' really are also areas
+            that are gentrifying in the East Bay. Although Glass's original use of the term was centered around economic class,
+            cultural, racial, and economic change are ALL contributing aspects of gentrification, and the fact that class change and rapid housing cost inflation
+            is so closely coupled with the racial changes shown above is further evidence of how deeply entangled the Bay Area's housing market is with racial segregation.
+            Though they cannot fully capture who and where is involved with gentrification, maps of racial change like these do a good job
+            of highlighting the racialized, antiblack effects gentrification brings AND highlighting how localized these affects are to specific neighborhoods.
+            Although fundamentally limited in scope, looking at gentrification purely as a racial process can help identify
+            areas where cultural change is most extreme.
+        </p>
+    </div>
+    <div id = "ch4">
+        <h1>
+            What I'd Like This Map to Show Next
+        </h1>
+    </div>
+    <div id = "footnote"><p>
+        *Unfortunately I didn't have time to process data for Solano, Napa, and Sonoma counties, and since graduating, I've lost access to my Wesleyan University ArcGIS account.
+        For my thesis, I was focused on understanding the policy and history specifically of the East Bay (Alameda and Contra Costa Counties), 
+        but I'd like to find a way to add the data for the remaining three counties soon.
+    </p></div>
+    <div id = "links">
+        <a href = "documents/thesis.pdf">This</a>
+        <a> is a link to my thesis as a pdf and </a>
+        <a href = "https://doi.org/10.14418/wes01.1.2622">this</a>
+        <a> is another link to the copy of my thesis stored in Wesleyan's Digital Collections database</a>
+    </div>
+    </body>
+</html>

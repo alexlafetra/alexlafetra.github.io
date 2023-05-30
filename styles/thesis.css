@@ -1,0 +1,199 @@
+body{
+    background-color:rgb(143, 143, 139);
+}
+/* link back to main page */
+#menu a{
+    /*using vw units keeps the relative font size constant ;)*/
+    color: rgba(100, 100, 100);
+    text-decoration: none;
+    position    :   relative;
+    font-size   :   10pt;
+    margin-left      : 2%;
+    margin-top      : 10%;
+}
+#menu a:hover{
+    /*using vw units keeps the relative font size constant ;)*/
+    color: rgba(0,0,0);
+}
+#menu h1{
+    color: rgba(80, 80, 80);
+    text-decoration: none;
+    position    :   relative;
+    font-size   :   10pt;
+    font-style  : italic;
+    font-weight: lighter;
+    margin-left      : 2%;
+    /* margin-top      : 2%; */
+}
+
+/* Title of page */
+/* rn it's "Research Into Gentrification in the Bay Area"*/
+#title h1{
+    color: rgba(0, 0, 0);
+    text-decoration: none;
+    position    :   relative;
+    font-size   :   26pt;
+    text-align  : center;
+    font-style  : bold;
+}
+/* subtitle */
+#title h2{
+    color: rgba(80, 80, 80);
+    text-decoration: none;
+    position    :   relative;
+    font-size   :   14pt;
+    text-align  : center;
+    font-style  : italic;
+    margin: 1px;
+}
+
+/* 'abstract' that's right below the title */
+#abstract p{
+    color: rgba(0, 0, 0);
+    text-decoration: none;
+    position    :   relative;
+    font-size   :   12pt;
+    /* text-align  : center; */
+    font-style  : bold;
+    margin : 10%;
+    text-indent: 5%;
+}
+
+#map{
+    margin-left: 5%;
+    align-items: center;
+    /* max-width: 800px; */
+}
+
+/* link to fullscreen version*/
+#fullscreen_link a{
+    color: rgba(80, 80, 80);
+    position    :   relative;
+    font-size   :   12pt;
+    display: inline;
+    text-indent : 40px; 
+    text-align: center;
+
+}
+#fullscreen_link p{
+    color: rgba(80, 80, 80);
+    font-size   :   12pt;
+    display:inline;
+    text-indent : 40px; 
+    margin-left: 5%;
+    text-align: center;
+
+
+}
+
+/* Chapter 2*/
+/* title "What this map can show you*/
+#ch2 h1{
+    color: rgba(0, 10, 120);
+    text-decoration: none;
+    font-size   :   18pt;
+    text-align  : left;
+    margin-left: 5%;
+    margin-top: 6%;
+}
+/*subtitle*/
+#ch2 h2{
+    color: rgba(80, 80, 80);
+    font-size   :   12pt;
+    display:inline;
+    text-indent : 40px; 
+    margin-left: 5%;
+    font-style  : italic;
+
+}
+#ch2 p{
+    color: rgba(0, 0, 0);
+    text-decoration: none;
+    font-size   :   12pt;
+    text-align  : left;
+    margin-left: 5%;
+    margin-right: 5%;
+    text-indent: 5%;
+}
+#instructions img{
+    max-width : 35%;
+    margin:5%;
+    margin-top:1%;
+    /* display: flexbox; */
+}
+#img2 img{
+    margin-left: auto;
+    margin-right: auto;
+    display:block;
+    max-width:35%;
+}
+#footnote p{
+    color: rgba(40, 40, 40);
+    text-decoration: none;
+    font-size   :   10pt;
+    text-align  : left;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+/* Chapter 3*/
+/* title "What this map can't"*/
+#ch3 h1{
+    color: rgba(0, 10, 120);
+    text-decoration: none;
+    font-size   :   18pt;
+    text-align  : left;
+    margin-left: 5%;
+    margin-top: 6%;
+
+}
+#ch3 h2{
+    color: rgba(80, 80, 80);
+    font-size   :   12pt;
+    display:inline;
+    text-indent: 5%;
+    margin-left: 5%;
+    font-style  : italic;
+
+}
+#ch3 p{
+    color: rgba(0, 0, 0);
+    text-decoration: none;
+    font-size   :   12pt;
+    text-align  : left;
+    margin-left: 5%;
+    text-indent: 5%;
+
+}
+
+/* Chapter 4*/
+#ch4 h1{
+    color: rgba(0, 10, 120);
+    text-decoration: none;
+    font-size   :   18pt;
+    text-align  : left;
+    margin-left: 5%;
+    margin-top: 6%;
+
+}
+#ch4 p{
+    color: rgba(0, 0, 0);
+    text-decoration: none;
+    font-size   :   12pt;
+    text-align  : left;
+    margin-left: 5%;
+
+}
+/*bottom links to thesis*/
+#links a{
+    color: rgba(80, 80, 80);
+    position    :   relative;
+    font-size   :   12pt;
+    display:inline-block;
+    align-content: center;
+    /* margin-left: 5%; */
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}

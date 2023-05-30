@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>stepchild</title>
+<link href="blog_post.css" rel="stylesheet">
+</head>
+<body>
+    <div id = "blog">
+        <p id = "title">1 - the backstory</p>
+        <p id = "date">5.29.23</p>
+        <img class = "wide_center_image" src = "media/images/middletown_snow.jpeg">
+        <div class = "image_caption">
+            <p>My home in college, jan 2022</p>
+        </div>
+        <p>
+            This project <b>officially</b> started last winter, as I was sitting in my dorm, snowed inside during January of last year,
+             slowly hibernating through both winter break and my thesis deadline. The sun was going down at 4pm. I was pushing myself to take outside walks in the beautiful but 
+            breakingly cold suburban woods of Middletown, Connecticut. Winter was intense.
+        </p>
+        <p>
+            I really like the SP404. It's my sketchbook, it feels... not quite 'extension of my body', but more like 
+            'bar where everyone knows me.' It's my getaway driver. It's become a big part of how I write music now, and that past winter I was spending around two hours each night
+             (which, again, started at like 4pm) writing and recording tiny snippets of would-be songs and mushing the audio around with the mkii's FX engine.
+        </p>
+        <div class = "image_caption">
+            <p>a literal 10s of audio written on the mkii</p>
+        </div>
+        <audio controls>
+            <source src="media/audio/midwest_shawty_example.WAV" type="audio/wav">
+            Your browser does not support the audio element.
+        </audio>
+        <p>
+            Its strong suit is experimentation;
+            the SP's playfullness and live-recording feels engaging and exciting when I'm writing with it. 
+            However, when it comes to writing longer pieces, or iterating over ideas without re-recording everything, the SP starts lacking.
+        </p>
+        <p>
+            So, that winter in Connecticut, deep in my heart, a memory burned brightly: <b>FL Studio Mobile</b>. From 2011.
+        </p>
+        <div class = "image_container">
+            <img src = "media/images/flstudio_mobile_piano.jpg">
+            <img src = "media/images/flstudio_mobile_drum.jpg">
+        </div>
+        <div class = "image_caption">
+            <p>FL Mobile's piano roll and step sequencer</p>
+        </div>
+        <p>
+            Yeah, that's right. Mobile. Sometimes this app is still how I think about writing songs.
+            I won't go over all the features that I remember making this app great, in truth because it <i>wasn't</i> really that great, but the 2011 pocket DAW
+            was built around writing digital notes into FL's <b>step sequencer</b> and <b>piano roll</b> through a minimal interface, one that you could use with just your thumbs.
+            The app allowed for flexible and intuitive editing, live recording, and experimentation with sequenced notes. 
+            The first instrument I really learned how to play became the piano roll, on a train and in between class. This was literally my jam.
+        </p>
+        <p>
+            That winter, when I started this project, the closest thing the SP404mkii had to a step sequencer was its pattern record mode, 
+            which was cool but made it difficult to write anything complex without breaking out some paper to keep track of what pattern was doing what.
+            A few months later roland released firmware 2.0, which <i>did</i> have a step sequencer, but again lacked in clarity and speed while editing, at least for my limited-patience-ass.
+            This project isn't a criticism of the mkii, I really love the mkii, but the specific limitations of pattern and TR-REC mode leave so much to be desired, especially <i>because</i> the mkii
+            is such a powerful machine.
+        </p>
+        <div class = "image_container">
+            <img src = "media/images/sp404_TR-REC.jpg">
+            <img src = "media/images/sp404_Pattern.jpg">
+        </div>
+        <!-- <img class = "center_image" src = "media/images/sp404mkii_pattern_mode.jpg"> -->
+        <div class = "image_caption">
+            <p>MKii's TR-REC and pattern playback display, which is such a missed opportunity (?!?)</p>
+        </div>
+        <p>
+            The missed design opportunities are weird; the mkii uses a 128x64 OLED display that could show a lot more than it does, 
+            as it is now TR-REC mode displays a few note-specific options (which is nice) but the pattern mode displays... the playhead position in giant numbers.
+             <i>Imagine</i> how rad it would be to fully write, edit, and play back little arpeggios of samples, faster than human hands could play them,
+              with the freedom to tweak them in real time. 
+        </p>
+        <p>
+            TR-REC mode is so nonvisual, especially if your pattern is longer than 16 steps, that it's just too clunky to do this, and
+              Pattern mode is really more like a performance capture (which is great) than it is for sequencing new music.
+              You also can't "bounce" your patterns to MIDI files, which would be cool.
+        </p>
+        <p>Contrasting this with FL Mobile, I started feeling like there was so much potential locked up in how we interface with music software.
+            FL Mobile sounded <i>bad</i>, which isn't to say it was impossible to make great music on it, but importantly sound wasn't what made it fun and creative.
+            The fluidity of its interface and its integration into a portable device, alongside the ability to endlessly tinker with my notated rectangles made me obsessed with writing
+            tiny clips of hopeful songs on my BART rides to and from school. I was, and still am sure that having good pen is more important than good paper, and the mkii got me thinking--
+        </p>
+        <p>
+            How do I want to write music?
+        </p>
+        <p>
+            The challenge was to make:
+            <li>
+                A software or hardware way of visually recording, editing, and playing back notes
+            </li>
+            <li>
+                With a minimal graphical interface that was still intuitive
+            </li>
+            <li>
+                That could sequence other instruments
+            </li>
+        </p>
+        <p>
+            <!-- Initially, I thought it would be really cool to make an alternative OS for the MKii hardware, not unlike JJOS for the MPC line, but with my huge lack of knowledge on compiling and flashing my own firmware to the SP404mkii, not to mention programming in general, I hit a brick wall. <i>
+            As a side note, custom software and an open-source API for the SP404mkii is still something I think would be amazing</i>.
+            In my ignorance, I turned to hardware: I wanted a sequencer, small enough to be carried with my SP and flexible enough to act as a 
+            notebook for sequencing sounds.  -->
+            Thus, the <b>Stepchild</b> was born in early january on a raspberry pi pico.
+        </p>
+        <div class = "image_caption">
+            <p>The first pico program I wrote, sending USB MIDI to Ableton Live on my laptop</p>
+        </div>
+        <img class = "wide_center_image" src = "media/images/IMG_4541.jpeg">
+        <!-- <img class = "center_image" src = "media/images/IMG_7793.jpeg"> -->
+        <!-- <p>
+            A few notes on hardware: I love the pico. I love it because it's very powerful, because it has two cores, but mostly because it's cheap, really well documented, and
+            supported by people who genuinely seem interested in making programming more fun and accessible to everyone.
+        </p> -->
+    </div>
+</body>
+</html>

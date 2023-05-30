@@ -1,0 +1,43 @@
+
+html{
+    font-size       : 10px;
+    font-family     : "Times New Roman", sans-serif;
+    background-color: #f0f0f0;
+    overflow:hidden;
+    margin:0;
+    padding:0;
+    background-color:white;
+}
+/* gallery links */
+#menu{
+    display:block;
+    width:16.5%;
+    position:absolute;
+    top:30vw;
+    left:0;
+    text-align:center;
+}
+
+#menu a{
+    display:block;
+    font-size: 1vw;
+    font-family: 'Golos Text', sans-serif;
+    text-decoration: none;
+    color:black;
+}
+#menu a:hover{
+    color:rgb(2, 183, 203);
+    text-decoration:underline;
+}
+
+#sketch{
+    top:0;
+    right:0;
+    display:block;
+    position:absolute;
+    border:none;
+    border-left:solid;
+    width:83.5%;
+    height:100vh;
+    float:right;
+}
