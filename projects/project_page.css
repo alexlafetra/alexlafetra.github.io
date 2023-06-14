@@ -1,0 +1,73 @@
+body{
+    display:block;
+    background:transparent;
+    color:black;
+}
+/* intro blurb */
+#intro{
+    height:15%;
+    width:100%;
+    display:block;
+    text-align:center;
+}
+
+/* the big container holding everything starts a little ways down the page */
+#container{
+    /* top:15%; */
+    position:absolute;
+    display:block;
+    width:100%;
+    margin:0;
+    border:0;
+    left:0;
+}
+/* icon holds the image, the title, and the subtitle */
+.icon{
+    display:block;
+    position:relative;
+    width:22%;
+    min-width:200px;
+    height:22%;
+    float:left;
+    margin:1.5%;
+}
+
+.icon img{
+    /* width:100%; */
+    display:block;
+    width:100%;
+    height:100%%;
+    margin:auto;
+    transition:0.1s;
+}
+
+.icon img:hover{
+    opacity:0%;
+}
+.icon .description{
+    display:block;
+    position:absolute;
+    width:100%;
+    margin:auto;
+    top:0;
+    left:0;
+    z-index:-1;
+    text-align:center;
+    /* opacity:0; */
+    transition: 0.1s;
+}
+.icon .description:hover{
+    opacity:1;
+}
+.icon .title{
+    display:block;
+    font-size: 3vw;
+    z-index:-1;
+    font-style:italic;
+    color:blue;
+}
+.icon .subtitle{
+    display:block;
+    font-size: 2vw;
+    z-index:-1;
+}
