@@ -3,17 +3,10 @@ body{
     background:transparent;
     color:black;
 }
-/* intro blurb */
-#intro{
-    height:15%;
-    width:100%;
-    display:block;
-    text-align:center;
-}
 
 /* the big container holding everything starts a little ways down the page */
 #container{
-    /* top:15%; */
+    top:15%;
     position:absolute;
     display:block;
     width:100%;
@@ -43,6 +36,8 @@ body{
 
 .icon img:hover{
     opacity:0%;
+    padding:10%;
+    width:90%;
 }
 .icon .description{
     display:block;
