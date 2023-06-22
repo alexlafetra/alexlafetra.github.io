@@ -1,5 +1,5 @@
 html{
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
     overflow:hidden;
 }
 /* for the 3D model of the stepchild */
@@ -8,6 +8,7 @@ canvas{
     top:-130px;
     right:-100px;
     z-index: -1;
+    background:transparent;
 }
 
 #me{
@@ -19,13 +20,6 @@ canvas{
 }
 #me img{
     width:100%;
-}
-#angel{
-    position:absolute;
-    right:0;
-    top:0;
-    max-height:20%;
-    max-width:20%;
 }
 /* title of page */
 #title{
@@ -90,11 +84,12 @@ a{
     font-family     : "courier", sans-serif;
     display:block;
     position:absolute;
-    width:90%;
+    width:70%;
     height:100%;
     margin:0;
     border:0;
-    right:0;
+    left:10%;
+    /* right:0; */
     top:0;
     z-index:-1;
 }
