@@ -9,6 +9,7 @@ canvas{
     right:-100px;
     z-index: -1;
 }
+
 #me{
     display:block;
     position:absolute;
@@ -18,6 +19,13 @@ canvas{
 }
 #me img{
     width:100%;
+}
+#angel{
+    position:absolute;
+    right:0;
+    top:0;
+    max-height:20%;
+    max-width:20%;
 }
 /* title of page */
 #title{
@@ -32,19 +40,15 @@ canvas{
     font-weight:900;
     text-decoration:none;
     color:black;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white;
 }
 #title a:hover{
     color:blue;
     transition:0.2s;
 }
 
-/* list of links to other blogs */
-#other_posts{
-    font-size       : 12px;
-    font-family     : "courier", sans-serif;
-    position:absolute;
-    margin:0;
-}
+
 /* so links won't go purple */
 a{
     color:blue;
@@ -86,8 +90,8 @@ a{
     font-family     : "courier", sans-serif;
     display:block;
     position:absolute;
-    width:90vw;
-    height:100vh;
+    width:90%;
+    height:100%;
     margin:0;
     border:0;
     right:0;
@@ -97,8 +101,9 @@ a{
 /* turning off the iframe border */
 iframe{
     border:none;
+    top:0;
     /* border:solid; */
-    width:90%;
+    width:100%;
     height:100%;
     margin:auto;
 }

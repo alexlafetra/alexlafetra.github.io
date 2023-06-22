@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Alex LaFetra</title>
+    <link href="boids.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- this is the code linking the boids background-->
+    <script language="javascript" type="text/javascript" src="../../scripts/libraries/p5.min.js"></script>
+    <script language="javascript" type="text/javascript" src="boids.js"></script>
+
+    <script>
+        function toggleSidebar(){
+
+            let sidebar = document.getElementById("sidebar");
+            let main = document.getElementsByTagName("canvas");
+
+            if(sidebar.style.width == 0 || sidebar.style.width == "0%"){
+                sidebar.style.width = "30%";
+                main[0].style.width = "70%";
+            }
+            else if(sidebar.style.width == "30%"){
+                sidebar.style.width = "0%";
+                main[0].style.width = "100%";
+            }
+            console.log(sidebar.style.width);
+        }
+    </script>
+</head>
+<body>
+    <div class = "button" id = "show_sidebar" onclick = "toggleSidebar()">show sidebar</div>
+    <div id = "sidebar">
+    </div>
+</body>
+</html>

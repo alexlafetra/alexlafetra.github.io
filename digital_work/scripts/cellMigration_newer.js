@@ -14,7 +14,10 @@ let weight5 = 100;//rate of bifurcation
 let traceMode = false;
 let isPaused = false;
 let showActin = false;
+let showCenter = false;
 let bifurcated = false;
+let c = true;//color or b/w
+let modelType = "Bifurcation";
 
 let divisionRate = 0;
 
@@ -23,8 +26,6 @@ let slider2;
 let slider3;
 let slider4;
 let slider5;
-
-
 
 function setup() {
   frameRate(30);
@@ -47,12 +48,22 @@ function setup() {
   let pauseButton = createButton('Pause');
   pauseButton.position(10,10);
   pauseButton.mousePressed(pauseSim);
+
   let traceButton = createButton('Trace');
   traceButton.position(10,40);
   traceButton.mousePressed(changeMode);
+
   let actinButton = createButton('Show Actin Forces (do it)');
   actinButton.position(70,10);
   actinButton.mousePressed(actinToggle);
+
+  let colorButton = createButton('Color Mode');
+  colorButton.position(70,40);
+  colorButton.mousePressed(toggleColor);
+
+  let modelButton = createButton('Switch Models');
+  modelButton.position(160,40);
+  modelButton.mousePressed(toggleModel);
    
   chemoattractant = createVector(mouseX,mouseY);
   for(let i = 0; i<cellSize;i++){//building all the Boids
@@ -71,9 +82,20 @@ function actinToggle(){
   showActin = !showActin;
 }
 
+function toggleColor(){
+  c = !c;
+}
+
+function toggleModel(){
+  if(modelType == "Bifurcation")
+    modelType = "Compass";
+  else
+    modelType = "Bifurcation";
+}
 function drawCell(){
   noFill();
-  stroke(255,255,255);
+  if(!c)
+    stroke(255);
   strokeWeight(5);
   beginShape();
   curveVertex(cell[0].position.x,cell[0].position.y);
@@ -111,13 +133,38 @@ function draw() {
     cellRad = slider4.value();
     divisionRate = slider5.value();
     
-    
+    let center = createVector();
     for(let boid of cell){
-      boid.edges();
-      boid.cell(cell);
+      center.add(boid.position);
+      // boid.edges();
+      if(modelType == "Bifurcation")
+        boid.bifurcationModel(cell);
+      else{
+        boid.compassModel(cell);
+        let farthestDist = 10000;
+        let farthestPoint;
+        //retracting farthest point
+        for(let i = 0; i<cell.length; i++){
+          let d = p5.Vector.dist(cell[i].position,chemoattractant);
+          if(d<farthestDist && cell[i].isProtruding){
+            farthestDist = d;
+            farthestPoint = i;
+          }
+        }
+        cell[farthestPoint].retract();
+      }
       boid.update();
-    //   boid.show();
     }
+    center.div(cell.length);
+    let offset = p5.Vector.dist(center,chemoattractant);
+    let c = 0;
+    if(offset>80){
+      c = color(255-offset,0,0+offset);
+    }
+    else{
+      c = color(255,255-offset*2,255-offset*2);
+    }
+    stroke(c);
     drawCell();
   }
 }
@@ -208,7 +255,7 @@ class Boid{
   
       center.div(cellSize);//get average dist
       strokeWeight(20);
-      point(center.x,center.y);
+      // point(center.x,center.y);
       return center;
     }
     
@@ -303,7 +350,7 @@ class Boid{
     }
   
     
-    cell(boids){
+    bifurcationModel(boids){
       let wallTension = this.partnerDistance(boids);
       let centerForce = this.centerPoint(boids);
       let distanceCenter = p5.Vector.dist(this.center(),chemoattractant);
@@ -341,32 +388,35 @@ class Boid{
     }
     
     //old
-    cellold(boids){
-      //let mouse = (this.mouse(boids));
-      let wallTension = this.partnerDistance(boids);
-      let centerForce = this.centerPoint(boids);
-      
-      if(!this.isProtruding){//if the boid isn't protruding
-        this.acceleration.set(0,0);
-        let chance = random(0,weight5);
-        chance = int(chance);
-        if((chance == weight5-1) && pNumber<maxProtrusions){
-          let protrusionForce = this.protrude(boids);
-          this.acceleration.add(protrusionForce.mult(3000));
+    compassModel(cell){
+      let wallTension = this.partnerDistance(cell);
+      let centerForce = this.centerPoint(cell);
+      let distanceCenter = p5.Vector.dist(this.center(),chemoattractant);
+      if(distanceCenter>cellRad){//if the chemoattractant is outside the cell    
+        if(!this.isProtruding){//if it's not protruding, apply normal forces to it
+          this.acceleration.set(0,0);
+          this.acceleration.add(centerForce.div(1));
+          this.acceleration.add(wallTension.div(1));    
+          //print(pNumber);
+          if(pNumber == 0){//if there are no protrusions
+            let protrusionForce = this.protrude(cell);
+            this.acceleration.add(protrusionForce.mult(3000));
+          }
         }
-        this.acceleration.add(centerForce.div(1));
-        this.acceleration.add(wallTension.div(1));
+        if(frameCount%divisionRate == 0){
+          //protrude a random point
+          let r = random(cell);
+          if(r.isProtruding)
+            r.retract();
+          else  
+            r.protrude();
+        }
       }
-      
-      //if the boid is a protrusion
-      if(this.isProtruding){
-        let Length = p5.Vector.dist(this.position,this.center());
-        //print(Length);
-        if(Length>maxProtrusionLength){
-          this.retractProtrusion(boids);
-        }
-        this.acceleration.add(centerForce.div(2));
-        this.acceleration.add(wallTension.div(1));
+      else{
+        this.retractAll(cell);
+        this.acceleration.set(0,0);
+        this.acceleration.add(centerForce.div(1));
+        this.acceleration.add(wallTension.div(1));    
       }
     }
   

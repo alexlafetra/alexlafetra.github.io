@@ -42,7 +42,7 @@ function initFlock(){
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   background(0);
-  initFlock();
+  // initFlock();
 }
 
 //asking for user permission to get access to motion info

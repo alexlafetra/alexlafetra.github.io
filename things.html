@@ -7,25 +7,6 @@
     <link href="projects/main.css" rel="stylesheet">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script>
-        // add new blog names here!
-        const linkList = [''];
-        function makeList(){
-            let listElement = document.getElementById("other_posts");
-            for(const title of linkList){
-                let paragraph = document.createElement("p");
-                let link = document.createElement("a");
-                link.append(title);
-                link.href = "blogs/projects/"+title+".html";
-                link.target = "current_entry";
-                paragraph.append(link);
-                listElement.append(paragraph);
-            }
-        }
-        function getRecentPostLink(){
-            return ("stepchild_blog_posts/"+linkList[0]+".html");
-        }
-    </script>
 </head>
 <body>
     <!-- title of page -->
@@ -35,10 +16,10 @@
     <div id = "me">
         <img src = "images/about/about_img.png">
     </div>
-
-    <!-- links to other posts -->
-    <div id = "other_posts">
+    <div id = "angel">
+        <img src = "projects/angel1.gif">
     </div>
+    <!-- links -->
     <div id = "external_links">
         <p><a href = "index.html">index</a></p>
         <p><a href = "about.html" target = "current_entry">about</a></p>
@@ -53,8 +34,4 @@
         </iframe>
     </div>
 </body>
-<script>
-    // needs to go down here so that the body loads first
-    makeList();
-</script>
 </html>
