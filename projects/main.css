@@ -34,12 +34,34 @@ canvas{
     font-weight:900;
     text-decoration:none;
     color:black;
-    -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: white;
+    /* -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white; */
 }
 #title a:hover{
     color:blue;
     transition:0.2s;
+}
+
+#header{
+    position:absolute;
+    display:block;
+    font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight:900;
+    font-size:4.85vh;
+    right:0;
+    text-align:right;
+    top:20px;
+    background:white;
+    /* border-bottom: 5px solid;} */
+}
+#header a{
+    /* padding-right:80px; */
+    padding:40px;
+    transition:0.5s;
+}
+#header a:hover{
+    color:black;
+    cursor:pointer;
 }
 
 
@@ -85,13 +107,13 @@ a{
     font-family     : "courier", sans-serif;
     display:block;
     position:absolute;
-    width:80%;
-    height:100%;
+    width:95%;
+    height:90%;
     margin:0;
     border:0;
-    left:10%;
+    right:0%;
     /* right:0; */
-    top:0;
+    bottom:0;
     z-index:-1;
 }
 /* turning off the iframe border */

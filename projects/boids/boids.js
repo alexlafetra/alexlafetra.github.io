@@ -11,9 +11,10 @@ let alignmentMultiplier = 1;
 let maxBoids = 150;
 let pallette;
 let zAngle;
+let canvas;
 
 function setup(){
-  let canvas = createCanvas(windowWidth, windowHeight);
+  canvas = createCanvas(windowWidth, windowHeight);
   //every time the canvas is pressed, it'll try and request access
   canvas.mousePressed(requestAccess);
   pallette = floor(random(0,5));
