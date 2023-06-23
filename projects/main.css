@@ -73,9 +73,10 @@ a{
 
 /* contact icons */
 #external_links img{
+    left:0;
     width:40px;
     display:block;
-    margin:auto;
+    /* margin:auto; */
     padding:10px;
 }
 /* div holding the blog post */
@@ -84,7 +85,7 @@ a{
     font-family     : "courier", sans-serif;
     display:block;
     position:absolute;
-    width:70%;
+    width:80%;
     height:100%;
     margin:0;
     border:0;

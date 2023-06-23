@@ -6,7 +6,7 @@ let odds = 1; //odds of a protrusion, odds = 1/10
 let pNumber = 0;
 let maxBifurcations = 2;
 let maxProtrusionLength = 100;
-let chemoattractant=0;
+let chemoattractant;
 let weight1 = 1;//cell surface tension
 let weight2 = 5;//cell pressure
 let weight3 = 1;//actin push force
@@ -16,6 +16,7 @@ let isPaused = false;
 let showActin = false;
 let showCenter = false;
 let bifurcated = false;
+let movingChemo = false;
 let c = true;//color or b/w
 let modelType = "Bifurcation";
 
@@ -65,10 +66,15 @@ function setup() {
   modelButton.position(160,40);
   modelButton.mousePressed(toggleModel);
    
-  chemoattractant = createVector(mouseX,mouseY);
+  makeChemo();
+
   for(let i = 0; i<cellSize;i++){//building all the Boids
     cell.push(new Boid());
   }
+}
+
+function makeChemo(){
+  chemoattractant = createVector(random(-width/2,width/2),random(-height/2,height/2));
 }
 
 function changeMode(){
@@ -84,6 +90,18 @@ function actinToggle(){
 
 function toggleColor(){
   c = !c;
+}
+
+function mouseClicked(){
+  if(movingChemo){
+    movingChemo = false;
+  }
+  else{
+    let m = createVector(mouseX-width/2,mouseY-height/2);
+    if(p5.Vector.dist(m,chemoattractant)<10){
+      movingChemo = true;
+    }
+  }
 }
 
 function toggleModel(){
@@ -123,10 +141,20 @@ function draw() {
     translate(width/2,height/2);
 
     stroke(255);
-    strokeWeight(20);
-    chemoattractant.set(mouseX-width/2,mouseY-height/2);
+    if(movingChemo){
+      chemoattractant.set(mouseX-width/2,mouseY-height/2);
+    }
+    if(p5.Vector.dist(createVector(mouseX-width/2,mouseY-height/2),chemoattractant)<10){
+      strokeWeight(30);
+      cursor("POINTER");
+    }
+    else{
+      strokeWeight(20);
+      cursor(ARROW);
+    }
     point(chemoattractant.x,chemoattractant.y);
     
+    strokeWeight(20);
     weight1 = slider1.value();
     weight2 = slider2.value();
     weight3 = slider3.value();
@@ -308,7 +336,6 @@ class Boid{
         cell[p2].isProtruding = true;
         cell[p2].maxVel = weight3;
         pNumber++;
-  
       }
       this.acceleration.set(0,0);
     }
@@ -380,6 +407,7 @@ class Boid{
         }
       }
       else{
+        makeChemo();
         this.retractAll(boids);
         this.acceleration.set(0,0);
         this.acceleration.add(centerForce.div(1));
