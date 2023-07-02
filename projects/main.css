@@ -48,15 +48,13 @@ canvas{
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-weight:900;
     font-size:4.85vh;
-    right:0;
+    left:300px;
     text-align:right;
     top:20px;
-    background:white;
-    /* border-bottom: 5px solid;} */
+    max-width:600px;
 }
 #header a{
-    /* padding-right:80px; */
-    padding:40px;
+    padding:10px;
     transition:0.5s;
 }
 #header a:hover{
@@ -107,7 +105,7 @@ a{
     font-family     : "courier", sans-serif;
     display:block;
     position:absolute;
-    width:95%;
+    width:90%;
     height:90%;
     margin:0;
     border:0;

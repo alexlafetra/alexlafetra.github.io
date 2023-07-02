@@ -20,7 +20,8 @@ body{
 .icon{
     display:block;
     position:relative;
-    width:44%;
+    /* width:44%; */
+    width:60%;
     min-width:200px;
     /* height:22%; */
     height:fit-content;
