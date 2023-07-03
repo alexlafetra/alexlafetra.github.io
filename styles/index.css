@@ -32,7 +32,8 @@ body {
 /* links */
 #center_index a{
     fill:rgb(255, 255, 255);
-    font-size: 27px;
+    /* font-size: 27px; */
+    font-size: 35px;
     /* font-size: 5vw; */
     transition: 0.2s;
 }
@@ -53,15 +54,7 @@ body {
     display: block;
     margin: auto;
     transition: 0.3s;
-    /* transform: rotateX(15deg) rotateY(15deg) scale(250%); */
-    /* transform: rotateY(15deg) scale(250%); */
 }
-/* pausing svg rotation */
-/* #text_svg:hover{
-    transform: rotateX(15deg) rotateY(35deg) scale(250%);
-    transform: rotateY(80deg) scale(250%);
-
-} */
 
 canvas{
     z-index:0;

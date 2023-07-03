@@ -10,16 +10,14 @@ canvas{
     z-index: -1;
     background:transparent;
 }
-
-#me{
+#main_container{
+    width:80%;
+    max-width:1200px;
     display:block;
     position:absolute;
-    width:10%;
-    margin:0;
-    border:0;
-}
-#me img{
-    width:100%;
+    margin-left:10%;
+    /* border:solid; */
+    height:100%;
 }
 /* title of page */
 #title{
@@ -30,7 +28,7 @@ canvas{
 }
 #title a{
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size:8.85vh;
+    font-size:60pt;
     font-weight:900;
     text-decoration:none;
     color:black;
@@ -43,15 +41,15 @@ canvas{
 }
 
 #header{
-    position:absolute;
+    /* position:absolute; */
     display:block;
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-weight:900;
-    font-size:4.85vh;
-    left:300px;
+    font-size:20pt;
     text-align:right;
-    top:20px;
-    max-width:600px;
+    margin-top:20px;
+    max-width:100px;
+    float:right;
 }
 #header a{
     padding:10px;
@@ -68,48 +66,18 @@ a{
     color:blue;
 }
 
-/* links to other sites */
-#external_links{
-    position:absolute;
-    display:block;
-    bottom:0;
-    left:0;
-    width:10%;
-    text-align:center;
-    
-}
-#external_links a{
-    color:black;
-    font-family: 'JetBrains Mono', monospace;
-    font-size:12px;
-    font-weight:800;
-    text-decoration:none;
-}
-#external_links a:hover{
-    transition:0.2s;
-    color:blue;
-    cursor:pointer;
-}
-
-/* contact icons */
-#external_links img{
-    left:0;
-    width:40px;
-    display:block;
-    /* margin:auto; */
-    padding:10px;
-}
 /* div holding the blog post */
 #blog_post{
     font-size       : 12px;
     font-family     : "courier", sans-serif;
     display:block;
-    position:absolute;
-    width:90%;
-    height:90%;
+    /* position:absolute; */
+    width:100%;
+    height:88%;
     margin:0;
     border:0;
-    right:0%;
+
+    /* margin-right:0%; */
     /* right:0; */
     bottom:0;
     z-index:-1;

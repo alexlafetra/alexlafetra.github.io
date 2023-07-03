@@ -2,22 +2,21 @@ let cell;
 
 function setup() {
   cell = new Cell();
-  createCanvas(windowWidth, windowHeight);
-  background(255);
+  createCanvas(1000,1000);
+  // background(255);
   blendMode(DIFFERENCE);
 }
 
 
 function draw() {
-  translate(windowWidth/2,windowHeight/2);
+  // translate(windowWidth/2,windowHeight/2);
+  scale(0.5);
   // colorMode(RGB);
   // background(0);
   cell.update();
   cell.show();
 }
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight,true);
-  // colorMode(RGB);
-  // background(0,0,0,200);
-}
+// function windowResized() {
+  // resizeCanvas(windowWidth, windowHeight,true);
+// }

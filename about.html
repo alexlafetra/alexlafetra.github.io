@@ -10,55 +10,41 @@
   <script language="javascript" type="text/javascript" src="scripts/sketch_for_about_page.js"></script>
   <!-- OK, YOU CAN MAKE CHANGES BELOW THIS LINE AGAIN -->
   <script>
-    function showPortraitArrow(){
-      let arrow = document.getElementById("arrow");
-      arrow.style.visibility = "visible";
+    function copyEmail(){
+        navigator.clipboard.writeText("alexlafetrathompson@gmail.com");
     }
-    function hidePortraitArrow(){
-      let arrow = document.getElementById("arrow");
-      arrow.style.visibility = "hidden";
-    }
-
   </script>
-  <!-- This line removes any default padding and style.
-       You might only need one of these values set. -->
   <link href="styles/about.css" rel="stylesheet">
 </head>
-
 <body>
-    <div id = "portrait">
-        <img src = "images/about/about_img.png" onmouseenter="showPortraitArrow();" onmouseleave = "hidePortraitArrow();">
-        <p id = "arrow">^
-|
-|
-|
-|
-me in 2023
-        </p>
-    </div>
-    <h1>Hey</h1>
-    <div id = "bio">
-      <p>I'm an artist, programmer, and art installer. I'm typically writing <a href = "music.html">music</a>,
-        designing <a href = "stepchild.html">hardware</a>, <a href = "art.html">painting</a>, writing <a href = "https://github.com/alexlafetra">code</a>, and <a href = "installation.html">installing</a> work for local galleries in the Bay Area.
-      </p>
-      <p>
-        In 2023 I graduated from Wesleyan University, where I studied Biology and Sociology. I'm especially interested in studying <a href = "thesis.html">housing discrimination</a> in the East Bay, digital simulation,
-        and art that makes people care about things they may not otherwise.
-      </p>
-      <p>
-        I love getting involved with other people's projects. The best way to get in touch with me for music production, installation work, or anything else is through <a href = "mailto: alexlafetra@gmail.com">email</a>
-        or <a href="tel:510-517-8186">text</a>.
-      </p>
-    </div>
-    <div id = "links">
-      <a id  = "back" href = "index.html"><--</a>
-      <a id = "email" href = "mailto: alexlafetra@gmail.com">Gmail</a>
-      <a id  = "phone" href="tel:510-517-8186">Phone</a>
-      <a id = "resume" href = "resume.html">CV</a>
-      <a href = "https://www.instagram.com/alexlafetra/"><img id = "instagram" src = "images/icons/Instagram_logo_2016.svg.png"></a>
-      <a href = "https://open.spotify.com/artist/4r08ZtOAOeWfMOC0l9Q61A?si=JyiiKMQeSh2U0_N8lDtK3Q"><img id = "spotify" src = "images/icons/Spotify_logo_2023.svg.png"></a>
-      <a href = "https://soundcloud.com/user-697637496"><img id = "soundcloud" src = "images/icons/Soundcloud_logo_2023.svg.png"></a>
-      <a href = "https://alexlafetra.bandcamp.com"><img id = "bandcamp" src = "images/icons/Bandcamp_logo_2023.svg.png"></a>
+    <div id = "main_container">
+        <img id = "portrait" src = "images/about/about_img.png">
+        <span class = "loud">Hey,</span>
+        <div id = "bio">
+            <p>I'm an artist, programmer, and art installer. I write <a href = "music.html">music</a>,
+                I play around with <a href = "stepchild.html">electronics</a>, I make visual <a href = "art.html">art</a>, and I love to experiment with creative  <a href = "https://github.com/alexlafetra">programming</a>.
+                 To make ends meet, I <a href = "installation.html">install</a> artwork for galleries and homes in the Bay Area, NYC, and Chicago.
+            </p>
+            <p>
+                I studied Biology and Sociology at Wesleyan University, where I became interested in researching housing and gentrification in the East Bay and wrote my undergraduate <a href = "thesis.html">thesis</a> on the history of housing discrimination in the Bay Area.
+            </p>
+            <p>
+                I love getting involved with other people's projects. The best way to get in touch with me for music production, installation work, or anything else is through <a href = "mailto: alexlafetra@gmail.com">email</a>
+                or <a href="tel:510-517-8186">text</a>.
+            </p>
+        </div>
+        <div id = "links">
+            <div id = "link_icons">
+                <a href = "https://www.instagram.com/alexlafetra/"><img id = "instagram" src = "images/icons/Instagram_logo_2016.svg.png"></a>
+                <a href = "https://open.spotify.com/artist/4r08ZtOAOeWfMOC0l9Q61A?si=JyiiKMQeSh2U0_N8lDtK3Q"><img id = "spotify" src = "images/icons/Spotify_logo_2023.svg.png"></a>
+                <a href = "https://soundcloud.com/user-697637496"><img id = "soundcloud" src = "images/icons/Soundcloud_logo_2023.svg.png"></a>
+                <a href = "https://alexlafetra.bandcamp.com"><img id = "bandcamp" src = "images/icons/Bandcamp_logo_2023.svg.png"></a>
+            </div>
+            <div id = "link_text">
+                <a id = "email" href = "" onclick = "copyEmail();">alexlafetrathompson@gmail.com</a>
+                <a id = "resume" href = "resume.html">CV</a>
+            </div>
+        </div>
     </div>
 </body>
 </html>

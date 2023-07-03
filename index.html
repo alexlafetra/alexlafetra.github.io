@@ -34,8 +34,10 @@
         <!-- center media -->
         <!-- art -->
         <img id = "0" class = "main_menu_media" src = "main_menu_media/art.jpeg">
-        <!-- cells -->
-        <video id = "1" class = "main_menu_media" autoplay muted>
+        <img id = "1" class = "main_menu_media" src = "main_menu_media/transformer.jpeg">
+        <img id = "2" class = "main_menu_media" src = "projects/thumbnails/murmur.png">
+        <img id = "3" class = "main_menu_media" src = "images/about/about_img.png">
+        <!-- <video id = "1" class = "main_menu_media" autoplay muted>
             <source src = "main_menu_media/cells.mov">
         </video>
         <video id = "2" class = "main_menu_media" autoplay muted>
@@ -43,25 +45,21 @@
         </video>
         <video id = "3" class = "main_menu_media" autoplay muted>
             <source src = "main_menu_media/stepchild_prototype.mov">
-        </video>
+        </video> -->
         <!-- circular menu -->
         <svg id = "text_svg" width="250" height="250" onmouseleave = "clearImages()">
             <!-- note to self: i made this path using http://complexdan.com/svg-circleellipse-to-path-converter/ -->
             <path id = "curve" fill = "none" d="M25,125a100,100 0 1,0 200,0a100,100 0 1,0 -200,0"/>
-            <!-- <animateTransform attributeName = "transform" attributeType = "XML" type = "rotate" from = "0 0 0" to = "360 0 0" dur = "10s" repeatCount = "indefinite"/> -->
             <text>
                 <textPath alignment-baseline = "top" xlink:href="#curve" startOffset = "0" id = "circleText" color = "rgb(255,255,255)">
-                    <a class = "link" href = "art.html" onmouseover = "loadCenterImage(0)">Art</a>
-                    <a>~</a>
-                    <a class = "link" href = "thesis.html" >Map</a>
-                    <a>~</a>
-                    <a class = "link" href = "music.html" onmouseover = "loadCenterImage(2)">Music</a>
-                    <a>~</a>
-                    <a class = "link" href = "blogs/stepchild.html" onmouseover = "loadCenterImage(3)">Stepchild</a>
-                    <a>~</a>
-                    <a class = "link" href = "projects.html" onmouseover = "loadCenterImage(1)">Projects</a>
-                    <a>~</a>
-                    <a class = "link" href = "about.html">About</a>
+                    <a class = "link" href = "art.html" onmouseover = "loadCenterImage(0)" onmouseleave = "clearImages()">Visual Art</a>
+                    <a>---</a>
+                    <a class = "link" href = "https://soundcloud.com/user-697637496" onmouseover = "loadCenterImage(1)" onmouseleave = "clearImages()">Music</a>
+                    <a>----</a>
+                    <a class = "link" href = "projects.html" onmouseover = "loadCenterImage(2)" onmouseleave = "clearImages()">Projects</a>
+                    <a>---</a>
+                    <a class = "link" href = "about.html" onmouseover = "loadCenterImage(3)" onmouseleave = "clearImages()">About</a>
+                    <a>----</a>
                 </textPath>
             </text>
         </svg>

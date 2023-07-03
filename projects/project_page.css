@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap');
+
 body{
     display:block;
     background:transparent;
@@ -20,30 +23,34 @@ body{
 .icon{
     display:block;
     position:relative;
+    margin:auto;
+    padding-bottom:10px;
     /* width:44%; */
-    width:60%;
+    width:80%;
     min-width:200px;
+    max-width:400px;
     /* height:22%; */
     height:fit-content;
     float:left;
-    margin:3%;
+    /* margin:3%; */
     left:0;
     transition:0.1s;
 }
 
 .icon img{
     display:block;
-    width:50%;
+    width:40%;
     height:100%;
 }
 
 .icon:hover{
-    box-shadow: 8px 8px rgb(255,0,0),16px 16px rgb(0,255,0),24px 24px rgb(0,0,255);
+    /* box-shadow: 8px 8px rgb(255,0,0),16px 16px rgb(0,255,0),24px 24px rgb(0,0,255); */
+    box-shadow:8px 8px rgb(80,80,80);
 }
 .icon .description{
     display:block;
     position:absolute;
-    width:50%;
+    width:60%;
     height:100%;
     /* margin:auto; */
     /* padding:10px; */
@@ -57,15 +64,25 @@ body{
 }
 .icon .description .title{
     display:block;
-    font-size: 3vw;
-    font-style:italic;
+    font-size: 14pt;
+    font-family:nunito;
     color:blue;
     padding-left:10px;
     /* text-align:center; */
 }
 .icon .description .subtitle{
     display:block;
-    font-size: 2vw;
+    font-family:nunito;
+    font-size: 10pt;
     padding-left:10px;
-    color:black;
+    /* color:black; */
+    color:rgb(50,50,50);
+}
+.icon .description .date{
+    font-family: 'JetBrains Mono', monospace;
+    display:block;
+    position:absolute;
+    right:10px;
+    color:rgb(50,50,50);
+    font-size:10pt;
 }
