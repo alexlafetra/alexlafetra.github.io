@@ -17,6 +17,7 @@ body {
     position:absolute;
     width: 250px;
     height:250px;
+    /* margin:auto; */
     /* border:5px solid white; */
 
     /* centering it */
@@ -27,13 +28,21 @@ body {
 
     /* making sure it renders above the canvas */
     z-index: 1;
-    background-image: url('https://alexlafetra.github.io/images/backgrounds/background2.jpg');
+    /* background-image: url('https://alexlafetra.github.io/images/backgrounds/background2.jpg'); */
+    /* background-image: "images/backgrounds/background2.jpg"; */
+}
+#background{
+    position:absolute;
+    width:250px;
+    height: 250px; 
+    overflow: hidden;
+    object-fit: cover;
 }
 /* links */
 #center_index a{
     fill:rgb(255, 255, 255);
     /* font-size: 27px; */
-    font-size: 35px;
+    font-size: 31.5px;
     /* font-size: 5vw; */
     transition: 0.2s;
 }

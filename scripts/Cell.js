@@ -24,19 +24,18 @@ class Node{
       }
       //else, if this node is closer
       else{
-          let newDist = p5.Vector.dist(cell.nodes[node].position,this.position);
-          let oldDist = p5.Vector.dist(cell.nodes[this.nearestNodes[i]].position,this.position);
-          if(newDist<oldDist){
-            let tempNode = this.nearestNodes[i];
-            this.nearestNodes[i] = node;
-            this.addNextNearest(tempNode);
-            return;
-          }
+        let newDist = p5.Vector.dist(cell.nodes[node].position,this.position);
+        let oldDist = p5.Vector.dist(cell.nodes[this.nearestNodes[i]].position,this.position);
+        if(newDist<oldDist){
+          let tempNode = this.nearestNodes[i];
+          this.nearestNodes[i] = node;
+          this.addNextNearest(tempNode);
+          return;
         }
+      }
     }
   }
 }
-
 class Cell{
   constructor(){
     let nodeNumber = 50;
