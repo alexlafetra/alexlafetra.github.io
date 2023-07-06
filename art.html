@@ -8,31 +8,35 @@
 <script>
     // gallery objects
     // note: no spaces allowed in src's !
-    const drawings = {  titles:['Minivan','Moose belly','Skeleton'],
-                        descriptions:['ink and pastel on paper, 2020','oil and gold leaf on canvas, 2021','pastel on paper, 2019'],
-                        src:['visual_art/summer_2021/doing_your_best.jpeg','visual_art/summer_2021/In_my_old_clothing.jpeg'],
-                        series:"drawings"};
+    const sketchbook = {  titles:[],
+                        descriptions:[],
+                        src:['visual_art/sketchbook/kaylen_2020.jpeg','visual_art/sketchbook/lili_rivera_2022.jpeg',
+                             'visual_art/sketchbook/lily_bite_2020.jpeg','visual_art/sketchbook/self_2021.jpeg',
+                             'visual_art/sketchbook/mush_2021.jpeg','visual_art/sketchbook/zoom_2020.jpeg'],
+                        series:"Sketchbook"};
 
     const summer2021 = { titles:['Doing your best','Things are living in the clothes that don\'t fit you anymore'],
                         descriptions:['Pastel on panel, 2021','Pastel on panel, 2021'],
                         src:['visual_art/summer_2021/doing_your_best.jpeg','visual_art/summer_2021/In_my_old_clothing.jpeg'],
                         series:"Pastel 2021"};
 
-    const test = { titles:['Doing your best','Things are living in the clothing that doesn\'t fit you anymore'],
-                        descriptions:['ink and pastel on paper, 2020','oil and gold leaf on canvas'],
-                        src:['visual_art/summer_2021/doing_your_best.jpeg','visual_art/summer_2021/In_my_old_clothing.jpeg'],
-                        series:"misc"};
+    const moose = { titles:['moose belly (a gift for lily)'],
+                        descriptions:['oil, imitation gold on canvas, 2020'],
+                        src:['visual_art/moose/downscaled_moose_belly.png'],
+                        series:"Moose"};
 
     const caustics = { titles:['Bathroom','Bathroom','Bottles','Water','Connecticut','Bottles','Hyde Park','Connecticut','Berkeley','Connecticut','Berkeley','Connecticut','Hyde Park','Emeryville','Connecticut','Connecticut','San Francisco','Emeryville Apartment Mailbox'],
                         descriptions:['Photograph, 2022','Photograph, 2022','Photograph, 2022','Photograph, 2020','Photograph, 2022','Photograph, 2022','Photograph, 2022','Photograph, 2022','Photograph, 2021','Photograph, 2022','Photograph, 2022','Photograph, 2023','Photograph, 2022','Photograph, 2022','Photograph, 2023','Photograph, 2023'],
                         src:['visual_art/caustics/bathroom1.jpg','visual_art/caustics/bathroom5.jpg','visual_art/caustics/countertop.jpg','visual_art/caustics/creekcar.jpg'
                         ,'visual_art/caustics/diagonal_line.jpeg','visual_art/caustics/garlic5.jpg','visual_art/caustics/hyde_park_apt.jpg','visual_art/caustics/doorlight.jpg'
                         ,'visual_art/caustics/light.jpg','visual_art/caustics/light1.jpg','visual_art/caustics/light2.jpg','visual_art/caustics/light3.jpg','visual_art/caustics/light4.jpg'
-                        ,'visual_art/caustics/shadow2.jpeg','visual_art/caustics/smoke_detector.jpg','visual_art/caustics/stars.jpg','visual_art/caustics/window_trick.jpg','visual_art/caustics/mailbox_2.jpg'],
+                        ,'visual_art/caustics/shadow2.jpeg','visual_art/caustics/smoke_detector.jpg','visual_art/caustics/stars.jpg','visual_art/caustics/window_trick.jpg','visual_art/caustics/mailbox_2.jpg',
+                        'visual_art/caustics/berkeley.jpeg','visual_art/caustics/emeryville_1.jpeg','visual_art/caustics/claremont.jpeg','visual_art/caustics/oakland_1.jpeg','visual_art/caustics/oakland_2.jpeg'],
                         series:"Caustics",
                         date:"jan 2020 - ongoing"};
+    
 
-    const galleries = [drawings,summer2021,test,caustics];
+    const galleries = [moose,summer2021,caustics,sketchbook];
 
     let currentGallery = 0;
     //toggles a full-size version of the image, which also blurs everything else
@@ -112,12 +116,17 @@
 
     //this one loads description text when the big image is loaded
     function loadImageText(gallery,which){
-        document.getElementById("image_title").innerText = galleries[gallery].titles[which];
-        document.getElementById("image_description").innerText = galleries[gallery].descriptions[which];
+        //if there is a title
+        if(galleries[gallery].titles[which])
+            document.getElementById("image_title").innerText = galleries[gallery].titles[which];
+        //and if there's text
+        if(galleries[gallery].descriptions[which])
+            document.getElementById("image_description").innerText = galleries[gallery].descriptions[which];
     }
     // loading and clearing the series title
     function loadSeriesTitle(title){
-        document.getElementById("gallery_text").innerText = title;
+        if(title)
+            document.getElementById("gallery_text").innerText = title;
     }
     function clearSeriesTitle(){
         document.getElementById("gallery_text").innerText = '';
@@ -190,10 +199,10 @@
         </div>
         <div id = "menu">
             <p onclick = "enableHomeImage()" id = "home">Home</p>
-            <p onclick = "loadGallery(0)">Paintings</p>
+            <p onclick = "loadGallery(0)">Moose</p>
             <p onclick = "loadGallery(1)">Pastel 2021</p>
-            <p onclick = "loadGallery(2)">Photographs</p>
-            <p onclick = "loadGallery(3)">Caustics</p>
+            <p onclick = "loadGallery(2)">Caustics</p>
+            <p onclick = "loadGallery(3)">Sketchbook</p>
             <a href = "about.html">About</a><br><br>
             <a href = "index.html">More</a>
         </div>

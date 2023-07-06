@@ -1,31 +1,14 @@
 body{
-    background-color:rgb(143, 143, 139);
-}
-/* link back to main page */
-#menu a{
-    /*using vw units keeps the relative font size constant ;)*/
-    color: rgba(100, 100, 100);
-    text-decoration: none;
-    position    :   relative;
-    font-size   :   10pt;
-    margin-left      : 2%;
-    margin-top      : 10%;
-}
-#menu a:hover{
-    /*using vw units keeps the relative font size constant ;)*/
-    color: rgba(0,0,0);
-}
-#menu h1{
-    color: rgba(80, 80, 80);
-    text-decoration: none;
-    position    :   relative;
-    font-size   :   10pt;
-    font-style  : italic;
-    font-weight: lighter;
-    margin-left      : 2%;
-    /* margin-top      : 2%; */
+    background-color:rgb(235,255,255)
 }
 
+#main_container{
+    width:80%;
+    max-width:800px;
+    display:block;
+    margin:auto;
+    margin-top:100px;
+}
 /* Title of page */
 /* rn it's "Research Into Gentrification in the Bay Area"*/
 #title h1{
@@ -46,44 +29,30 @@ body{
     font-style  : italic;
     margin: 1px;
 }
+.center_image{
+    width:60%;
+    margin:auto;
+    display:block;
+    /* padding:10px; */
+}
 
 /* 'abstract' that's right below the title */
-#abstract p{
-    color: rgba(0, 0, 0);
-    text-decoration: none;
-    position    :   relative;
+#abstract{
+    /* border:solid; */
+    width:80%;
+    display:block;
+    margin:auto;
     font-size   :   12pt;
-    /* text-align  : center; */
-    font-style  : bold;
-    margin : 10%;
-    text-indent: 5%;
+    text-indent: 40px;
+    padding:40px;
 }
+
 
 #map{
-    margin-left: 5%;
-    align-items: center;
-    /* max-width: 800px; */
-}
-
-/* link to fullscreen version*/
-#fullscreen_link a{
-    color: rgba(80, 80, 80);
-    position    :   relative;
-    font-size   :   12pt;
-    display: inline;
-    text-indent : 40px; 
-    text-align: center;
-
-}
-#fullscreen_link p{
-    color: rgba(80, 80, 80);
-    font-size   :   12pt;
-    display:inline;
-    text-indent : 40px; 
-    margin-left: 5%;
-    text-align: center;
-
-
+    width:60%;
+    height:60%;
+    display:block;
+    margin:auto;
 }
 
 /* Chapter 2*/
