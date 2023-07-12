@@ -14,7 +14,7 @@ let zAngle;
 let canvas;
 
 function setup(){
-  canvas = createCanvas(windowWidth, windowHeight);
+  canvas = createCanvas(500,500);
   //every time the canvas is pressed, it'll try and request access
   canvas.mousePressed(requestAccess);
   pallette = floor(random(0,5));
@@ -41,7 +41,7 @@ function initFlock(){
 
 //resizes canvas when the window is changed
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+  // resizeCanvas(windowWidth, windowHeight);
   background(0);
   // initFlock();
 }

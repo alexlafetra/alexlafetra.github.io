@@ -41,8 +41,8 @@ body {
 /* links */
 #center_index a{
     fill:rgb(255, 255, 255);
-    /* font-size: 27px; */
-    font-size: 31.5px;
+    font-size: 29.55px;
+    /* font-size: 31.5px; */
     /* font-size: 5vw; */
     transition: 0.2s;
 }

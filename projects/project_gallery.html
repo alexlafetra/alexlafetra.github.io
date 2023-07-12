@@ -1,37 +1,195 @@
 <!DOCTYPE html>
 <html>
-<!-- this page needs to display pics and titles (that you can click) for a bunch of sites-->
-<!-- also, subtitle should fade in on top of each pic -->
 <head>
 <meta charset="utf-8">
 <title>Alex LaFetra</title>
 <link href="project_gallery.css" rel="stylesheet">
+<script>
+    const stepchild = {
+        icon:"stepchild_2.png",
+        date:"5.27.22 - ongoing",
+        title:"step/child",
+        subtitle:"A handheld midi sequencer, with a graphical OS",
+        link_target:"_top",
+        href:"../blogs/stepchild.html"
+    }
+    const childOSInterface = {
+        icon:"childOSinterface.png",
+        date:"10.10.23",
+        title:"childOS Interface",
+        subtitle:"A java application for interfacing between the step/child and a PC. This application uses Processing's java libraries to create a graphical interface (emoji icons included, ofc), Serial and MIDI libraries to link and send/receive MIDI files to and from the step/child over USB, and custom scripts for converting .stpchld files to MIDI files for use in a DAW. Also supports flashing firmware updates and custom firmware to the step/child via USB.",
+        link_target:"_top",
+        href:"childOS/childOSInterface.html"
+    }
+
+    const tamo = {
+        icon:"tamo.png",
+        date:"",
+        title:"Tamo",
+        subtitle:"A homebuilt tamagotchi",
+        link_target:"",
+        href: "tamo/tamo.html"
+    }
+
+    const bubbleLetters = {
+        icon:"3d_print.png",
+        date:"",
+        title:"Bubble Letters",
+        subtitle:"Experimenting with Blender and a 3D printer",
+        link_target:"_top",
+        href: "tamo/tamo.html"
+    }
+
+    const murmur = {
+        icon:"murmur.png",
+        date:"2.11.23",
+        title:"Murmur",
+        subtitle:"Building a granular synth that runs on a flocking sim.",
+        link_target:"_top",
+        href: "murmur/murmur.html"
+    }
+
+    const web_murmur = {
+        icon:"web_murmur.png",
+        date:"6.30.23 - ongoing",
+        title:"Web Murmur",
+        subtitle:"Porting murmur to the web with p5.js",
+        link_target:"_top",
+        href: "murmur/murmur.html"
+    }
+
+    const ink = {
+        icon:"ink.png",
+        date:"3.9.23",
+        title:"Ink Sim",
+        subtitle:"Messing around",
+        link_target:"",
+        href: "ink/ink.html"
+    }
+
+    const cellSim = {
+        icon:"cells.png",
+        date:"3.10.23",
+        title:"Cell Sim",
+        subtitle:"Messing around",
+        link_target:"",
+        href: "cells/cells.html"
+    }
+
+    const tissueAnim = {
+        icon:"tissueMigration.png",
+        date:"",
+        title:"Tissue Migration",
+        subtitle:"Hand-animation and musical score depicting epithelial tissue migration",
+        link_target:"",
+        href: "tissuemigrationanimation/tissueMigration.html"
+    }
+
+    const cellMigration = {
+        icon:"cellMigration.png",
+        date:"",
+        title:"Modelling Cell Migration",
+        subtitle:"Simple exploration of cell migration models",
+        link_target:"_top",
+        href: "../digital_work/cell_migration.html"
+    }
+
+    const boids = {
+        icon:"boids.png",
+        date:"",
+        title:"Boids",
+        subtitle:"",
+        link_target:"",
+        href: "boids/boids.html"
+    }
+
+    const motorcycle = {
+        icon:"motorcycle.png",
+        date:"ongoing",
+        title:"Electric Motorcycle Display",
+        subtitle:"",
+        link_target:"",
+        href: "boids/boids.html"
+    }
+
+    const projectList = [stepchild,childOSInterface,tamo,bubbleLetters,murmur,web_murmur,ink,cellSim, tissueAnim,cellMigration,boids,motorcycle];
+
+    function clearAllProjects(){
+        document.getElementById("container").innerHTML = "";
+    }
+    function addProject(proj){
+        let date = document.createElement('p');
+        date.className = "date";
+        date.innerHTML = proj.date;
+
+        let title = document.createElement('p');
+        title.className = "title";
+        title.innerHTML = proj.title;
+
+        let subtitle = document.createElement('p');
+        subtitle.className = "subtitle";
+        subtitle.innerHTML = proj.subtitle;
+
+        // appending to description div
+        let desc = document.createElement('div');
+        desc.className = "description";
+        desc.appendChild(date);
+        desc.appendChild(title);
+        desc.appendChild(subtitle);
+
+        // appending desc+image to icon div
+        let img = document.createElement('img');
+        img.src = "thumbnails/"+proj.icon;
+        let div = document.createElement('div');
+        div.className = "icon";
+        div.appendChild(img);
+        div.appendChild(desc);
+        
+        // appending everything to <a> tag
+        let link = document.createElement('a');
+        link.target = proj.link_target;
+        link.href = proj.href;
+        link.appendChild(div);
+
+        //appending everything to "container" div
+        document.getElementById("container").appendChild(link);
+    }
+    function buildProjects(projList){
+        for(proj of projList){
+            addProject(proj);
+        }
+    }
+</script>
 </head>
 <body>
     <div id = "container">
         <!-- stepchild -->
-        <a href = "../blogs/stepchild.html" target = "_top">
+        <!-- <a href = "../blogs/stepchild.html" target = "_top">
             <div class = "icon">
                 <img src = "thumbnails/stepchild_2.png">              
                 <div class = "description">
-                    <p class = "date">5.27.23</p>
-                    <p class = "title">Stepchild</p>
+                    <p class = "date">5.27.22 - ongoing</p>
+                    <p class = "title">step/child</p>
                     <p class = "subtitle">A handheld midi sequencer, with a graphical OS</p>
                 </div>
             </div>
-        </a>
+        </a> -->
         <!-- childOSInterface -->
-        <a href = "childOS/childOSInterface.html" target = "_top">
+        <!-- <a href = "childOS/childOSInterface.html" target = "_top">
         <div class = "icon">
             <img src = "thumbnails/childOSinterface.png">
             <div class = "description">
-                <p class = "title">ChildOS Filewriter</p>
-                <p class = "subtitle">Standalone java interface for porting MIDI projects to and from the stepchild</p>
+                <p class = "title">childOS Interface</p>
+                <p class = "subtitle">A java application for interfacing between the step/child and a PC.
+                     This application uses Processing's java libraries to create a graphical interface (emoji icons included, ofc), 
+                     Serial and MIDI libraries to link and send/receive MIDI files to and from the step/child over USB, and custom scripts for converting
+                     .stpchld files to MIDI files for use in a DAW. Also supports flashing firmware updates and custom firmware to the step/child via USB.
+                </p>
             </div>
         </div>
-        </a>
+        </a> -->
         <!-- tamo -->
-        <a href = "tamo/tamo.html">
+        <!-- <a href = "tamo/tamo.html">
             <div class = "icon">
                 <img src = "thumbnails/tamo.png">
                 <div class = "description">
@@ -39,9 +197,9 @@
                     <p class = "subtitle">Handmaking a tamagotchi</p>
                 </div>
             </div>
-        </a>
+        </a> -->
         <!-- 3d printer -->
-        <a href = "../digital_work/ink/ink_people.html" target = "_top">
+        <!-- <a href = "../digital_work/ink/ink_people.html" target = "_top">
         <div class = "icon">
             <img src = "thumbnails/3d_print.png">
             <div class = "description">
@@ -49,9 +207,9 @@
                 <p class = "subtitle">Making something with blender and a 3D printer</p>
             </div>
         </div>
-        </a>
+        </a> -->
         <!-- murmur -->
-        <a href = "murmur/murmur.html" target = "_top">
+        <!-- <a href = "murmur/murmur.html" target = "_top">
         <div class = "icon">
             <img src = "thumbnails/murmur.png">
             <div class = "description">
@@ -59,9 +217,9 @@
                 <p class = "subtitle">A granular sampler instrument (?) inspired by flocking behavior</p>
             </div>
         </div>
-        </a>
+        </a> -->
         <!-- murmur -->
-        <a href = "murmur/murmur.html" target = "_top">
+        <!-- <a href = "murmur/murmur.html" target = "_top">
             <div class = "icon">
                 <img src = "thumbnails/web_murmur.png">
                 <div class = "description">
@@ -69,9 +227,9 @@
                     <p class = "subtitle">Porting murmur to the web with p5.js</p>
                 </div>
             </div>
-            </a>
+        </a> -->
         <!-- ink -->
-        <a href = "ink/ink.html">
+        <!-- <a href = "ink/ink.html">
         <div class = "icon">
                 <img src = "thumbnails/ink.png">
             <div class = "description">
@@ -79,9 +237,9 @@
                 <p class = "subtitle">Messing around with blend colormodes and surface tension</p>
             </div>
         </div>
-        </a>
+        </a> -->
         <!-- cell sim -->
-        <a href = "cells/cells.html">
+        <!-- <a href = "cells/cells.html">
         <div class = "icon">
             <img src = "thumbnails/cells.png">
             <div class = "description">
@@ -89,9 +247,9 @@
                 <p class = "subtitle">Playing around with cell membrane simulations</p>
             </div>
         </div>
-        </a>
+        </a> -->
         <!-- tissue animation -->
-        <a href = "tissuemigrationanimation/tissueMigration.html">
+        <!-- <a href = "tissuemigrationanimation/tissueMigration.html">
         <div class = "icon">
             <img src = "thumbnails/tissueMigration.png">
             <div class = "description">
@@ -99,9 +257,9 @@
                 <p class = "subtitle">A hand-animation of epithelial cells undergoing migration</p>
             </div>
         </div>
-        </a>
+        </a> -->
         <!-- cell migration sim -->
-        <a href = "../digital_work/cell_migration.html" target = "_top">
+        <!-- <a href = "../digital_work/cell_migration.html" target = "_top">
         <div class = "icon">
             <img src = "thumbnails/cellMigration.png">
             <div class = "description">
@@ -109,9 +267,9 @@
                 <p class = "subtitle">Low-res explorations of simple cell migration</p>
             </div>
         </div>
-        </a>
+        </a> -->
         <!-- boids  -->
-        <a href = "boids/boids.html" target = "_top">
+        <!-- <a href = "boids/boids.html">
         <div class = "icon">
             <img src = "thumbnails/boids.png">
             <div class = "description">
@@ -119,9 +277,9 @@
                 <p class = "subtitle">Experiments with flocking behavior</p>
             </div>
         </div>
-        </a>
+        </a> -->
                 <!-- motorcycle -->
-        <a href = "../digital_work/ink/ink_people.html" target = "_top">
+        <!-- <a href = "../digital_work/ink/ink_people.html" target = "_top">
         <div class = "icon">
             <img src = "thumbnails/motorcycle.png">
             <div class = "description">
@@ -129,7 +287,11 @@
                 <p class = "subtitle"></p>
             </div>
         </div>
-        </a>
+        </a> -->
     </div>
 </body>
+<script>
+    // clearAllProjects();
+    buildProjects(projectList);
+</script>
 </html>
