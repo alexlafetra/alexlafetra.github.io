@@ -27,10 +27,10 @@ canvas{
 }
 /* title of page '/lately' */
 #title{
-    width:fit-content;
-    display:block;
-    margin:0;
-    max-width:40%;
+    /* width:fit-content; */
+    /* display:block; */
+    /* margin:0; */
+    /* max-width:20%; */
 }
 #title a{
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
