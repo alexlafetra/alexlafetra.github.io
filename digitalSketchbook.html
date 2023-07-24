@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Alex LaFetra</title>
+    <link href="styles/digitalSketchbook.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script language="javascript" type="text/javascript" src="scripts/libraries/p5.min.js"></script>
+    <script>
+        //objects storing the sketches
+        const paperWaves = {
+            title:"paper waves",
+            url:["paper_waves/paper_waves_small.js","paper_waves/shader.js"]
+        };
+        const O0 = {
+            title:"O0",
+            url:["O0/loop_shader.js","O0/shader.js"]
+        }
+        const sketches = [paperWaves,O0];
+
+        function loadSketch(sketch){
+            let div = document.getElementById("sketches");
+            for(let url of sketch.url){
+                let script = document.createElement("script");
+                let helper = document.createElement("span");
+                helper.class = "vertical_align_helper";
+                script.language = "javascript";
+                script.type = "text/javascript";
+                script.src = "digitalSketches/"+url;
+                div.appendChild(script);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id = "menu">
+    </div>
+</body>
+<div id = "sketches">
+</div>
+<script>loadSketch(O0);</script>
+<span class = "vertical_align_helper"></span>
+</html>
