@@ -1,0 +1,5 @@
+tbd:
+
+- editable palette steps
+- quantize colors to twelve-tone-equal-temperment
+- cleaner UI

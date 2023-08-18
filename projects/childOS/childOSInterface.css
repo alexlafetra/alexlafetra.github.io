@@ -47,12 +47,29 @@ html{
     height:100%;
     right:230px;
     top:30px;
-    position:absolute;
+    /* position:absolute; */
     display:block;
 }
 .gif img{
+    width:200px;
     /* position:absolute;
     display:block; */
 }
 #CD{
+}
+
+.screenshot{
+    margin:auto;
+    display:block;
+    width:500px;
+}
+
+#info_text{
+    max-width:600px;
+    margin:auto;
+    display:block;
+}
+.text{
+    font-size:13pt;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
