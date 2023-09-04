@@ -1,7 +1,7 @@
 html{
     font-size       : 20px;
     font-family     :'Courier New', Courier, monospace;
-    background-color: #ffffff;
+    background-color: black;
     /* background-image: url('https://alexlafetra.github.io/images/backgrounds/background1.jpg'); */
 }
 
@@ -23,7 +23,7 @@ body {
 #menu{
     display: block;
     position:absolute;
-    /* width: 0; */
+    width: 100px;
     float:left;
     z-index: 2;
 
@@ -39,13 +39,11 @@ body {
 #menu a{
     display:block;
     width:100%;
-   /* right:0; */
-    /* margin:auto; */
 
     color:rgb(0, 0, 0);
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    /* font-size: 83px; */
-    font-size:8.85vh;
+    font-size: 75px;
+    /* font-size:8.85vh; */
     font-weight:900;
     font-stretch: 250%;
     writing-mode:vertical-rl;
@@ -80,32 +78,9 @@ body {
     display:block;
     /* max-width: 50%; */
     /* object-fit: cover; */
-    z-index:1;
+    z-index:0;
 }
-#images video{
-    display:block;
-    bottom:0;
-    position:absolute;
-    max-height:100%;
-    max-width:100%;
-    /* object-fit: cover; */
-    z-index: 0;
-}
-/* big stepchild logo */
-#stepchild{
-    font-family:'Courier New', Courier, monospace;
-    color:#000000;
-    font-size: 12px;
-    font-weight:bolder;
-    white-space: pre;
-    transition:0.3s;
-    /* text-shadow: rgb(255, 0, 0) 1px 1px 8px, rgb(255, 0, 0) 1px 0 5px; */
-}
-#info{
-    float: right;
-    right:0%;
-    /* width:100%; */
-}
+
 /* menu class--for each popup */
 .menu{
     float: right;
@@ -134,32 +109,6 @@ body {
 .menu h1{
     text-align:center;
 }
-#what{
-    background-color: #ffffff;
-}
-#why{
-    background-color: #ffffff;
-}
-#where{
-    background-color: #ffea00;
-}
-#store{
-    background-color: #ff0000;
-}
-#github{
-    background-color: #0033ff;
-}
-#blog{
-    background-color: #ff6f00;
-}
-
-.video{
-    display:block;
-    max-width:100%;
-    max-height:90%;
-    margin:auto;
-    /* max-width:100%; */
-}
 
 /* scrolling shit */
 #scroll-container {
@@ -169,14 +118,15 @@ body {
     right:0;
     height:100%;
     width:90px;
+    z-index:2;
 
     border: 0;
-    border-color: #000000;
+    border-color: #ffffff;
     border-left:3px;
     /* background-color: #ffffffff; */
 
     /* overflow: hidden; */
-    color:rgb(0, 0, 0);
+    color:rgb(255, 255, 255);
     writing-mode:vertical-rl;
     text-orientation:sideways-right;
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -185,7 +135,6 @@ body {
     white-space:nowrap;
     animation: scrollText 20s infinite linear;
     transition: all 1s ease;
-
 }
 #scroll_text{
     display:block;
@@ -210,13 +159,13 @@ to { transform: translateY(-320%); }
 #img2{
     left:100px;
     top:100px;
-    /* height:30%; */
     width:40%;
 }
 
 canvas{
-    /* z-index:2; */
-    position:absolute;
+    display:block;
+    margin:auto;
+    z-index:10;
 }
 iframe{
     width:100%;

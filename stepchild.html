@@ -8,96 +8,27 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script language="javascript" type="text/javascript" src="scripts/libraries/p5.min.js"></script>
-    <script language="javascript" type="text/javascript" src="scripts/stepchild_3d_model.js"></script>
-    <script>
-        let menuCol = true;
-        let centerStart = "90px";
-        let centerEnd = "80px";
-        function setCenterColumn(){
-            document.getElementById("images").style.right = centerEnd;
-            document.getElementById("images").style.left = centerStart;
-        }
-        //opening and closing menu column
-        function toggleMenuColumn(){
-            menuCol = !menuCol;
-            if(menuCol)
-                showMenuColumn();
-            else
-                hideMenuColumn();
-        }
-        function showMenuColumn(){
-            document.getElementById("menu").style.width = "150px";
-            document.getElementById("menu").style.left = "0px";
-            centerStart = "100px";
-            setCenterColumn();
-        }
-        function hideMenuColumn(){
-            let menu = document.getElementById("menu");
-            menu.style.width = "0";
-            centerStart = "0px";
-            setCenterColumn();
-        }
-        // opening and closing menus
-        let activeMenu = 0;
-        function closeMenus(){
-            let menus = document.getElementsByClassName("menu");
-            for(let i = 0; i<menus.length; i++){
-                menus[i].style.width = "0";
-            }
-        }
-        function openMenu(which){
-            closeMenus();
-            let width = "90%";
-            //if you're trying to open a menu that was open, just return
-            if(which == activeMenu){
-                activeMenu = 0;
-                centerEnd = "90px";
-                setCenterColumn();
-                document.getElementById("images").style.visibility = "visible";
-                return;
-            }
-            // let menus = document.getElementsByClassName("menu");
-            // menus[which-1].style.width  = width;
-            document.getElementById("menuFrame").style.width = width;
-            document.getElementById("menuFrame").style.left = "100px";
-            document.getElementById("menuFrame").style.right= "0px";
-            document.getElementById("images").style.visibility = "hidden";
-
-            activeMenu = which;
-            centerEnd = width;
-            setCenterColumn();
-        }
-    </script>
+    <script language="javascript" type="text/javascript" src="scripts/stl_testing.js"></script>
 </head>
 <body>
     <!-- menu options that are shown when icon is hovered -->
     <div class = "column" id = "menu">
         <div id = "options">
-            <a class = "menuLink" href = "stepchild_site/what.html" target = "iframe" onclick = "openMenu(1)">what</a>
-            <a class = "menuLink" onclick = "openMenu(2)">childOS</p>
-            <a class = "menuLink" onclick = "openMenu(3)">store</p>
-            <a class = "menuLink" href = "blog_posts/3.7.23.html" target = "iframe" onclick = "openMenu(4)">blog </a>
-            <a class = "menuLink" href = "https://github.com/alexlafetra/childOSInterface">github </a>
+            <a class = "menuLink" href = "stepchild_site/what.html" target = "iframe" onclick = "openMenu(1)">About</a>
+            <a class = "menuLink" onclick = "openMenu(2)">Kit</p>
+            <a class = "menuLink" onclick = "openMenu(3)">ChildOS</p>
+            <a class = "menuLink" href = "blogs/stepchild.html" target = "iframe" onclick = "openMenu(4)">Updates</a>
+            <a class = "menuLink" href = "https://github.com/alexlafetra/childOSInterface">Github </a>
         </div>
     </div>
-    <div class = "column" id = "info">
-        <iframe class  = "menu" id = "menuFrame" name = "iframe"></iframe>
-    </div>
     <div class = "column" id = "images">
-        <h1>what is this?</h1>
-        <img id = "img1" src = "blog_posts/media/images/IMG_7796.jpeg">
-        <img id = "img2" src = "blog_posts/media/images/IMG_4541.jpeg">
-
-        <!-- <video autoplay muted loop src = "/Users/alex/Desktop/introscreen.mov"></video> -->
-
-        <!-- <img src = "images/stepchild/board.jpeg">
-        <img src = "images/stepchild/v0.1.jpeg"> -->
+        <!-- <img id = "img1" src = "images/stepchild/board.jpeg">
+        <img id = "img2" src = "images/stepchild/v0.1.jpeg"> -->
         <!-- scrolling ticker -->
         <div class = "column" id="scroll-container">
             <div id="scroll-text">midi sequencer music computer silent instrument pocket composer compact beat machine quiet thing midi sequencer music computer silent instrument pocket composer compact beat machine quiet thing                 
             <div>
         </div>
-        
     </div>
 </body>
 <script>
