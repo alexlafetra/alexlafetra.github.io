@@ -23,7 +23,8 @@ body {
 #menu{
     display: block;
     position:absolute;
-    width: 100px;
+    /* width: 100px; */
+    width:10vh;
     float:left;
     z-index: 1;
 
@@ -42,8 +43,8 @@ body {
 
     color:rgb(0, 0, 0);
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: 75px;
-    /* font-size:8.85vh; */
+    /* font-size: 75px; */
+    font-size:8.85vh;
     font-weight:900;
     font-stretch: 250%;
     writing-mode:vertical-rl;
@@ -66,8 +67,8 @@ body {
     position:absolute;
     margin:0;
     padding:0;
-    left:90px;
-    right:90px;
+    left:10vh;
+    right:10vh;
     /* overflow:auto; */
     overflow:hidden;
     transition: 0.2s;
@@ -81,14 +82,19 @@ body {
 #boxHolder{
     position:absolute;
     display:block;
+    left:0px;
+    top:0px;
     width:100%;
     height:100%;
+    margin:0;
+    border:0;
+    padding:0;
 }
 .menuBox{
     float:right;
     display:block;
     width:50%;
-    height:33%;
+    height:33.33%;
     /* margin:auto; */
     /* margin:10px; */
     /* for some reason, this is necessary to make the canvas click-thru-able */
@@ -124,7 +130,8 @@ body {
     top:0;
     right:0;
     height:100%;
-    width:90px;
+    /* width:90px; */
+    width:10vh;
     z-index:1;
 
     border: 0;
@@ -137,7 +144,8 @@ body {
     writing-mode:vertical-rl;
     text-orientation:sideways-right;
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: 80px;
+    /* font-size: 80px; */
+    font-size:8.85vh;
     font-weight:900;
     white-space:nowrap;
     animation: scrollText 20s infinite linear;
