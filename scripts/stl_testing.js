@@ -14,14 +14,15 @@ function preload() {
 }
 
 function setup() {
-  size = windowWidth<maxWidth?windowWidth:maxWidth;
+  // size = windowWidth<maxWidth?windowWidth:maxWidth;
+  size = windowWidth;
   canv = createCanvas(size, windowHeight, WEBGL);
 }
 
 function draw() {
 //   background(0);
   canv.clear();
-  scale(size*4/maxWidth);
+  scale((size>maxWidth?maxWidth:size)*3/maxWidth);
 
   rotateX(frameCount*0.01);
   rotateY(frameCount*0.01);
@@ -31,6 +32,7 @@ function draw() {
 }
 
 function windowResized(){
-  size = windowWidth<maxWidth?windowWidth:maxWidth;
+  // size = windowWidth<maxWidth?windowWidth:maxWidth;
+  size = windowWidth;
   resizeCanvas(size,windowHeight);
 }
