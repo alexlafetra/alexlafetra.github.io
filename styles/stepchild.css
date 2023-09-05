@@ -87,14 +87,17 @@ body {
 .menuBox{
     float:right;
     display:block;
-    width:48%;
+    width:50%;
     height:33%;
     /* margin:auto; */
-    margin:10px;
+    /* margin:10px; */
     /* for some reason, this is necessary to make the canvas click-thru-able */
     z-index:-1;
     /* background-color:#0033ff; */
     text-align:center;
+}
+.menuBox:hover{
+    opacity:1;
 }
 
 .menuBox img{
@@ -102,13 +105,9 @@ body {
     width:100%;
     height:100%;
     transition:0.1s;
-    object-fit: contain;
+    /* object-fit: contain; */
+    object-fit: cover;
 }
-
-.menuBox img:hover{
-    opacity:80%;
-}
-
 .menuBox p{
     position:absolute;
     display:block;
