@@ -1,19 +1,16 @@
 html{
     font-size       : 20px;
     font-family     :'Courier New', Courier, monospace;
-    background-color: black;
+    background-color: white;
     /* background-color:rgb(100, 100, 0); */
 }
 
 body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
-#about_body{
-    background-image:url('/Users/alex/Documents/Arduino/stepchild/images/stepchild.gif');
-}
 .column{
     height:100vh;
     transition: 0.5s;
@@ -24,12 +21,24 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 90vh;
 }
 .single_centered_div img{
     max-width:80%;
     max-height:80%;
 }
+
+.ascii{
+    font-family:'Courier New', Courier, monospace;
+    white-space:pre;
+    white-space-collapse: preserve-spaces;
+}
+
+#ascii_title{
+    font-size:2vw;
+    position:absolute;
+}
+
 #options{
     top:0%;
 }
@@ -40,11 +49,12 @@ body {
     position:absolute;
     /* width: 100px; */
     width:10vh;
+    height:100vh;
     float:left;
     z-index: 1;
 
     background: #ff6200;
-    border: solid;
+    /* border: solid; */
     border-width: 0;
     border-right-width: 2px;
 
@@ -56,7 +66,8 @@ body {
     display:block;
     width:100%;
 
-    color:rgb(0, 0, 0);
+    /* color:rgb(0, 0, 0); */
+    color:white;
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     /* font-size: 75px; */
     font-size:8.85vh;
@@ -83,7 +94,7 @@ body {
     margin:0;
     padding:0;
     left:10vh;
-    right:10vh;
+    right:5vh;
     /* overflow:auto; */
     overflow:hidden;
     transition: 0.2s;
@@ -146,21 +157,16 @@ body {
     right:0;
     height:100%;
     /* width:90px; */
-    width:10vh;
+    /* width:3vh; */
     z-index:1;
 
     border: 0;
-    border-color: #ffffff;
-    border-left:3px;
-    /* background-color: #ffffffff; */
 
-    /* overflow: hidden; */
-    color:rgb(255, 255, 255);
     writing-mode:vertical-rl;
     text-orientation:sideways-right;
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    /* font-size: 80px; */
-    font-size:8.85vh;
+    /* font-size:8.85vh; */
+    font-size:5vh;
     font-weight:900;
     white-space:nowrap;
     animation: scrollText 20s infinite linear;
