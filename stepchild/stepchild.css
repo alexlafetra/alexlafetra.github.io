@@ -16,29 +16,6 @@ body {
     transition: 0.5s;
 }
 
-/* this is for hold */
-.single_centered_div{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 90vh;
-}
-.single_centered_div img{
-    max-width:80%;
-    max-height:80%;
-}
-
-.ascii{
-    font-family:'Courier New', Courier, monospace;
-    white-space:pre;
-    white-space-collapse: preserve-spaces;
-}
-
-#ascii_title{
-    font-size:2vw;
-    position:absolute;
-}
-
 #options{
     top:0%;
 }
@@ -87,15 +64,13 @@ body {
 }
 /* middle image column*/
 #mainColumn{
-    /* background-color:#000000; */
     float:right;
     display:block;
     position:absolute;
     margin:0;
     padding:0;
     left:10vh;
-    right:5vh;
-    /* overflow:auto; */
+    right:40px;
     overflow:hidden;
     transition: 0.2s;
     transition-timing-function:ease-in-out;
@@ -150,14 +125,12 @@ body {
 }
 
 /* scrolling shit */
-#scroll-container {
+#scroll_container {
     display:block;
     position:fixed;
     top:0;
     right:0;
     height:100%;
-    /* width:90px; */
-    /* width:3vh; */
     z-index:1;
 
     border: 0;
@@ -166,7 +139,7 @@ body {
     text-orientation:sideways-right;
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     /* font-size:8.85vh; */
-    font-size:5vh;
+    font-size:40px;
     font-weight:900;
     white-space:nowrap;
     animation: scrollText 20s infinite linear;
@@ -186,10 +159,6 @@ from   { transform: translateY(0%); }
 to { transform: translateY(-320%); }
 }
 
-/* main{
-    display:block;
-    margin:auto;
-} */
 canvas {
     position: absolute;
     pointer-events: none;
@@ -202,4 +171,50 @@ canvas {
     border:0;
     padding:0;
     margin:0;
+}
+
+#info_section{
+    font-family: 'Varela Round', sans-serif;
+    font-size:20px;
+    background-color:white;
+    margin: 45vh auto;
+    width:80%;
+    /* transition:0.001s; */
+}
+#info_section img{
+    display:block;
+    margin:auto;
+}
+
+/* this is for hold */
+.single_centered_div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position:sticky;
+    top: 0px;
+    margin:auto;
+    margin-top:20vh; /*Setting the starting offset*/
+    max-width:800px;
+    min-width:300px;
+    transition:0.6s;
+}
+.single_centered_div img{
+    max-width:100%;
+}
+
+.ascii{
+    font-family:'Courier New', Courier, monospace;
+    white-space:pre;
+    white-space-collapse: preserve-spaces;
+}
+
+#ascii_title{
+    font-size:1vw;
+    position:absolute;
+}
+
+.random_icon{
+    position:fixed;
+    z-index: -1;
 }

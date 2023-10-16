@@ -7,43 +7,84 @@
     <link href="stepchild.css" rel="stylesheet">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script language="javascript" type="text/javascript" src="../scripts/libraries/p5.min.js"></script>
-    <!-- <script language="javascript" type="text/javascript" src="stl_testing.js"></script> -->
+    <script>
+        function scaleHeader(){
+            window.addEventListener("scroll", (event) => {
+
+                //shrinking the stepchild icon once it's at the top
+                let scroll = this.scrollY;
+                let title =  document.getElementById("title");
+                let titleCoords = title.getBoundingClientRect();
+                if(titleCoords.top<=0){
+                  title.style.width ="300px";
+                }
+                else if(titleCoords.bottom>=200){
+                    title.style.width ="800px";
+                }
+
+                //Cropping the info div once it's at the bottom of the icon
+                let info = document.getElementById("info_section");
+                let infoCoords = info.getBoundingClientRect();
+                if(infoCoords.top<titleCoords.bottom){
+                    info.style.clipPath =  "inset("+(titleCoords.bottom-infoCoords.top)+"px 0 0 0)";
+                }
+                else{
+                    info.style.clipPath =  "";
+                }
+            });
+        }
+        function popIcon(){
+            //get rid of all the icons
+            let icons = document.getElementsByClassName("random_icon");
+            for(let i of icons){
+                i.remove();
+            }
+            let numberOfIcons = 10*Math.random();
+            for(let i = 0; i<numberOfIcons; i++){
+                const newIcon = document.createElement("img");
+                let which = 2*Math.random();
+                if(which < 0.5){
+                    newIcon.src = "images/star_quiet.svg";
+                }
+                else{
+                    newIcon.src = "images/star.svg";
+                }
+                newIcon.style.top = window.innerHeight*Math.random()+"px";
+                newIcon.style.left = window.innerWidth*Math.random()+"px";
+                newIcon.style.width = 100*Math.random()+"px";
+                newIcon.style.height = newIcon.style.width;
+                newIcon.className = "random_icon";
+                document.getElementById("about_body").append(newIcon);
+            }
+        }
+    </script>
 </head>
 <body id = "about_body">
-    <div class = "single_centered_div">
-        <img id = "img1" src = "images/stepchild.gif">
-        <!-- <p id = "ascii_title" class = "ascii">
-             ________  ________  ________      ________  ________  ________  ________  ________  ________   ________  _______    _______ 
-            /        \/    /   \/        \    /        \/        \/        \/        \/        \/    /   \ /        \/       \ _/       \
-           /        _/         /         /   /        _/        _/         /         /         /         /_/       //        //         /
-           /       //         /        _/   /-        //       //        _/       __/       --/         //         /        //         / 
-           \_____// \___/____/\________/    \_______// \______/ \________/\______/  \________/\___/____/ \________/\________/\________/  
-        </p> -->
+    <div class = "single_centered_div" id = "title">
+        <img id = "img1" src = "images/stepchild.gif" onclick = "popIcon()">
         <p id = "ascii_title" class = "ascii">
-             ________         ______               __   _ __   __
-            /_  __/ /  ___   / __/ /____ ___  ____/ /  (_) /__/ /
-             / / / _ \/ -_) _\ \/ __/ -_) _ \/ __/ _ \/ / / _  / 
-            /_/ /_//_/\__/ /___/\__/\__/ .__/\__/_//_/_/_/\_,_/  
-                                      /_/                                    
+   ________  ________  ________      ________  ________  ________  ________  ________  ________   ________  _______    _______ 
+  /        \/    /   \/        \    /        \/        \/        \/        \/        \/    /   \ /        \/       \ _/       \
+ /        _/         /         /   /        _/        _/         /         /         /         /_/       //        //         /
+/       //         /        _/   /-        //       //        _/       __/       --/         //         /        //         / 
+\_____// \___/____/\________/    \_______// \______/ \________/\______/  \________/\___/____/ \________/\________/\________/  
         </p>
     </div>
-    <div id = "info_section">
-        The Stepchild is a graphical MIDI sequencer        The Stepchild is a graphical MIDI sequencer
-        The Stepchild is a graphical MIDI sequencer
-        The Stepchild is a graphical MIDI sequencer
-        The Stepchild is a graphical MIDI sequencer
-        The Stepchild is a graphical MIDI sequencer
-        The Stepchild is a graphical MIDI sequencer
-        The Stepchild is a graphical MIDI sequencer
-        The Stepchild is a graphical MIDI sequencer
-        The Stepchild is a graphical MIDI sequencer
-        The Stepchild is a graphical MIDI sequencer
-        The Stepchild is a graphical MIDI sequencer
-        The Stepchild is a graphical MIDI sequencer
-        The Stepchild is a graphical MIDI sequencer
-        The Stepchild is a graphical MIDI sequencer
+    <!-- <div id = "clip_div"> -->
+        <div id = "info_section">
+            boo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo boo
+            boo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo boo
+            boo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo boo
+            boo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo boo
+            boo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo boo
 
-    </div>
+            <img src = "/Users/alex/Desktop/Web things/alexlafetra.github.io/stepchild/images/exploded.png" width = "20%">
+        </div>
+    <!-- </div> -->
+    <script>
+        scaleHeader();
+        popIcon();
+        window.setInterval(popIcon,2000);
+    </script>
 </body>
 </html>
