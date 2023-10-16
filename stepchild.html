@@ -4,36 +4,25 @@
 <head>
     <meta charset="utf-8">
     <title>Alex LaFetra</title>
-    <link href="styles/stepchild.css" rel="stylesheet">
+    <link href="stepchild/stepchild.css" rel="stylesheet">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script language="javascript" type="text/javascript" src="scripts/libraries/p5.min.js"></script>
-    <script language="javascript" type="text/javascript" src="scripts/stl_testing.js"></script>
+    <!-- <script language="javascript" type="text/javascript" src="scripts/libraries/p5.min.js"></script> -->
+    <!-- <script language="javascript" type="text/javascript" src="scripts/stl_testing.js"></script> -->
 </head>
 <body>
     <!-- menu options that are shown when icon is hovered -->
     <div class = "column" id = "menu">
         <div id = "options">
-            <a class = "menuLink" href = "stepchild_site/what.html" target = "iframe" onclick = "openMenu(1)">About</a>
-            <a class = "menuLink" onclick = "openMenu(2)">Get</p>
+            <a class = "menuLink" href = "stepchild/homePage.html" target = "mainpage">About</a>
+            <a class = "menuLink" href = "stepchild/store.html" target = "mainpage">Get</p>
             <a class = "menuLink">Build</p>
-            <a class = "menuLink" onclick = "openMenu(3)">Manual</p>
-            <a class = "menuLink" href = "https://github.com/alexlafetra/childOSInterface">Github </a>
+            <a class = "menuLink" href = "https://github.com/alexlafetra/stepchild/blob/main/manual/manual.md">Manual</p>
+            <a class = "menuLink" href = "https://github.com/alexlafetra/stepchild">Github </a>
         </div>
     </div>
     <div class = "column" id = "mainColumn">
-        <!-- six boxes -->
-        <div id = "boxHolder">
-            <div class = "menuBox" id = "1"><a href = "about.html"><img id = "img1" src = "images/stepchild/board.jpeg"></a></div>
-            <div class = "menuBox" id = "2"><a href = "about.html"><img id = "img2" src = "images/stepchild/v0.1.jpeg"></a></div>
-            <div class = "menuBox" id = "3"><a href = "about.html"><img id = "img2" src = "images/stepchild/stepchild_assembly.jpg"></a></div>
-            <div class = "menuBox" id = "4"><a href = "about.html"><img id = "img1" src = "images/stepchild/stepchild_disassembled.jpg"></a></div>
-            <div class = "menuBox" id = "5"><a href = "about.html"><img id = "img1" src = "images/stepchild/board.jpeg"></a></div>
-            <div class = "menuBox" id = "6"><a href = "about.html"><img id = "img2" src = "images/stepchild/v0.1.jpeg"></a></div>
-        </div>
-        <!-- <img id = "img1" src = "images/stepchild/board.jpeg">
-        <img id = "img2" src = "images/stepchild/v0.1.jpeg"> -->
-        <!-- scrolling ticker -->
+        <iframe id = "main_page_iframe" name = "mainpage" src = "stepchild/homePage.html"></iframe>
     </div>
     <div class = "column" id="scroll-container">
         <div id="scroll-text">midi sequencer music computer silent instrument pocket composer compact beat machine quiet thing midi sequencer music computer silent instrument pocket composer compact beat machine quiet thing                 
