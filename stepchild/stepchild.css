@@ -196,6 +196,7 @@ canvas {
     margin:auto;
     margin-top:20vh; /*Setting the starting offset*/
     max-width:800px;
+    /* max-width:80%; */
     min-width:300px;
     transition:0.6s;
 }
@@ -210,11 +211,16 @@ canvas {
 }
 
 #ascii_title{
-    font-size:1vw;
+    font-size:10px;
     position:absolute;
 }
 
 .random_icon{
     position:fixed;
     z-index: -1;
+    /* filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4)); */
+}
+
+.ascii_hidden{
+    visibility:hidden;
 }

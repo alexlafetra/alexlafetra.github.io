@@ -8,6 +8,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
+        function swapAscii(){
+            let textOptions = document.getElementsByClassName("ascii_hidden");
+            let newText = textOptions[Math.floor(textOptions.length*Math.random())].innerHTML;
+            while(document.getElementById("ascii_title").innerHTML == newText){
+                newText = textOptions[Math.floor(textOptions.length*Math.random())].innerHTML;
+            }
+            document.getElementById("ascii_title").innerHTML = newText;
+        }
+
+        function setAscii(){
+
+        }
+
         function scaleHeader(){
             window.addEventListener("scroll", (event) => {
 
@@ -15,10 +28,11 @@
                 let scroll = this.scrollY;
                 let title =  document.getElementById("title");
                 let titleCoords = title.getBoundingClientRect();
-                if(titleCoords.top<=0){
+
+                if(titleCoords.top == 0 && titleCoords.width == 800){
                   title.style.width ="300px";
                 }
-                else if(titleCoords.bottom>=200){
+                else if(titleCoords.bottom>=350 && titleCoords.width == 300){
                     title.style.width ="800px";
                 }
 
@@ -62,29 +76,52 @@
 <body id = "about_body">
     <div class = "single_centered_div" id = "title">
         <img id = "img1" src = "images/stepchild.gif" onclick = "popIcon()">
-        <p id = "ascii_title" class = "ascii">
-   ________  ________  ________      ________  ________  ________  ________  ________  ________   ________  _______    _______ 
+        <p id = "ascii_title" class = "ascii" onclick = "swapAscii()">   ________  ________  ________      ________  ________  ________  ________  ________  ________   ________  _______    _______ 
   /        \/    /   \/        \    /        \/        \/        \/        \/        \/    /   \ /        \/       \ _/       \
  /        _/         /         /   /        _/        _/         /         /         /         /_/       //        //         /
 /       //         /        _/   /-        //       //        _/       __/       --/         //         /        //         / 
-\_____// \___/____/\________/    \_______// \______/ \________/\______/  \________/\___/____/ \________/\________/\________/  
-        </p>
+\_____// \___/____/\________/    \_______// \______/ \________/\______/  \________/\___/____/ \________/\________/\________/</p>
     </div>
-    <!-- <div id = "clip_div"> -->
-        <div id = "info_section">
-            boo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo boo
-            boo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo boo
-            boo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo boo
-            boo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo boo
-            boo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo booboo boo boo
-
-            <img src = "/Users/alex/Desktop/Web things/alexlafetra.github.io/stepchild/images/exploded.png" width = "20%">
-        </div>
-    <!-- </div> -->
+    <div id = "info_section">
+        <span class = "h1">About</span>
+        
+        <img src = "/Users/alex/Desktop/Web things/alexlafetra.github.io/stepchild/images/exploded.png" width = "20%">
+    </div>
+    <p class = "ascii_hidden">
+ _________  ___  ___  _______           ________  _________  _______   ________  ________  ___  ___  ___  ___       ________     
+|\___   ___\\  \|\  \|\  ___ \         |\   ____\|\___   ___\\  ___ \ |\   __  \|\   ____\|\  \|\  \|\  \|\  \     |\   ___ \    
+\|___ \  \_\ \  \\\  \ \   __/|        \ \  \___|\|___ \  \_\ \   __/|\ \  \|\  \ \  \___|\ \  \\\  \ \  \ \  \    \ \  \_|\ \   
+     \ \  \ \ \   __  \ \  \_|/__       \ \_____  \   \ \  \ \ \  \_|/_\ \   ____\ \  \    \ \   __  \ \  \ \  \    \ \  \ \\ \  
+      \ \  \ \ \  \ \  \ \  \_|\ \       \|____|\  \   \ \  \ \ \  \_|\ \ \  \___|\ \  \____\ \  \ \  \ \  \ \  \____\ \  \_\\ \ 
+       \ \__\ \ \__\ \__\ \_______\        ____\_\  \   \ \__\ \ \_______\ \__\    \ \_______\ \__\ \__\ \__\ \_______\ \_______\
+        \|__|  \|__|\|__|\|_______|       |\_________\   \|__|  \|_______|\|__|     \|_______|\|__|\|__|\|__|\|_______|\|_______|
+                                           \|_________|</p>
+<p class = "ascii_hidden">
+    (                                     
+*   )   )        )\ )   )                 )   (  (     
+` )  /(( /(   (   (()/(( /(  (           ( /((  )\ )\ )  
+( )(_))\()) ))\   /(_))\())))\`  )   (  )\())\((_|()/(  
+(_(_()|(_)\ /((_) (_))(_))//((_)(/(   )\((_)((_)_  ((_)) 
+|_   _| |(_|_))   / __| |_(_))((_)_\ ((_) |(_|_) | _| |  
+| | | ' \/ -_)  \__ \  _/ -_) '_ \) _|| ' \| | / _` |  
+|_| |_||_\___|  |___/\__\___| .__/\__||_||_|_|_\__,_|  
+                            |_|</p>
+<p class = "ascii_hidden">   ________  ________  ________      ________  ________  ________  ________  ________  ________   ________  _______    _______ 
+  /        \/    /   \/        \    /        \/        \/        \/        \/        \/    /   \ /        \/       \ _/       \
+ /        _/         /         /   /        _/        _/         /         /         /         /_/       //        //         /
+/       //         /        _/   /-        //       //        _/       __/       --/         //         /        //         / 
+\_____// \___/____/\________/    \_______// \______/ \________/\______/  \________/\___/____/ \________/\________/\________/</p>
+<p class = "ascii_hidden">  ________         ______               __   _ __   __
+ /_  __/ /  ___   / __/ /____ ___  ____/ /  (_) /__/ /
+  / / / _ \/ -_) _\ \/ __/ -_) _ \/ __/ _ \/ / / _  / 
+ /_/ /_//_/\__/ /___/\__/\__/ .__/\__/_//_/_/_/\_,_/  
+                           /_/                         
+</p>
     <script>
         scaleHeader();
         popIcon();
         window.setInterval(popIcon,2000);
+        window.setInterval(swapAscii,4000);
     </script>
 </body>
 </html>
