@@ -8,8 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <div id = "background_column" style = "height:100vh;width:100vw;margin:auto;position:fixed;background-color:white;"></div>
-    <div class = "header" id = "title_header" style = 
+    <div class = "header" id = "manual_header" style = 
     "height:6vh;
     width:80%; 
     right:0;   
@@ -23,8 +22,9 @@
     display:block;
     position:fixed;
     text-align:right;
-    padding-right:40px;"><img src = "images/stepchild.gif" style = "position:absolute;right:46vh;height:7vh;bottom:0;">Stepchild User Manual</div>
-    <div class = "header" id = "index_header" style = 
+    padding-right:40px;
+    transition:0.1s;"><img src = "images/stepchild.gif" id = "title_image" style = "position:absolute;right:46vh;height:7vh;bottom:0;"><span id = "title_text">Stepchild User Manual</span></div>
+    <div class = "header" id = "index_header" onclick = "toggleTOC()" style = 
     "height:6vh;
     left:0;
     width:20%;    
@@ -33,14 +33,14 @@
     font-weight:900;
     font-stretch: 250%;
     color:white;
-    background-color: black;
     display:block;
     position:fixed;
-    text-align:center;">Index</div>
-    <div class = "column" id = "index_column" style = "height:94vh;width:20%;left:0;bottom:0;position:fixed;overflow-y:scroll;overflow-x: hidden;">
-        <iframe src = "manual/TOC.html" name = "tableofcontents" id = "toc_iframe" style = "width:100%;height:100vh;border:none;padding:0;"></iframe>
+    text-align:center;
+    transition:0.1s;">Index</div>
+    <div id = "index_column" style = "height:94vh;width:20%;left:0;bottom:0;position:fixed;overflow-y:scroll;overflow-x: hidden;">
+        <iframe src = "manual/TOC.html" name = "tableofcontents" id = "toc_iframe" style = "width:100%;height:100vh;border:none;padding:0;background-color: transparent;"></iframe>
     </div>
-    <div class = "column" id = "manual_column" style = "height:94vh;width:80%;right:0;bottom:0;position:fixed;overflow-y:scroll;">
+    <div id = "manual_column" style = "height:94vh;width:80%;right:0;bottom:0;position:fixed;overflow-y:scroll;background-color:white;border-left:solid 2px;">
         <iframe src = "manual/manual_body.html" name = "manual" id = "manual_iframe" style = "width:100%;height:100vh;border:none;padding:0;color:black;"></iframe>
     </div>
 </body>
@@ -90,33 +90,68 @@
 
     document.getElementById("manual_iframe").addEventListener("load",loadManual());
 
-    // Passing message along into manual_body
-    window.addEventListener('message', event => {
-        const iframeWindow = document.getElementById("manual_iframe").contentWindow;
-        iframeWindow.postMessage({scrollTo: event.data.scrollTo},"*");
-    });
-
     function closeTOC(){
-        document.getElementById("index_column").style.visibility = "hidden";
-        document.getElementById("index_header").style.visibility = "hidden";
-        document.getElementById("manual_column").style.width = "100%";
-        document.getElementById("manual_header").style.width = "100%";
+        //phone mode
+        if(window.innerWidth<window.innerHeight){
+            document.getElementById("index_column").style.width = "0%";
+            document.getElementById("index_header").style.width = "12vh";
+            document.getElementById("manual_column").style.width = "100%";
+            document.getElementById("manual_header").style.width = "90%";
+        }
+        else{
+            document.getElementById("index_column").style.width = "0%";
+            document.getElementById("index_header").style.width = "12vh";
+            document.getElementById("manual_column").style.width = "100%";
+            document.getElementById("manual_header").style.width = "90%";
+        }
     }
+
     function openTOC(){
-        document.getElementById("index_column").style.visibility = "visible";
-        document.getElementById("index_header").style.visibility = "visible";
-        document.getElementById("manual_column").style.width = "80%";
-        document.getElementById("manual_header").style.width = "80%";
+        //phone mode
+        if(window.innerWidth<window.innerHeight){
+            document.getElementById("index_column").style.width = "100%";
+            document.getElementById("index_header").style.width = "100%";
+            document.getElementById("manual_column").style.width = "0%";
+            document.getElementById("manual_header").style.width = "0%";
+        }
+        else{
+            document.getElementById("index_column").style.width = "20%";
+            document.getElementById("index_header").style.width = "20%";
+            document.getElementById("manual_column").style.width = "80%";
+            document.getElementById("manual_header").style.width = "80%";
+        }
+    }
+
+    function toggleTOC(){
+        if(document.getElementById("index_column").style.width == "0%"){
+            openTOC();
+        }
+        else{
+            closeTOC();
+        }
     }
 
     function checkIndexSize(){
         if(window.innerWidth<window.innerHeight){
+            document.getElementById("title_text").innerHTML = "Manual";
+            document.getElementById("title_image").style.visibility = "hidden";
             closeTOC();
         }
-        else if(document.getElementById("index_column").style.visibility == "hidden"){
+        else if(document.getElementById("index_column").style.width == "0%"){
+            document.getElementById("title_text").innerHTML = "Stepchild User Manual";
+            document.getElementById("title_image").style.visibility = "visible";
             openTOC();
         }
     }
+
+    // Passing message along into manual_body
+    window.addEventListener('message', event => {
+        if(document.getElementById("index_column").style.width == "100%"){
+            closeTOC();
+        }
+        const iframeWindow = document.getElementById("manual_iframe").contentWindow;
+        iframeWindow.postMessage({scrollTo: event.data.scrollTo},"*");
+    });
     window.onresize = checkIndexSize;
     window.onload = checkIndexSize;
 </script>

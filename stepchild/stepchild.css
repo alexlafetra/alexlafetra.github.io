@@ -241,3 +241,11 @@ canvas {
 .ascii_hidden{
     visibility:hidden;
 }
+
+#index_header{
+    background-color:black;
+}
+#index_header:hover{
+    cursor:pointer;
+    background-color:blue;
+}
