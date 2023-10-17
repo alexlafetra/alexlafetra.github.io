@@ -13,24 +13,85 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src = "stepchild/stars.js"></script>
+    <script>
+        // Function to update the iframe source and URL
+        function updateURL(url) {
+            // Update the URL
+            history.pushState(null, null, "stepchild.html?page="+url);
+        }
+
+        function toggleMenuLink(which){
+            //reset active menu link
+            const activeLinks = document.getElementsByClassName("activeMenuLink");
+            for(link of activeLinks){
+                link.className = "menuLink";
+            }
+            //set the new active menu link
+            const menuLinks = document.getElementsByClassName("menuLink");
+            const href = menuLinks[which].href;
+            console.log(which);
+            console.log(href);
+            if(href.includes("?page=")){
+                let urlParam = href.substring(href.indexOf("?page=")+6);
+                updateURL(urlParam);
+            }
+            menuLinks[which].className = "activeMenuLink";
+        }
+
+        // Function to get URL parameters so you can link directly to different subpages
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        function loadTargetPage(){
+            // Get the parameter from the URL
+            let urlParam = getUrlParameter('page');
+
+            // Set the source of the iframe based on the parameter
+            if (urlParam) {
+                // updateURL(urlParam);
+                let targetPage = "stepchild/"+urlParam+'.html?page='+urlParam;
+                // Update the iframe source
+                document.getElementById('main_page_iframe').src = targetPage;
+                //toggle the corresponding menu link
+                const menuLinks = document.getElementsByClassName("menuLink");
+                for(let i = 0; i<menuLinks.length; i++){
+                    if(menuLinks[i].href == targetPage){
+                        toggleMenuLink(i);
+                        break;
+                    }
+                }
+            }
+            //if no subpage is specified, just load the homepage
+            else{
+                toggleMenuLink(0);
+            }
+        }
+    </script>
 </head>
 <body>
     <!-- menu options that are shown when icon is hovered -->
     <div class = "column" id = "menu">
         <div id = "options">
-            <a class = "menuLink" href = "stepchild/homePage.html" target = "mainpage">About</a>
-            <a class = "menuLink" href = "stepchild/preorder.html" target = "mainpage">Get</p>
-            <a class = "menuLink" href = "stepchild/store.html" target = "mainpage">Build</p>
-            <a class = "menuLink" href = "stepchild/manual.html" target = "mainpage">Manual</p>
-            <a class = "menuLink" href = "https://github.com/alexlafetra/stepchild">Github </a>
+            <a class = "menuLink" href = "stepchild/home.html?page=home" target = "mainpage" onclick = "toggleMenuLink(0);">Hello</a>
+            <a class = "menuLink" href = "stepchild/preorder.html?page=preorder" target = "mainpage" onclick = "toggleMenuLink(1);">Purchase</p>
+            <a class = "menuLink" href = "stepchild/home.html?page=info" target = "mainpage" onclick = "toggleMenuLink(2);">Info</a>
+            <a class = "menuLink" href = "stepchild/manual.html?page=manual" target = "mainpage" onclick = "toggleMenuLink(3);">Manual</p>
+            <a class = "menuLink" href = "https://github.com/alexlafetra/stepchild">Github</a>
         </div>
     </div>
     <div class = "column" id = "mainColumn">
-        <iframe id = "main_page_iframe" name = "mainpage" src = "stepchild/homePage.html"></iframe>
+        <iframe id = "main_page_iframe" name = "mainpage" src = "stepchild/home.html"></iframe>
     </div>
     <div class = "column" id="scroll_container">
         <div id="scroll-text">midi sequencer music computer silent instrument pocket composer compact beat machine quiet thing midi sequencer music computer silent instrument pocket composer compact beat machine quiet thing                 
         </div>
     </div>
 </body>
+<script>
+    loadTargetPage();
+</script>
 </html>

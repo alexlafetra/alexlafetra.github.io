@@ -9,11 +9,38 @@
 </head>
 <body>
     <div id = "background_column" style = "height:100vh;width:100vw;margin:auto;position:fixed;background-color:white;"></div>
-
-    <div class = "column" id = "index_column" style = "height:100vh;max-width:20%;left:0;position:fixed;overflow-y:scroll;overflow-x: hidden;">
+    <div class = "header" id = "title_header" style = 
+    "height:6vh;
+    width:80%; 
+    right:0;   
+    font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size:5vh;
+    font-weight:900;
+    font-stretch: 250%;
+    font-style:italic;
+    color:rgb(200,200,200);
+    background-color: white;
+    display:block;
+    position:fixed;
+    text-align:right;
+    padding-right:40px;"><img src = "images/stepchild.gif" style = "position:absolute;right:46vh;height:7vh;bottom:0;">Stepchild User Manual</div>
+    <div class = "header" id = "index_header" style = 
+    "height:6vh;
+    left:0;
+    width:20%;    
+    font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size:5vh;
+    font-weight:900;
+    font-stretch: 250%;
+    color:white;
+    background-color: black;
+    display:block;
+    position:fixed;
+    text-align:center;">Index</div>
+    <div class = "column" id = "index_column" style = "height:94vh;width:20%;left:0;bottom:0;position:fixed;overflow-y:scroll;overflow-x: hidden;">
         <iframe src = "manual/TOC.html" name = "tableofcontents" id = "toc_iframe" style = "width:100%;height:100vh;border:none;padding:0;"></iframe>
     </div>
-    <div class = "column" id = "manual_column" style = "height:100vh;width:80%;right:0;position:fixed;overflow-y:scroll;">
+    <div class = "column" id = "manual_column" style = "height:94vh;width:80%;right:0;bottom:0;position:fixed;overflow-y:scroll;">
         <iframe src = "manual/manual_body.html" name = "manual" id = "manual_iframe" style = "width:100%;height:100vh;border:none;padding:0;color:black;"></iframe>
     </div>
 </body>
@@ -39,21 +66,29 @@
     marked.use({ renderer });
 
     // Use the Fetch API to load the Markdown files
-    fetch('manual/index.md')
-    .then(response => response.text())
-    .then(markdownContent => {
-        const iframeWindow = document.getElementById("toc_iframe").contentWindow;
-        iframeWindow.postMessage({text: marked.parse(markdownContent)},"*");
-    })
-    .catch(error => console.error('Error loading table of contents:', error));
+    function loadIndex()    {
+        fetch('manual/index.md')
+        .then(response => response.text())
+        .then(markdownContent => {
+            const iframeWindow = document.getElementById("toc_iframe").contentWindow;
+            iframeWindow.postMessage({text: marked.parse(markdownContent)},"*");
+        })
+        .catch(error => console.error('Error loading table of contents:', error));
+    }
 
-    fetch('manual/manual.md')
-    .then(response => response.text())
-    .then(markdownContent => {
-        const iframeWindow = document.getElementById("manual_iframe").contentWindow;
-        iframeWindow.postMessage({text: marked.parse(markdownContent)},"*");
-    })
-    .catch(error => console.error('Error loading manual:', error));
+    document.getElementById("toc_iframe").addEventListener("load",loadIndex());
+
+    function loadManual() {
+        fetch('manual/manual.md')
+        .then(response => response.text())
+        .then(markdownContent => {
+            const iframeWindow = document.getElementById("manual_iframe").contentWindow;
+            iframeWindow.postMessage({text: marked.parse(markdownContent)},"*");
+        })
+        .catch(error => console.error('Error loading manual:', error));
+    }
+
+    document.getElementById("manual_iframe").addEventListener("load",loadManual());
 
     // Passing message along into manual_body
     window.addEventListener('message', event => {
@@ -61,14 +96,25 @@
         iframeWindow.postMessage({scrollTo: event.data.scrollTo},"*");
     });
 
+    function closeTOC(){
+        document.getElementById("index_column").style.visibility = "hidden";
+        document.getElementById("index_header").style.visibility = "hidden";
+        document.getElementById("manual_column").style.width = "100%";
+        document.getElementById("manual_header").style.width = "100%";
+    }
+    function openTOC(){
+        document.getElementById("index_column").style.visibility = "visible";
+        document.getElementById("index_header").style.visibility = "visible";
+        document.getElementById("manual_column").style.width = "80%";
+        document.getElementById("manual_header").style.width = "80%";
+    }
+
     function checkIndexSize(){
         if(window.innerWidth<window.innerHeight){
-            document.getElementById("index_column").style.visibility = "hidden";
-            document.getElementById("manual_column").style.width = "100%";
+            closeTOC();
         }
         else if(document.getElementById("index_column").style.visibility == "hidden"){
-            document.getElementById("index_column").style.visibility = "visible";
-            document.getElementById("manual_column").style.width = "80%";
+            openTOC();
         }
     }
     window.onresize = checkIndexSize;

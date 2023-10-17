@@ -6,6 +6,7 @@
 <body id = "manual_body">
 </body>
 <script>
+    //scrolling to the clicked link
     window.addEventListener('message', event => {
         if(!event.data.scrollTo)
             return;
@@ -13,13 +14,12 @@
         if(tag){
             window.scrollTo(0, window.scrollY + tag.getBoundingClientRect().top);
         }
-        console.log(tag);
     });
+    //loading the markdown html
     window.addEventListener('message', event => {
         if(!event.data.text)
             return;
         document.getElementById("manual_body").innerHTML = event.data.text;
     });
 </script>
-
 </html>

@@ -20,7 +20,7 @@ body {
   font-family: Helvetica, arial, sans-serif;
   font-size: 14px;
   /* line-height: 1; */
-  line-height:1.2;
+  line-height:1.4;
   padding-top: 10px;
   padding-bottom: 10px;
   background-color: white;
@@ -127,7 +127,7 @@ h6 {
 }
 
 p, blockquote, ul, ol, dl, li, table, pre {
-  margin: 15px 0;
+  /* margin: 15px 0; */
 }
 
 hr {
