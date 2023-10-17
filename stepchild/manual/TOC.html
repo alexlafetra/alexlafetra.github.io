@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body id = "index_body">
+</body>
+<script>
+    window.addEventListener('message', event => {
+        document.getElementById("index_body").innerHTML = event.data.text;
+        //Adding message poster when <a> tags are clicked
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('href').substring(1);
+                window.parent.postMessage({ scrollTo: target }, '*');
+                console.log(target);
+                console.log("hey");
+            });
+        });
+    });
+
+</script>
+</html>

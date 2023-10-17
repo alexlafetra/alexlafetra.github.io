@@ -7,15 +7,59 @@
     <link href="stepchild.css" rel="stylesheet">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Lightweight client-side loader that feature-detects and load polyfills only when necessary -->
-    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2/webcomponents-loader.min.js"></script>
-    <!-- Load the element definition -->
-    <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@1/src/zero-md.min.js"></script>
 </head>
 <body>
-    <div class = "column" id = "manual_column" style = "max-width:800px;margin:auto;background-color: white; border:solid;">
-        <!-- Simply set the `src` attribute to your MD file and win -->
-        <zero-md src="https://raw.githubusercontent.com/alexlafetra/stepchild/main/manual/manual.md"></zero-md>
+    <div id = "background_column" style = "height:100vh;width:100vw;margin:auto;position:fixed;background-color:white;"></div>
+
+    <div class = "column" id = "index_column" style = "height:100vh;max-width:20%;left:0;position:fixed;overflow-y:scroll;overflow-x: hidden;">
+        <iframe src = "manual/TOC.html" name = "tableofcontents" id = "toc_iframe" style = "width:100%;height:100vh;border:none;padding:0;"></iframe>
+    </div>
+    <div class = "column" id = "manual_column" style = "height:100vh;width:80%;right:0;position:fixed;overflow-y:scroll;">
+        <iframe src = "manual/manual_body.html" name = "manual" id = "manual_iframe" style = "width:100%;height:100vh;border:none;padding:0;color:black;"></iframe>
     </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    // Markdown renderer
+    const renderer = {
+    heading(text, level) {
+        let cleanedText = text.replace(/\./g,'');
+        cleanedText = cleanedText.replace("amp",'-');
+        // cleanedText = cleanedText.replace("/",'-');
+        const escapedText = cleanedText.toLowerCase().replace(/[^\w]+/g, '-');
+
+        return `
+                <h${level}>
+                <a id="${escapedText}" class="anchor" href="#${escapedText}">
+                    <span class="header-link"></span>
+                </a>
+                ${text}
+                </h${level}>`;
+    }
+    };
+    marked.use({ renderer });
+
+    // Use the Fetch API to load the Markdown files
+    fetch('manual/index.md')
+    .then(response => response.text())
+    .then(markdownContent => {
+        const iframeWindow = document.getElementById("toc_iframe").contentWindow;
+        iframeWindow.postMessage({text: marked.parse(markdownContent)},"*");
+    })
+    .catch(error => console.error('Error loading table of contents:', error));
+
+    fetch('manual/manual.md')
+    .then(response => response.text())
+    .then(markdownContent => {
+        const iframeWindow = document.getElementById("manual_iframe").contentWindow;
+        iframeWindow.postMessage({text: marked.parse(markdownContent)},"*");
+    })
+    .catch(error => console.error('Error loading manual:', error));
+
+    // Passing message along into manual_body
+    window.addEventListener('message', event => {
+        const iframeWindow = document.getElementById("manual_iframe").contentWindow;
+        iframeWindow.postMessage({scrollTo: event.data.scrollTo},"*");
+    });
+</script>
 </html>

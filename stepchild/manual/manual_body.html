@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body id = "manual_body">
+</body>
+<script>
+    window.addEventListener('message', event => {
+        if(!event.data.scrollTo)
+            return;
+        const tag = document.getElementById(event.data.scrollTo);
+        if(tag){
+            window.scrollTo(0, window.scrollY + tag.getBoundingClientRect().top);
+        }
+        console.log(tag);
+    });
+    window.addEventListener('message', event => {
+        if(!event.data.text)
+            return;
+        document.getElementById("manual_body").innerHTML = event.data.text;
+    });
+</script>
+
+</html>
