@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
-    <title>Alex LaFetra</title>
+    <title>Stepchild User Manual</title>
     <link href="stepchild.css" rel="stylesheet">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -61,5 +60,18 @@
         const iframeWindow = document.getElementById("manual_iframe").contentWindow;
         iframeWindow.postMessage({scrollTo: event.data.scrollTo},"*");
     });
+
+    function checkIndexSize(){
+        if(window.innerWidth<window.innerHeight && window.innerWidth<400){
+            document.getElementById("index_column").style.visibility = "hidden";
+            document.getElementById("manual_column").style.width = "100%";
+        }
+        else if(document.getElementById("index_column").style.visibility == "hidden"){
+            document.getElementById("index_column").style.visibility = "visible";
+            document.getElementById("manual_column").style.width = "80%";
+        }
+    }
+    // window.onresize = checkIndexSize;
+    // window.onload = checkIndexSize;
 </script>
 </html>

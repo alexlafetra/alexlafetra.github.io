@@ -211,7 +211,8 @@ canvas {
 }
 
 #ascii_title{
-    font-size:10px;
+    /* font-size:10px; */
+    font-size:1vw;
     position:absolute;
 }
 
