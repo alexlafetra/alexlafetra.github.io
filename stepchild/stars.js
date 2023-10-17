@@ -9,10 +9,10 @@ function popIcon(){
         const newIcon = document.createElement("img");
         let which = 2*Math.random();
         if(which < 0.5){
-            newIcon.src = "images/star_quiet.svg";
+            newIcon.src = "stepchild/images/star_quiet.svg";
         }
         else{
-            newIcon.src = "images/star.svg";
+            newIcon.src = "stepchild/images/star.svg";
         }
         newIcon.style.top = window.innerHeight*Math.random()+"px";
         newIcon.style.left = window.innerWidth*Math.random()+"px";
@@ -23,5 +23,7 @@ function popIcon(){
     }
 }
 
-window.setInterval(popIcon,2000);
-document.addEventListener("load",popIcon);
+window.setInterval(popIcon,1500);
+window.onload = function(){
+    popIcon();
+};
