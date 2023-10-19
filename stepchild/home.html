@@ -23,11 +23,13 @@
                 let title =  document.getElementById("title");
                 let titleCoords = title.getBoundingClientRect();
 
-                if(titleCoords.top == 0 && titleCoords.width == 800){
+                if(titleCoords.top == 0 && titleCoords.width == 800 || titleCoords.width == "80vw"){
                   title.style.width ="300px";
+                  title.style.maxWidth = "20vw";
                 }
-                else if(titleCoords.bottom>=350 && titleCoords.width == 300){
+                else if(titleCoords.bottom>=350 && titleCoords.width == 300 || titleCoords.width == "20vw"){
                     title.style.width ="800px";
+                    title.style.maxWidth = "80vw";
                 }
 
                 //Cropping the info div once it's at the bottom of the icon
@@ -67,7 +69,7 @@
              they're available.
         </p>
         <p id = "about" class = "info_text">
-            The online manual for the Stepchild can be read <a href = "manual.html">here</a>; it's also available alongside the source code and some deeper documentation from the <a href = "https://github.com/alexlafetra/stepchild">Github Page</a>.
+            The online manual for the Stepchild can be read <a href = "manual.html">here</a>; it's available to download along with the source code and some deeper documentation on the <a href = "https://github.com/alexlafetra/stepchild" target = "top_">Github Page</a>.
         </p>
         <p id = "misc" class = "info_text">
             It's the <span class = "blue_italic">Step</span>-child because it's a <span class = "blue_italic">Step</span>-sequence, and because it's your baby.
