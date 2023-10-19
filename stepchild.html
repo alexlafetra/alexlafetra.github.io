@@ -12,6 +12,7 @@
     <link href="stepchild/stepchild.css" rel="stylesheet">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="stepchild/images/stepchild_icon.png">
     <script src = "stepchild/stars.js"></script>
     <script>
         //update the URL with the subpage address (".html?page=X")
@@ -29,14 +30,13 @@
             //set the new active menu link
             const menuLinks = document.getElementsByClassName("menuLink");
             const href = menuLinks[which].href;
-            console.log(which);
-            console.log(href);
             if(href.includes("?page=")){
                 let urlParam = href.substring(href.indexOf("?page=")+6);
                 updateURL(urlParam);
             }
             menuLinks[which].className = "activeMenuLink";
         }
+
         //Get sub page name (just the "home" or "manual" keyword) from the url
         function getUrlParameter(name) {
             name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -73,7 +73,7 @@
         }
     </script>
 </head>
-<body>
+<body style = "overflow-y:hidden;">
     <!-- menu options that are shown when icon is hovered -->
     <div class = "column" id = "menu">
         <div id = "options">

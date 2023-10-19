@@ -37,6 +37,7 @@ body {
 
     transition: 0.5s;
     transition-timing-function:ease-in-out;
+    overflow-y: hidden;
 }
 /* menu options */
 #menu .menuLink{
@@ -190,11 +191,14 @@ canvas {
 }
 
 #info_section{
-    font-family: 'Varela Round', sans-serif;
-    font-size:20px;
+    /* font-family: 'Varela Round', sans-serif; */
+    font-family     : 'Arial', Arial, sans-serif;
+    font-size:25px;
+    font-weight:600;
     background-color:white;
     margin: 45vh auto;
     width:80%;
+    max-width:500px;
     /* transition:0.001s; */
 }
 #info_section img{
@@ -248,4 +252,17 @@ canvas {
 #index_header:hover{
     cursor:pointer;
     background-color:blue;
+}
+
+.blue_italic{
+    font-style:italic;
+    color:blue;
+}
+.blue{
+    color:blue;
+}
+
+.info_text a{
+    text-decoration:underline;
+    color:blue;
 }
