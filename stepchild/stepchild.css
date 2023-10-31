@@ -3,12 +3,12 @@ html{
     font-family     :'Courier New', Courier, monospace;
     /* background-color: white; */
     /* background-color:rgb(100, 100, 0); */
+    overflow-x:hidden;
 }
 
 body {
   margin: 0;
   padding: 0;
-  /* overflow: hidden; */
 }
 
 .column{
@@ -188,6 +188,7 @@ canvas {
     border:0;
     padding:0;
     margin:0;
+    overflow-x: hidden;
 }
 
 #info_section{
@@ -265,4 +266,11 @@ canvas {
 .info_text a{
     text-decoration:underline;
     color:blue;
+}
+
+#index_column{
+    overflow-x: hidden;
+}
+#manual_column{
+    overflow-x: hidden;
 }
