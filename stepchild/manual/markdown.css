@@ -279,6 +279,17 @@ table tr th :last-child, table tr td :last-child {
 
 img {
   max-width: 100%;
+  margin:auto;
+}
+/* for centering gifs */
+.center-gif {
+  display: block;
+  margin: 0 auto;
+}
+
+.button-svg {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 span.frame {
@@ -413,4 +424,83 @@ pre code, pre tt {
 
 #index_body{
   padding-left:10px;
+}
+
+#index_header{
+  height:6vh;
+  left:0;
+  width:20%;    
+  font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size:4vh;
+  font-weight:900;
+  font-stretch: 250%;
+  color:white;
+  display:block;
+  position:fixed;
+  text-align:center;
+  transition:0.1s;
+  border-radius:0 10px 0 0;
+  background-color:black;
+  top:0;
+}
+#index_header:hover{
+  cursor:pointer;
+  background-color:blue;
+}
+
+#index_column{
+  height:94vh;
+  width:20%;
+  left:0;
+  bottom:0;
+  position:fixed;
+  background-color:white;
+  margin:0;
+  overflow-y:scroll;
+}
+
+#toc{
+  padding:0px 20px 400px 20px;
+}
+
+#manual_header{
+  top:0;
+  height:6vh;
+  width:80%; 
+  right:0;   
+  font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size:5vh;
+  font-weight:900;
+  font-stretch: 250%;
+  font-style:italic;
+  color:rgb(200,200,200);
+  background-color: white;
+  display:block;
+  position:fixed;
+  text-align:right;
+  padding-right:40px;
+  transition:0.1s;
+}
+
+#manual_column{
+  height:94vh;
+  width:80%;
+  right:0;
+  bottom:0;
+  position:fixed;
+  display:block;
+  background-color:white;
+  overflow-y:scroll;
+  overflow-x:hidden;
+}
+
+#manual{
+  padding:0px 20px 400px 20px;
+}
+
+#title_image{
+  position:absolute;
+  right:46vh;
+  height:7vh;
+  bottom:0;
 }

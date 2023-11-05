@@ -12,14 +12,9 @@
     <link rel="icon" href="stepchild/images/stepchild_icon.png">
     <script src = "stepchild/stars.js"></script>
     <script>
-        //update the URL with the subpage address (".html?page=X")
-        function updateURL(url) {
-            // Update the URL
-            history.pushState(null, null, "stepchild.html?page="+url);
-        }
 
-        //Changes the styling of the clicked menu link, and updates the url with it's href
-        function toggleMenuLink(which){
+        //update the top URL with the subpage address (".html?page=X") and sets the style of the menu link buttons
+        function updateURL(url) {
             //reset active menu link
             const activeLinks = document.getElementsByClassName("activeMenuLink");
             for(link of activeLinks){
@@ -27,12 +22,14 @@
             }
             //set the new active menu link
             const menuLinks = document.getElementsByClassName("menuLink");
-            const href = menuLinks[which].href;
-            if(href.includes("?page=")){
-                let urlParam = href.substring(href.indexOf("?page=")+6);
-                updateURL(urlParam);
+            for(link of menuLinks){
+                if(link.href.includes("?page="+url)){
+                    link.className = "activeMenuLink";
+                }
             }
-            menuLinks[which].className = "activeMenuLink";
+
+            // Update the URL
+            history.pushState(null, null, "stepchild.html?page="+url);
         }
 
         //Get sub page name (just the "home" or "manual" keyword) from the url
@@ -49,28 +46,20 @@
 
         //Loads page specified in the url into the target iframe and updates the corresponding menulink
         //This function is called on page load
-        function loadTargetPage(){
+        function loadPageFromURL(){
             // Get the parameter from the URL
             let urlParam = getUrlParameter('page');
-
-            // Set the source of the iframe based on the parameter
-            if (urlParam) {
-                // updateURL(urlParam);
-                let targetPage = "stepchild/"+urlParam+'.html?page='+urlParam;
-                // Update the iframe source
-                document.getElementById('main_page_iframe').src = targetPage;
-                //toggle the corresponding menu link
-                const menuLinks = document.getElementsByClassName("menuLink");
-                for(let i = 0; i<menuLinks.length; i++){
-                    if(menuLinks[i].href.includes(targetPage)){
-                        toggleMenuLink(i);
-                        break;
-                    }
-                }
-            }
-            //if no subpage is specified, just load the homepage
-            else{
-                toggleMenuLink(0);
+            switch(urlParam){
+                case "manual":
+                    // Update the iframe source
+                    document.getElementById('main_page_iframe').src =  "stepchild/manual/manual.html?page=manual";
+                    break;
+                case "home":
+                case "preorder":
+                case "info":
+                    // Update the iframe source
+                    document.getElementById('main_page_iframe').src = "stepchild/"+urlParam+'.html?page='+urlParam;
+                    break;
             }
         }
 
@@ -99,11 +88,11 @@
     <!-- menu options that are shown when icon is hovered -->
     <div class = "column" id = "menu">
         <div id = "options">
-            <a class = "menuLink" href = "stepchild/home.html?page=home" target = "mainpage" onclick = "toggleMenuLink(0);">Hello</a>
-            <a class = "menuLink" href = "stepchild/preorder.html?page=preorder" target = "mainpage" onclick = "toggleMenuLink(1);">Preorder</p>
-            <a class = "menuLink" href = "stepchild/info.html?page=info" target = "mainpage" onclick = "toggleMenuLink(2);">Info</a>
-            <a class = "menuLink" href = "stepchild/manual.html?page=manual" target = "mainpage" onclick = "toggleMenuLink(3);">Manual</p>
-            <a class = "menuLink" href = "stepchild/store.html?page=store" target = "mainpage" onclick = "toggleMenuLink(4)">Github</a>
+            <a class = "menuLink" href = "stepchild/home.html?page=home" target = "mainpage">Hello</a>
+            <a class = "menuLink" href = "stepchild/preorder.html?page=preorder" target = "mainpage">Preorder</p>
+            <a class = "menuLink" href = "stepchild/info.html?page=info" target = "mainpage">Info</a>
+            <a class = "menuLink" href = "stepchild/manual/manual.html?page=manual" target = "mainpage">Manual</p>
+            <a class = "menuLink" href = "stepchild/store.html?page=store" target = "mainpage">Github</a>
         </div>
     </div>
     <div class = "column" id = "mainColumn">
@@ -116,7 +105,7 @@
     </div>
 </body>
 <script>
-    window.onload = loadTargetPage();
+    // window.onload = loadTargetPage();
     //event listener to update the URL extension (?page= 'x') whenever a link is clicked from within the iframe
     window.addEventListener('message', function(event) {
         if(!event.isTrusted)
@@ -128,5 +117,6 @@
         }
     }, false);
     window.addEventListener('resize',updateVH);
+    loadPageFromURL();
 </script>
 </html>
