@@ -84,9 +84,12 @@
         function updateVH(){
             //getting VH for mobile
             if(isMobile()){
-                document.documentElement.style.setProperty('--menuFontSize', `7vh`);            }
+                document.documentElement.style.setProperty('--menuFontSize', `6vh`);
+                document.documentElement.style.setProperty('--menuColSize', `7.85vh`);
+            }
             else{
                 document.documentElement.style.setProperty('--menuFontSize', `7.8vh`);
+                document.documentElement.style.setProperty('--menuColSize', `8.85vh`);
             }
         }
         updateVH();

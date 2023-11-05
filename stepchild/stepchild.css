@@ -45,7 +45,8 @@ body {
     display: block;
     position:absolute;
     /* width: 100px; */
-    width:  8.95vh;
+    width:  var(--menuColSize);
+    /* width:8.95vh; */
     height:100vh;
     float:left;
     z-index: 1;
