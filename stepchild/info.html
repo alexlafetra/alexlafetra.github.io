@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html style = "overflow-y: hidden;">
+
+<head>
+    <meta charset="utf-8">
+    <title>Alex LaFetra</title>
+    <link href="stepchild.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        //update the URL with the subpage address (".html?page=X")
+        function updateURL(pageName) {
+            window.parent.postMessage({newURL:pageName});
+        }
+        updateURL("info");
+    </script>
+</head>
+<body id = "info_body">
+    <!-- main div -->
+    <div>
+        <!-- exploded diagram -->
+        <img id = "exploded_diagram">
+
+    </div>
+</body>
+</html>

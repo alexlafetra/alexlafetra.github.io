@@ -22,7 +22,7 @@ body {
 .activeMenuLink{
     /* color:#0033ff; */
     color:black;
-    text-decoration:overline;
+    text-decoration:none;
     display:block;
     width:100%;
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
