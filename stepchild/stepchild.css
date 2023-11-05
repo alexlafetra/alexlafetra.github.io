@@ -95,7 +95,8 @@ body {
     position:absolute;
     margin:0;
     padding:0;
-    left:8.95vh;
+    left:8.95;
+    left:var(--menuColSize);
     right:40px;
     overflow:hidden;
     /* transition: 0.2s; */
