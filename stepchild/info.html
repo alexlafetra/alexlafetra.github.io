@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html style = "overflow-y: hidden;">
+<html>
 
 <head>
     <meta charset="utf-8">
@@ -16,11 +16,37 @@
     </script>
 </head>
 <body id = "info_body">
-    <!-- main div -->
-    <div>
+    <!-- image div -->
+    <div style = "width:60%;min-width:500px;margin:auto;display:block;">
         <!-- exploded diagram -->
-        <img id = "exploded_diagram">
+        <img id = "exploded_diagram" src = "images/Exploded View.svg" style = "display:block;position:fixed;width:100%;max-width:1000px;padding:20px;margin-left:-200px;">
+        <img id = "exploded_diagram" src = "images/stepchild_disassembled.jpg" style = "display:block;position:fixed;width:30%;max-width:300px;padding:20px;right:0;">
+    </div>
+    <!-- text -->
+    <div id = "info" class = "info_text" style = "position:absolute;top:80px;left:10%;background-color: white;height:fit-content;width:80%;max-width:500px;">
+        <p> hey</p>
+        <p>The Stepchild is a project I began while writing music with my <i>SP404MKii</i>. At the time, the MKii had
+             no actual sequencing capabilities aside from playing back a live-recorded pattern, which gave it a very 
+            unique set of limitations. Sometimes these limitations were and still are really fun, but as it became my main instrument outside of my
+            laptop I wanted to be able to dig into it deeper.</p>
+        <p><b>Technical Details</b></p>
 
+        <b><i>I/O</i></b>
+        <li>5 Separate Hardware MIDI Out Ports (1 USB MIDI Out, 4 5-Pin-DIN Jacks <i>and</i> 4 TRS Jacks)</li>
+        <li>2 Separate Hardware MIDI In Ports (1 USB MIDI In, 1 5-Pin-DIN Jack <i>and</i> 1 TRS Jack)</li>
+        <li>3 CV Eurorack TRS Jacks</li>
+        <br>
+        <b><i>Hardware</i></b>
+        <li>2 Push Encoders, 16 Push Buttons, 8 LEDs, Analog Joystick</li>
+        <li>2.5" 128x64 monochrome OLED screen</li>
+        <li>5V USB power and/or 3 AA Batteries</li>
+        <li>3D printed hand painted housing</li>
+        <br>
+        <b><i>Software</i></b>
+        <li>Arpeggiator</li>
+        <li>X custom generative MIDI instruments</li>
+        <li>CC Data Autotracks (for sending arbitrary waveforms as CC data)</li>
+        <li>Program Change sequencer</li>
     </div>
 </body>
 </html>

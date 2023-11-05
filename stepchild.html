@@ -17,6 +17,7 @@
             // Update the URL
             history.pushState(null, null, "stepchild.html?page="+url);
         }
+
         //Changes the styling of the clicked menu link, and updates the url with it's href
         function toggleMenuLink(which){
             //reset active menu link
@@ -83,7 +84,7 @@
         function updateVH(){
             //getting VH for mobile
             if(isMobile()){
-                document.documentElement.style.setProperty('--menuFontSize', `4.8vh`);            }
+                document.documentElement.style.setProperty('--menuFontSize', `7vh`);            }
             else{
                 document.documentElement.style.setProperty('--menuFontSize', `7.8vh`);
             }
