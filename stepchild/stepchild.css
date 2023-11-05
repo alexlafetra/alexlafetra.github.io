@@ -35,8 +35,8 @@ body {
     border-width: 0;
     border-right-width: 2px;
 
-    transition: 0.5s;
-    transition-timing-function:ease-in-out;
+    /* transition: 0.5s; */
+    /* transition-timing-function:ease-in-out; */
     overflow-y: hidden;
 }
 /* menu options */
@@ -54,12 +54,13 @@ body {
     writing-mode:vertical-rl;
     text-orientation:sideways;
 
-    transition:1s;
+    /* transition:1s; */
     text-decoration:none;
 }
 
 #menu .menuLink:hover{
-    color:#0033ff;
+    /* color:#0033ff; */
+    color:black;
     cursor: pointer;
     text-decoration:overline;
 }
@@ -194,10 +195,10 @@ canvas {
 #info_section{
     /* font-family: 'Varela Round', sans-serif; */
     font-family     : 'Arial', Arial, sans-serif;
-    font-size:25px;
+    font-size:20px;
     font-weight:600;
-    background-color:white;
-    margin: 45vh auto;
+    /* background-color:white; */
+    margin: auto;
     width:80%;
     max-width:500px;
     /* transition:0.001s; */
@@ -215,7 +216,7 @@ canvas {
     position:sticky;
     top: 0px;
     margin:auto;
-    margin-top:20vh; /*Setting the starting offset*/
+    /* margin-top:20vh; Setting the starting offset */
     max-width:800px;
     /* max-width:80%; */
     min-width:300px;
@@ -233,7 +234,7 @@ canvas {
 
 #ascii_title{
     /* font-size:10px; */
-    font-size:1vw;
+    font-size:1.2vw;
     position:absolute;
 }
 
@@ -266,6 +267,19 @@ canvas {
 .info_text a{
     text-decoration:underline;
     color:blue;
+}
+
+#preorder_blurb{
+    text-align:center;
+    font-size:50px;
+    margin-top:0;
+    margin-bottom:0;
+}
+#preorder_link{
+    font-size: 60px;
+    color:blue;
+    text-decoration:underline;
+    font-style:italic;
 }
 
 #index_column{

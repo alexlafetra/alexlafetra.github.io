@@ -408,3 +408,7 @@ pre code, pre tt {
   background-color: transparent;
   border: none;
 }
+
+#index_body{
+  padding-left:10px;
+}

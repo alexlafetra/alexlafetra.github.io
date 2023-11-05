@@ -45,6 +45,10 @@
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
 
+        function getURLExtension(url){
+            return url.substring(url.indexOf("stepchild/")+10,url.length-5);
+        }
+
         //Loads page specified in the url into the target iframe and updates the corresponding menulink
         //This function is called on page load
         function loadTargetPage(){
@@ -95,5 +99,15 @@
 </body>
 <script>
     window.onload = loadTargetPage();
+    //event listener to update the URL extension (?page= 'x') whenever a link is clicked from within the iframe
+    window.addEventListener('message', function(event) {
+        if(!event.isTrusted)
+            return;
+        // Check the origin of the sender to ensure security
+        if(event.data.newURL){
+            // Update the parent window's URL
+            updateURL(event.data.newURL);
+        }
+    }, false);
 </script>
 </html>

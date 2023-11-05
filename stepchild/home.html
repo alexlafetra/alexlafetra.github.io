@@ -16,21 +16,12 @@
             }
             document.getElementById("ascii_title").innerHTML = newText;
         }
-        function scaleHeader(){
+        function cropContent(){
             window.addEventListener("scroll", (event) => {
-                //shrinking the stepchild icon once it's at the top
-                let scroll = this.scrollY;
+                // //shrinking the stepchild icon once it's at the top
+                // let scroll = this.scrollY;
                 let title =  document.getElementById("title");
                 let titleCoords = title.getBoundingClientRect();
-
-                if(titleCoords.top == 0 && titleCoords.width == 800 || titleCoords.width == "80vw"){
-                  title.style.width ="300px";
-                  title.style.maxWidth = "20vw";
-                }
-                else if(titleCoords.bottom>=350 && titleCoords.width == 300 || titleCoords.width == "20vw"){
-                    title.style.width ="800px";
-                    title.style.maxWidth = "80vw";
-                }
 
                 //Cropping the info div once it's at the bottom of the icon
                 let info = document.getElementById("info_section");
@@ -45,8 +36,7 @@
         }
         //update the URL with the subpage address (".html?page=X")
         function updateURL(pageName) {
-            // Update the URL
-            history.pushState(null, null, "stepchild.html?page="+pageName);
+            window.parent.postMessage({newURL:pageName});
         }
     </script>
 </head>
@@ -60,13 +50,12 @@
 \_____// \___/____/\________/    \_______// \______/ \________/\______/  \________/\___/____/ \________/\________/\________/</p>
     </div>
     <div id = "info_section">
+        <p id = "preorder_blurb" class = "info_text">
+            Preorder the Stepchild <a id = "preorder_link" href = "preorder.html">here</a> !
+        </p>
         <p id = "introduction" class = "info_text">
             The <span class = "blue" >Stepchild</span> is a portable step-sequencer,
             MIDI interface, and generative MIDI instrument.
-        </p>
-        <p id = "acquiring" class = "info_text">
-            You can preorder one <a href = "preorder.html">here</a>, which will let you purchase one as soon as
-             they're available.
         </p>
         <p id = "about" class = "info_text">
             The online manual for the Stepchild can be read <a href = "manual.html">here</a>; it's available to download along with the source code and some deeper documentation on the <a href = "https://github.com/alexlafetra/stepchild" target = "top_">Github Page</a>.
@@ -117,7 +106,7 @@
  
 </p>
     <script>
-        scaleHeader();
+        cropContent();
         window.setInterval(swapAscii,4000);
     </script>
 </body>

@@ -8,7 +8,7 @@
             "type": "pwa-chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "/Users/alex/Desktop/webp-things/wp_0.2/index.html",
+            "url": "/Users/alex/Desktop/Web things/alexlafetra.github.io/stepchild.html",
             "webRoot": "${workspaceFolder}"
         }
     ]
