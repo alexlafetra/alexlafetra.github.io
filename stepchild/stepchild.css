@@ -13,8 +13,6 @@ body {
 
 .column{
     height: 100vh; /* Fallback for browsers that do not support Custom Properties */
-    height: calc(var(--vh, 1vh) * 100);  
-    /* transition: 0.5s; */
 }
 
 #options{
@@ -29,7 +27,7 @@ body {
     width:100%;
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size:7.8vh;
-    font-size:calc(var(--vh, 1vh) * 7.8);
+    font-size:var(--menuFontSize);
   
     font-weight:900;
     font-stretch: 250%;
@@ -48,7 +46,6 @@ body {
     position:absolute;
     /* width: 100px; */
     width:  8.95vh;
-    width: calc(var(--vh, 1vh) * 8.95);
     height:100vh;
     float:left;
     z-index: 1;
@@ -73,7 +70,7 @@ body {
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     /* font-size:7.8vh; */
     font-size:7.8vh;
-    font-size:calc(var(--vh, 1vh) * 7.8);
+    font-size:var(--menuFontSize);
     font-weight:900;
     font-stretch: 250%;
     writing-mode:vertical-rl;
