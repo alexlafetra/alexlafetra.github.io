@@ -4,7 +4,7 @@
     2. [Hardware](#02-hardware)
         1. [Buttons](#a-buttons)
         2. [MIDI Layout](#b-midi-layout)
-        3. Power & Batteries
+        3. [Power & Batteries](#c-power--batteries)
     3. [Software](#03-software)
         1. [A Brief Intro to MIDI](#a-a-brief-intro-to-midi)
         2. [Notes](#b-notes)
@@ -20,7 +20,7 @@
     7. [Copy/paste](#17-copy-paste)
     8. [Playback](#18-playback)
         1. Playing
-        2. Recording
+        2. [Recording](#b-recording)
     9. Status Icons
 2. [Track Editor](#2-track-editor)
     1. [Changing Track Pitch](#21-changing-track-pitch)
@@ -53,7 +53,8 @@
     5. FX Menu
     6. Settings Menu
         1. Sequence
-        2. System
+        2. Playback
+        3. System
     7. MIDI Menu
         1. Routing
         2. CV

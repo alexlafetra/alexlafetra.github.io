@@ -39,17 +39,27 @@ Alongside the 8 face buttons and two encoders, there are 8 stepbuttons along the
 
 ### b. MIDI Layout
 
-The Stepchild has 5 MIDI out ports and 2 MIDI in ports, 1 pair of which uses the Stepchilds MicroUSB port. The 5 non-USB hardware ports are each exposed as both a **TRS Type-A** 3.5mm headphone jack (like you'd use with an aux cable) *and* the traditional 5-Pin-DIN MIDI connector. Each pair of jacks are hardwired together, and will always transmit the same signals.
+The Stepchild has 4 unique hardware MIDI out ports, 1 unique hardware MIDI in port, and 1 In/Out port using the Stepchild's MicroUSB port. Every hardware port has both a **TRS Type-A** 3.5mm headphone jack (like you'd use with an aux cable) *and* the traditional 5-Pin-DIN MIDI connector, both hardwired together. The Stepchild has duplicates of ports in both the TRS and DIN standards to make it useful as an interface between the two.The Stepchild can act as a bridge between TRS MIDI, DIN MIDI, and USB MIDI platforms and can be used to sequence hardware instruments from a software program via USB MIDI.
 
 ![MIDI Layout Diagram](images/MIDI%20Layout.svg)
 
 EX: "Output 1" on the back of the Stepchild will send the same signals that "Output 1" on the front of the Stepchild will.
 
-Because of this, the Stepchild has 4 unique hardware and 1 unique software outputs, meaning you can connect up to **9** instruments directly to the Stepchild but the front 4 instruments will receive the same notes as the back 4. 
-
-The Stepchild will expose itself as a MIDI device when it's connected to a computer, and MIDI messages can be routed to it from a DAW or other virtual MIDI program. Because of this, the Stepchild can act as a bridge between TRS MIDI, DIN MIDI, and USB MIDI platforms and can be used to sequence hardware instruments from a software program via USB MIDI.
+The Stepchild will expose itself as a MIDI device when it's connected to a computer, and MIDI messages can be routed to it from a DAW or other virtual MIDI program. 
 
 ### c. Power & Batteries
+
+The Stepchild will run on as little as [IDK GOTTA TEST IT/LOOK IT UP]V and consumes very little current [ALSO TEST THIS USING OSC].
+There are two main ways to power the Stepchild:
+
+#### 1. Batteries
+
+The Stepchild can be powered by 3AA batteries. Rechargeable 1.2V AA's, like NiMH batteries, are totally fine and recommended! The Stepchild draws about [X]mA of current, and with Eneloop AA 1850mA batteries can run for [X] hours.
+
+The best way to insert or replace the batteries is to unscrew the bottom shell so you can access the battery clip on the bottom side of the board.
+
+#### 2. USB
+Plugging in the Stepchild to a USB power source will automatically switch the Stepchild to using USB power (the Stepchild will always be 'on' when powered from its USB port). A reverse current protection diode makes it safe to have the Stepchild plugged into both USB and battery power simultaneously; only USB power will be drawn from if available.
 
 ## 0.3 Software
 ![ChildOS Bootscreen](images/childOS.png)
@@ -117,6 +127,8 @@ The sequences you can write using the Stepchild are broken into ***timesteps***,
 
 ##### Because the BPM and timing of sequences is flexible, the actual duration value of a timestep in seconds or milliseconds varies, but it is *always* equivalent to 1/24th of a quarter note.
 
+#### The length of an unswung timestep, in milliseconds, is equal to the BPM * 400.
+
 All note data is stored in terms of timesteps: a note begins on one timestep, and ends on another. Using the Stepchild's [swing](#b-swing) or [internal CC](#53-internal-cc-messages), timesteps can have different values depending on where they are in the sequence and what the Stepchild's clock is doing.
 
 # 1. Main Sequence
@@ -181,16 +193,27 @@ You can **copy** currently selected notes by pressing ![Copy](images/buttons/cop
 
 ![Gif demonstrating copy/paste behavior](images/gifs/copypaste.gif)
 
-To paste the notes on your clipboard to the sequence, hold ![Shift](images/buttons/shift.svg) and press ![Copy](images/buttons/copy.svg). Pasted notes will be automatically selected, allowing you to easily [delete](#14-deleting--muting-notes) them if you want to undo your paste. 
+To paste the notes on your **clipboard** to the sequence, hold ![Shift](images/buttons/shift.svg) and press ![Copy](images/buttons/copy.svg). Pasted notes will be automatically selected, allowing you to easily [delete](#14-deleting--muting-notes) them if you want to undo your paste. Your copy/paste **clipboard** will stay the same until the next copy action.
 
 
 ## 1.8 Playback
 
-The Stepchild can record and play back sequences of [Notes](#b-notes) and [CC Data](#e-control-change-messages).
+The Stepchild is a *step-sequencer*, which means it can record and play back sequences of [Notes](#b-notes) and [CC Data](#e-control-change-messages). Unlike [**writing**](#13-creating-notes) and [**Editing**](#3-note-editor) notes, **recording** and **playing** the Stepchild's main sequence happens in real time.
+
+When playing or recording, the **playhead** and **writehead** will scan across the sequence, moving 1 [timestep](#d-timesteps) at a time according to the internal or external clock. 
 
 ### a. Playing
 
 ### b. Recording
+
+Alongside notes that are [written](#13-creating-notes) to the sequence by the user, the Stepchild can record notes as they're performed live. You can start **recording** by pressing ![Play](images/buttons/play.svg) and ![Shift](images/buttons/shift.svg) simultaneously. While recording, MIDI messages will create notes and CC data at the position of the **writehead**. By default, if a note already exists when a track is attempted to be written to, that note will be **overwritten**.
+
+By default the Stepchild will **wait** to receive a MIDI message before it starts recording, at which point it will begin recording in real time in **1-shot** recording mode. In 1-shot rec mode the Stepchild will continue recording until the **writehead** reaches the end of the current loop and then **stop**.
+
+Whether or not the Stepchild waits for a note can be changed in the [settings](#b-playback) menu by toggling the **wait for note** parameter. 
+The Stepchild can also switch between **overwriting** notes and **making new tracks** for conflicting notes by toggling the **overwrite** parameter. You can also swap between **1-shot** recording mode and **continuous** recording mode by toggling the **recmode** parameter. 
+
+Only [tracks](#c-tracks) and [autotracks](#5-autotracks) that are [armed](#24-arming-tracks) will be written to. Additionally, when the Stepchild is set to use an [external clock](#c-clock-source), the recording head will only advance when a MIDI clock signal is received.
 
 ## 1.9 Status Icons
 
@@ -201,7 +224,11 @@ Different status icons signify that a time-based event is taking place. This is 
 |Icon|Description|
 |:---:|:---|
 |![Power Icon](images/top_icons/battery.gif)|[Battery/USB](#c-power-batteries) indicator.|
+|![Power Icon](images/top_icons/battery.gif)|The sequence is [playing](#a-playing).|
+|![Power Icon](images/top_icons/battery.gif)|The sequence is [recording](#b-recording).|
+|![Power Icon](images/top_icons/battery.gif)| Writehead is in [overwrite](#b-recording) mode.|
 |![1-Shot Recording Icon](images/top_icons/1shot_rec.jpg)|[One-shot recording](#b-recording) mode is on.|
+|![1-Shot Recording Icon](images/top_icons/1shot_rec.jpg)|[Continuous recording](#b-recording) mode is on.|
 ![Loop Icon](images/top_icons/loop.gif)|The sequence is [Looping](#6-loops).
 ![Arp Icon](images/top_icons/arp.gif)|The [Arpeggiator](#7-arpeggiator) is on.
 ![Autotrack Icon](images/top_icons/autotracks.gif)|An [Autotrack](#5-autotracks) is active.
@@ -375,6 +402,11 @@ NA|NA|NA|NA
 
 ## 4.6 Settings
 
+### a. Sequence
+### b. Playback
+### c. System
+
+
 ## 4.7 MIDI Menu
 ### a. Routing
 ### b. CV
@@ -501,7 +533,7 @@ Sections of a sequence can be **Warped** to be bigger or smaller, although warpi
 ## 11.1 Saving
 
 ## 11.2 Quicksaving
-Selecting the quicksave icon in the [Main Menu](#41-main-menu) allows you to quicksave your sequence without going into the File Menu. If an older version of the current sequence has already been written to the Stepchild’s flash, quicksaving overwrites the old file with the current version. Holding ![**Shift**](images/buttons/shift.svg) while quicksaving restores the previously saved version of the sequence. Because the Stepchild lacks an undo ability, The quicksave feature is designed to be used for making backups before doing something iffy. Quicksave regularly because ChildOS *will occiasionally* crash and *does not autosave*.
+Selecting the quicksave icon in the [Main Menu](#23-main-menu) allows you to quicksave your sequence without going into the File Menu. If an older version of the current sequence has already been written to the Stepchild’s flash, quicksaving overwrites the old file with the current version. Holding ![**Shift**](images/buttons/shift.svg) while quicksaving restores the previously saved version of the sequence. Because the Stepchild lacks an undo ability, The quicksave feature is designed to be used for making backups before doing something iffy. Quicksave regularly because ChildOS *will occiasionally* crash and *does not autosave*.
 
 ###### *Why no autosave?* The Stepchild writes sequence data to the  Pico's onboard flash. Flash memory degrades every time its written, meaning you have a finite number of saves! Thus,the Stepchild isn't constantly autosaving to save its flash memory. 
 

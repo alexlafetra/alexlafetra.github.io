@@ -110,11 +110,18 @@
 
     function openTOC(){
         //phone mode
-        if(isMobile()){
+        if(isMobile() || window.innerWidth<400){
             document.getElementById("index_column").style.width = "100%";
             document.getElementById("index_header").style.width = "100%";
             document.getElementById("manual_column").style.width = "0%";
             document.getElementById("manual_header").style.width = "0%";
+            document.getElementById("index_header").style.borderRadius = "0 10px 0 0";
+        }
+        else if(window.innerWidth<1000){
+            document.getElementById("index_column").style.width = "40%";
+            document.getElementById("index_header").style.width = "40%";
+            document.getElementById("manual_column").style.width = "60%";
+            document.getElementById("manual_header").style.width = "60%";
             document.getElementById("index_header").style.borderRadius = "0 10px 0 0";
         }
         else{
@@ -141,7 +148,7 @@
         //     document.getElementById("title_image").style.visibility = "hidden";
         //     closeTOC();
         // }
-        if(isMobile() || window.innerWidth*0.2 < 200){
+        if(isMobile() || window.innerWidth<1000){
             document.getElementById("title_text").innerHTML = "Manual";
             document.getElementById("title_image").style.visibility = "hidden";
             closeTOC();
