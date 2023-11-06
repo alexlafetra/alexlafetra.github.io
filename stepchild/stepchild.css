@@ -143,18 +143,15 @@ body {
     right:0;
     height:100%;
     z-index:1;
-
     border: 0;
-
     writing-mode:vertical-rl;
-    text-orientation:sideways-right;
+    text-orientation:sideways;
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    /* font-size:8.85vh; */
     font-size:40px;
     font-weight:900;
     white-space:nowrap;
     animation: scrollText 20s infinite linear;
-    transition: all 1s ease;
+    /* transition: all 1s ease; */
 }
 #scroll_text{
     display:block;

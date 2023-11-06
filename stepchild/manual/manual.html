@@ -25,39 +25,50 @@
 
     // Markdown renderer
     const renderer = {
-    heading(text, level) {
-        let cleanedText = text.replace(/\./g,'');
-        cleanedText = cleanedText.replace("/",'-');
-        let escapedText = cleanedText.toLowerCase().replace(/[^\w]+/g, '-');
-        escapedText = escapedText.replace("amp","");
-
-        return `
-                <h${level}>
-                <a id="${escapedText}" class="anchor" href="#${escapedText}">
-                    <span class="header-link"></span>
-                </a>
-                ${text}
-                </h${level}>`;
-    },
-    //adds the close TOC function to menu links
-    link(href,title,text){
-        return `<a href="${href}" title="${title}" onclick="closeTOCFromLink()">${text}</a>`;
-    },
-    image(href, title, text) {
-        //check if it's a button svg
-        const isButtonImage = /buttons/i.test(href);
-        const isGif = /\.gif$/i.test(href);
-        let imageClass = '';
-        if(isButtonImage)
-            imageClass = 'button-svg';
-        else if(isGif)
-            imageClass = 'center-gif';
-        // Render the image with the appropriate class for centering
-        return `<img src="${href}" title="${text}" alt="${text}" class="${imageClass}">`;
-    }
+        heading(text, level) {
+            let cleanedText = text.replace(/\./g,'');
+            cleanedText = cleanedText.replace("/",'-');
+            let escapedText = cleanedText.toLowerCase().replace(/[^\w]+/g, '-');
+            escapedText = escapedText.replace("amp","");
+            return `
+                    <h${level}>
+                    <a id="${escapedText}" class="anchor" href="#${escapedText}">
+                        <span class="header-link"></span>
+                    </a>
+                    ${text}
+                    </h${level}>`;
+        },
+        //adds the close TOC function to menu links
+        link(href,title,text){
+            return `<a href="${href}" title="${title}" onclick="closeTOCFromLink()">${text}</a>`;
+        },
+        image(href, title, text) {
+            //check if it's a button svg
+            const isButtonImage = /buttons/i.test(href);
+            const isGif = /\.gif$/i.test(href);
+            let imageClass = '';
+            if(isButtonImage)
+                imageClass = 'button-svg';
+            else if(isGif)
+                imageClass = 'center-gif';
+            // Render the image with the appropriate class for centering
+            return `<img src="${href}" title="${text}" alt="${text}" class="${imageClass}">`;
+        }
     }
 
     marked.use({ renderer });
+
+    // Use the Fetch API to load the Markdown files
+    function loadMarkdownContent()    {
+        fetch('manual.md')
+        .then(response => response.text())
+        .then(markdownContent => {
+            const TOCindex = markdownContent.indexOf("<!-- END OF TABLE OF CONTENTS -->");
+            document.getElementById("toc").innerHTML = marked.parse(markdownContent.substring(0,TOCindex));
+            document.getElementById("manual").innerHTML = marked.parse(markdownContent.substring(TOCindex));
+        })
+        .catch(error => console.error('Error loading table of contents:', error));
+    }
 
     // Use the Fetch API to load the Markdown files
     function loadIndex()    {
@@ -72,7 +83,7 @@
         .catch(error => console.error('Error loading table of contents:', error));
     }
 
-    document.getElementById("toc").addEventListener("load",loadIndex());
+    // document.getElementById("toc").addEventListener("load",loadIndex());
 
     function loadManual() {
         fetch('manual.md')
@@ -86,7 +97,7 @@
         .catch(error => console.error('Error loading manual:', error));
     }
 
-    document.getElementById("manual").addEventListener("load",loadManual());
+    // document.getElementById("manual").addEventListener("load",loadManual());
 
     function closeTOC(){
         //works the same for mobile/desktop
@@ -156,23 +167,16 @@
         }
     }
 
-    // Passing message along into manual_body
-    window.addEventListener('message', event => {
-        if(document.getElementById("index_column").style.width == "100%"){
-            closeTOC();
-        }
-        const iframeWindow = document.getElementById("manual_iframe").contentWindow;
-        iframeWindow.postMessage({scrollTo: event.data.scrollTo},"*");
-    });
-    window.onresize = checkIndexSize;
-    window.onload = checkIndexSize;
-    checkIndexSize();
 
     function updateURL() {
         window.parent.postMessage({ newURL: "manual" }, '*');
         console.log("manual");
     }
+
+    window.onresize = checkIndexSize;
     updateURL();
+    loadMarkdownContent();
+    checkIndexSize();
 
 </script>
 </html>

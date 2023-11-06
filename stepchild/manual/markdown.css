@@ -103,7 +103,7 @@ h6 tt, h6 code {
 
 h1 {
   font-size: 28px;
-  color: black;
+  color: blue;
 }
 
 h2 {
@@ -281,16 +281,6 @@ img {
   max-width: 100%;
   margin:auto;
 }
-/* for centering gifs */
-.center-gif {
-  display: block;
-  margin: 0 auto;
-}
-
-.button-svg {
-  display: inline-block;
-  vertical-align: middle;
-}
 
 span.frame {
   display: block;
@@ -422,6 +412,21 @@ pre code, pre tt {
   border: none;
 }
 
+/* Some custom css*/
+
+/* for centering gifs */
+.center-gif {
+  display: block;
+  margin: 0 auto;
+}
+
+/* For centering button icons */
+.button-svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Prettying up the index */
 #index_body{
   padding-left:10px;
 }
@@ -431,6 +436,7 @@ pre code, pre tt {
   left:0;
   width:20%;    
   font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-style:italic;
   font-size:4vh;
   font-weight:900;
   font-stretch: 250%;
@@ -443,6 +449,7 @@ pre code, pre tt {
   background-color:black;
   top:0;
 }
+
 #index_header:hover{
   cursor:pointer;
   background-color:blue;
