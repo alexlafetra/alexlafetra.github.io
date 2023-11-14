@@ -336,7 +336,7 @@ Different status icons signify that a time-based event is taking place. This is 
 
 |Icon|Description|
 |:---:|:---|
-|![Power Icon](images/top_icons/battery.gif)|[Battery/USB](#c-power-batteries) indicator.|
+|![Power Icon](images/top_icons/battery.gif)|[Battery/USB](#c-power--batteries) indicator.|
 |![Power Icon](images/top_icons/battery.gif)|The sequence is [playing](#a-playing).|
 |![Power Icon](images/top_icons/battery.gif)|The sequence is [recording](#b-recording).|
 |![Power Icon](images/top_icons/battery.gif)| Writehead is in [overwrite](#b-recording) mode.|
@@ -628,7 +628,7 @@ The "grid" parameter dictates the grid each note will lock to. You can change th
 
 Finally, the "**delete colliding notes**" option lets you choose what happens when two notes are pushed onto the same subdivision. You can set it by navigating the cursor onto the grid parameter and twisting ![A](images/buttons/A.svg) and holding ![Shift](images/buttons/shift.svg). Setting it to "**off**" leaves notes where they are if they're unable to find a nearby spot on the grid, and setting it to "**on**" will delete notes that can't find a nearby spot on the grid. By default, this is on.
 
-Pressing ![New](images/buttons/new.svg) will push you to the note selection screen where you can [select notes](#15-selecting-notes) to quantize. You can continuously quantize notes by selecting and then pressing ![New](images/buttons/new.svg), or you can back out of the selection screen by pressing ![Menu](images/buttons/menu.svg).
+Pressing ![New](images/buttons/new.svg) will push you to the note selection screen where you can [select notes](#15-selecting-notes) that you want to quantize. You can quantize notes by selecting your target notes and then pressing ![New](images/buttons/new.svg), and you can back out to the quanitze menu screen by pressing ![Menu](images/buttons/menu.svg).
 
 
 ## 10.2 Humanize

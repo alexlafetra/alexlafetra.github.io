@@ -70,35 +70,6 @@
         .catch(error => console.error('Error loading table of contents:', error));
     }
 
-    // Use the Fetch API to load the Markdown files
-    function loadIndex()    {
-        fetch('index.md')
-        .then(response => response.text())
-        .then(markdownContent => {
-            // const iframeWindow = document.getElementById("toc_iframe").contentWindow;
-            // iframeWindow.postMessage({text: marked.parse(markdownContent)},"*");
-            document.getElementById("toc").innerHTML = marked.parse(markdownContent);
-            console.log("loaded index.");
-        })
-        .catch(error => console.error('Error loading table of contents:', error));
-    }
-
-    // document.getElementById("toc").addEventListener("load",loadIndex());
-
-    function loadManual() {
-        fetch('manual.md')
-        .then(response => response.text())
-        .then(markdownContent => {
-            // const iframeWindow = document.getElementById("manual_iframe").contentWindow;
-            // iframeWindow.postMessage({text: marked.parse(markdownContent)},"*");
-            document.getElementById("manual").innerHTML = marked.parse(markdownContent);
-            console.log("loaded manual.");
-        })
-        .catch(error => console.error('Error loading manual:', error));
-    }
-
-    // document.getElementById("manual").addEventListener("load",loadManual());
-
     function closeTOC(){
         //works the same for mobile/desktop
         document.getElementById("index_column").style.width = "0%";
@@ -177,6 +148,5 @@
     updateURL();
     loadMarkdownContent();
     checkIndexSize();
-
 </script>
 </html>

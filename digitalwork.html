@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Alex LaFetra</title>
+    <link href="styles/digital.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        //Get 
+        function getSketchName(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        function loadSketchFromURL(){
+            let sketchURL = "digital/"+getSketchName('sketch')+"/index.html";
+            console.log(sketchURL);
+            document.getElementsByName("sketch_frame").src = sketchURL;
+        }
+
+        function addSketchToURL(name){
+            history.pushState(null, null, "digitalwork.html?sketch="+name);
+        }
+    </script>
+</head>
+<body>
+    <div id = "links">
+        <a class = "sketch_link" href = "digital/extra_special/index.html" target = "sketch_frame">extra_special</a>
+        <a class = "sketch_link" href = "digital/curve_paper_waves/index.html" target = "sketch_frame">curve_paper_waves</a>
+        <a class = "sketch_link" href = "digital/hedorah/index.html" target = "sketch_frame">hedorah</a>
+        <a class = "sketch_link" href = "digital/colorsynth/index.html" target = "sketch_frame">colorsynth</a>
+        <a class = "sketch_link" href = "digital/grid/index.html" target = "sketch_frame">grid</a>
+        <a class = "sketch_link" href = "digital/ink_friends/index.html" target = "sketch_frame">friends</a>
+        <a class = "sketch_link" href = "digital/ink_people/index.html" target = "sketch_frame">people</a>
+        <a class = "sketch_link" href = "digital/inkdot/index.html" target = "sketch_frame">dot</a>
+        <a class = "sketch_link" href = "digital/loops/index.html" target = "sketch_frame">loops</a>
+
+        <a class = "sketch_link" href = "digital/membrane_mosaic/index.html" target = "sketch_frame">loops</a>
+        <a class = "sketch_link" href = "digital/membrane_noodles/index.html" target = "sketch_frame">loops</a>
+        <a class = "sketch_link" href = "digital/membrane_sim/index.html" target = "sketch_frame">loops</a>
+        <a class = "sketch_link" href = "digital/membrane_sim_bloom/index.html" target = "sketch_frame">loops</a>
+        <a class = "sketch_link" href = "digital/trees/index.html" target = "sketch_frame">loops</a>
+        <a class = "sketch_link" href = "digital/trees_diagram/" target = "sketch_frame">loops</a>
+        <a class = "sketch_link" href = "digital/trees_roots/index.html" target = "sketch_frame">loops</a>
+
+
+
+    </div>
+    <div id = "sketch">
+        <iframe name = "sketch_frame" id = "sketch_frame" src = "digital/extra_special/index.html"></iframe>
+    </div>
+</body>
+<script>
+    // loadSketchFromURL();
+</script>
+</html>

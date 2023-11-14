@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>l</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        html,
+        body,
+        #viewDiv {
+          padding: 0;
+          margin: 0;
+          height: 100%;
+          width: 100%;
+        }
+    </style>
+    
+    <!-- importing ArcGIS package and css -->
+    <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.28/"></script>
+
+    <script>
+
+    // load map and mapview modules
+    require([
+      "esri/config",
+      "esri/WebMap",
+      "esri/views/MapView",
+      "esri/widgets/ScaleBar",
+      "esri/widgets/Legend"
+    ], function(esriConfig, WebMap, MapView, ScaleBar, Legend) {
+        //API key from: https://developers.arcgis.com/
+        esriConfig.apiKey = "AAPK023753a33bf74bc5abe40247f8a69b7bOj30U9S6pJ6eK8QZSdWt6B9ds5GupD9QP4uflg03hyaK_pY_rQCZumXTYfq8gd-L";
+
+        // const map = new Map({
+        //     basemap: "arcgis/topographic" // basemap styles service
+        // });
+
+        const webMap = new WebMap({
+            portalItem: {
+                id: "524149f1d5c94aac9922e0a90fc8f3e8"
+            }
+        });
+
+        const view = new MapView({
+        map: webMap,
+        // center: [-118.805, 34.027],
+        // zoom: 13, // scale: 72223.819286
+        container: "viewDiv",
+        constraints: {
+            snapToZoom: false
+        }
+        });
+    })
+    </script>
+</head>
+<body>
+    <div id = "viewDiv"></div>
+</body>
+</html>

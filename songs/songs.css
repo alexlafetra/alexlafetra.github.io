@@ -1,0 +1,42 @@
+html{
+    padding:0;
+    margin:0;
+}
+
+#song_frame{
+    width:100%;
+    height:100%;
+    border:none;
+    padding:0 0 0 0;
+    margin:0 0 0 0;
+    top:0;
+    display:block;
+}
+
+#song{
+    width:85%;
+    float:right;
+    height:100vh;
+    margin:0;
+    top:0;
+    display:block;
+}
+
+#links{
+    width:10%;
+    min-width:500px;
+    float:left;
+    position:fixed;
+    height:100vh;
+    font-size:12pt;
+}
+
+.song_link::after{
+    content:"\a";
+    white-space:pre;
+}
+
+.verse::after{
+    content:"\a";
+    white-space:pre;
+}
