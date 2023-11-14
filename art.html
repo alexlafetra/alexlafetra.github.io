@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <title>Alex LaFetra Thompson</title>
-<link href="styles/art.css" rel="stylesheet">
+<link href="visual_art/art.css" rel="stylesheet">
 <script>
     // gallery objects
     // note: no spaces allowed in src's !
@@ -44,25 +44,20 @@
         const viewer = document.getElementById("image_viewer");
         viewer.style.display = "none";
         document.getElementById("main_container").style.display = "block";
-        // document.getElementsByTagName('html')[0].style.backgroundColor = "rgb(255,255,245)";
-        // document.getElementsByTagName('html')[0].style.backgroundColor = "rgb(160, 160, 140)";
     }
     function openImageViewer(src){
         const viewer = document.getElementById("image_viewer");
         document.getElementById("image_viewer").style.display = "block";
         document.getElementById("big_img").src = src;
         document.getElementById("main_container").style.display = "none";
-        // document.getElementsByTagName('html')[0].style.backgroundColor = "rgb(200,200,200)";
     }
     function toggleImageViewer(src){
         const viewer = document.getElementById("image_viewer");
         if(viewer.style.display == "none"){
-            // document.addEventListener("click",closeImageViewer);
             openImageViewer(src);
         }
         else{
             closeImageViewer();
-            // document.removeEventListener("click",closeImageViewer);
         }
     }
     //loop thru and clear all the children of the gallery div

@@ -2,6 +2,11 @@ html{
     padding:0;
     margin:0;
 }
+body{
+    padding:0;
+    margin:0;
+    overflow:scroll;
+}
 
 #song_frame{
     width:100%;
@@ -29,6 +34,7 @@ html{
     position:fixed;
     height:100vh;
     font-size:12pt;
+    z-index:-1;
 }
 
 .song_link::after{
@@ -39,4 +45,9 @@ html{
 .verse::after{
     content:"\a";
     white-space:pre;
+}
+
+.notes{
+    color:gray;
+    max-width:400px;
 }
