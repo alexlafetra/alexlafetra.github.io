@@ -68,10 +68,12 @@
     11. Randomizer Menu
     12. Console Menu
 5. [Autotracks](#5-autotracks)
-    1. Editor Controls
-    2. CC List
-    3. Internal CC Messages
-    4. Note about Ableton
+    1. Global Autotracks
+    2. Envelope Autotracks
+    3. Editor Controls
+    4. CC List
+    5. Internal CC Messages
+    6. Note about Ableton
 6. [Loops](#6-loops)
     1. Types of loops
     2. Editing within Loop
@@ -114,7 +116,8 @@
 # Stepchild V1.0 - *User Manual*
 <!-- ###### V1.0 10.15.23 -->
 
-![Render of the Stepchild](images/gifs/stepchild_optimized.gif)
+<!-- ![Render of the Stepchild](images/gifs/stepchild_optimized.gif) -->
+![Cover Image](images/explode7.png)
 
 # 0. Introduction
 
