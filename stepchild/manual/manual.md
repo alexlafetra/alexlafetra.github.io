@@ -59,9 +59,6 @@
         1. [BPM](#a-bpm)
         2. [Swing](#b-swing)
         3. [Clock Source](#c-clock-source)
-    8. Arpeggiator Menu
-    9. Randomizer Menu
-    10. Console Menu
 5. [Autotracks](#5-autotracks)
     1. [Autotrack Viewer](#51-autotrack-viewer)
     2. [Autotrack Triggers](#52-autotrack-triggers)
@@ -105,10 +102,10 @@
     3. Uploading to a computer
 12. [Console](#12-console)
 13. [Using the ChildOS Desktop Interface](#13-using-the-childos-desktop-interface)
-14. Misc. Functions
+14. [Misc. Functions](#14-misc-functions)
     1. Creating a Scale
     2. Yes/No Box
-15. [Background -- Take this out!](#15-background)
+    3. Text Input
 
 
 <!-- END OF TABLE OF CONTENTS -->
@@ -221,7 +218,7 @@ Alongside storing velocity, Notes also store a value for their probability. When
 
 If the Note does play, a MIDI 'Note On' message is sent at the note's velocity, with the pitch and channel of the respective track. If the playhead reaches the end of the note, and that note was successfully played, a MIDI 'Note Off' message is sent.
 
-By default, notes are shaded by their velocity, with quieter notes being more opaque. Note sprites can also be [configured](#45-settings) to be shaded by their probability.
+By default, notes are shaded by their velocity, with quieter notes being more opaque. Note sprites can also be [configured](#42-settings) to be shaded by their probability.
 
 ###### An animation showing the different shade levels for different velocities and probabilities:
 
@@ -487,28 +484,7 @@ The Stepchild's Main Menu can be opened by pressing ![Menu](images/buttons/menu.
 
 The Main Menu icons can be navigated using the Joystick ![all directions](images/buttons/joystick.svg) and selected by pressing ![select](images/buttons/select.svg). You can also jump directly into the [Loop Menu](#43-loop-menu) by pressing ![Loop](images/buttons/loop.svg) or into the [FX Menu](#45-fx-menu) by pressing ![New](images/buttons/new.svg).
 
-## 4.2 Loop Menu
-
-## 4.3 Instrument Menu
-
-## 4.4 FX Menu
-
-###### *The FX Menu links on page 1 are:*
-
-|[Quantize](#101-quantize)|[Humanize](#102-humanize)|[Strum](#103-strum)|[Echo](#104-echo)|
-|:---:|:---:|:---:|:---:|
-|[Reverse](#105-reverse)|[Warp](#106-warp)|NA|NA|
-NA|NA|NA|NA
-
-###### *The FX Menu links on page 2 are:*
-NA|NA|NA|NA
-|---|---|---|---|
-|NA|NA|NA|NA|
-|NA|NA|NA|NA|
-|NA|NA|NA|NA|
-
-## 4.5 Settings
-
+## 4.2 Settings
 ### a. Sequence
 ### b. Playback
 ### c. System
@@ -519,7 +495,7 @@ NA|NA|NA|NA
 ### b. CV
 ### c. Thru
 
-## 4.7 Clock Menu
+## 4.4 Clock Menu
 The Stepchild has a flexible clock that runs on its own core of the Pi Pico. Rather than using timer interrupts, the clock on the second core keeps track of how **late** or **early** it was each time it fires and dynamically delays or advances itself to come back in time.
 
 The Stepchild's **Clock Menu** has 3 parameters that can be experimented with to affect the timing of the sequence. 
@@ -706,6 +682,8 @@ Originally, the Randomizer was one of the [FX](#10-fx), but it became such a key
 
 "Instruments" are a category of applications which involve using the Stepchild as a controller to send MIDI messages in real time. This ranges from utility applications like [XY](#91-xy), where the Stepchild is used as a MIDI controller to send CC information, to more generative applications like [Storm](#92-storm) which uses the Stepchild like an instrument.
 
+
+
 ## 9.1 XY
 ## 9.2 Storm
 ## 9.3 Knobs
@@ -728,6 +706,21 @@ You can toggle between creating new tracks and overwriting existing tracks by pr
 # 10. FX
 
 "FX" are used to alter and edit the notes of the main sequence, as opposed to [instruments](#9-instruments) which send MIDI data in real-time. Each FX application is accessible from the [FX Menu](#45-fx-menu) and from the dropdown in the [Note Editor](#3-note-editor). You can also [add your own custom FX](../src/stepchild/User/userApplications.h) to ChildOS.
+
+###### *The FX Menu links on page 1 are:*
+
+|[Quantize](#101-quantize)|[Humanize](#102-humanize)|[Strum](#103-strum)|[Echo](#104-echo)|
+|:---:|:---:|:---:|:---:|
+|[Reverse](#105-reverse)|[Warp](#106-warp)|NA|NA|
+NA|NA|NA|NA
+
+###### *The FX Menu links on page 2 are:*
+
+NA|NA|NA|NA
+|---|---|---|---|
+|NA|NA|NA|NA|
+|NA|NA|NA|NA|
+|NA|NA|NA|NA|
 
 ## 10.1 Quantize
 
@@ -754,9 +747,7 @@ Sections of a sequence can be **Warped** to be bigger or smaller, although warpi
 
 The Stepchild stores sequences on its internal flash storage with the '.child' extension. There is also a settings file that can't be browsed directly from the File Menu but *can* be updated from the [Settings Menu](#46-settings) with user preferences.
 
-## 11.1 Saving
-
-## 11.2 Quicksaving
+## 11.1 Quicksaving
 Selecting the quicksave icon in the [Main Menu](#23-main-menu) allows you to quicksave your sequence without going into the File Menu. If an older version of the current sequence has already been written to the Stepchild’s flash, quicksaving overwrites the old file with the current version. Holding ![**Shift**](images/buttons/shift.svg) while quicksaving restores the previously saved version of the sequence. Because the Stepchild lacks an undo ability, The quicksave feature is designed to be used for making backups before doing something iffy. Quicksave regularly because ChildOS *will occiasionally* crash and *does not autosave*.
 
 ###### *Why no autosave?* The Stepchild writes sequence data to the  Pico's onboard flash. Flash memory degrades every time its written, meaning you have a finite number of saves! Thus,the Stepchild isn't constantly autosaving to save its flash memory. 
@@ -764,7 +755,11 @@ Selecting the quicksave icon in the [Main Menu](#23-main-menu) allows you to qui
 ###### I couldn't find a good source for how many write cycles the Pico's flash is rated for, but most flash storage falls in the range of 10k--100k cycles, which means you may get as few as 10k "saves" before the onboard flash is significantly degraded. So don't go crazy, but the good news is that saving a sequence 5x a day would give you at least 5 years worth of Stepchilding. You can be pretty liberal with it.
 
 
-If the current sequence hasn’t been saved yet, quicksaving will prompt you to enter a filename and save the sequence like you would when [creating a new save](#111-saving).
+If the current sequence hasn’t been saved yet, quicksaving will prompt you to enter a filename and save the sequence like you would when [creating a new save](#112-file-browsing).
+
+## 11.2 File Browsing
+
+The Stepchild's
 
 ## 11.3 Uploading to a Computer
 
@@ -779,19 +774,3 @@ If the current sequence hasn’t been saved yet, quicksaving will prompt you to 
 # 14.2 Yes/No Box
 
 # 14.3 Text Input
-
-# 15. Background
-
-![Birthplace of the Stepchild](images/middletown_snow.jpeg)
-###### *My house, winter 2021*
-
-My final year of college, in the dead of winter, in Middletown Connecticut, I was wracked with nostalgia. My first experience with any kind of music creation was an app on my first phone, the timeless *FL Studio Mobile*. Yeah, that's right. ***Mobile***. I miss the simplicity and toy-ness of this application; the accessible step sequencer and piano roll editor that focused on *note* editing made it engaging and simplistic and unique among modern DAWs.
-
-![FL Studio Mobile](images/flstudio_mobile_piano.jpg)
-###### *2011 FL Studio Mobile, the first music making app I used and, in retrospect, a big influence on the design of the Stepchild*
-
-I was feeling especially nostalgic for FL Studio Mobile because my instrument of choice, the SP404, had at the time a seriously defficient sequencer. Since then, Roland has added a step sequencer and streamlined the pattern building process a little, but I still think for such an awesome instrument it deserves a better sequencer.
-
-That winter, I began coding what would become the first version of ChildOS on an Arduino Mega. The goal was simple: create a sequencer that was easy to use, fun to engage with, but also complex enough that in theory and given enough time almost any song could be programmed into it.
-
-I didn't set out to recreate FL Studio Mobile, but I think it's influence over the way I think about songs is evident from the design of the Stepchild's UI, and I'm proud of that. At the end of the day, FL Studio Mobile was a highly unserious program with all the potential for creating serious things and that's a legacy I think the Stepchild should build from.
