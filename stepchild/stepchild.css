@@ -164,7 +164,7 @@ animation-play-state: paused;
 }*/
 @keyframes scrollText {
 from   { transform: translateY(0%); }
-to { transform: translateY(-320%); }
+to { transform: translateY(-200%); }
 }
 
 canvas {

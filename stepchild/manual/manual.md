@@ -46,37 +46,37 @@
     6. [Humanizing Notes](#36-humanizing-notes)
     7. [The FX Dropdown](#37-the-fx-dropdown)
 4. [Menus](#4-menus)
-    1. Main Menu
-    2. Autotrack Menu
-    3. Loop Menu
-    4. Instrument Menu
-    5. FX Menu
-    6. Settings Menu
+    1. [Main Menu](#41-main-menu)
+    2. Settings Menu
         1. Sequence
         2. Playback
         3. System
-    7. MIDI Menu
+    3. MIDI Menu
         1. Routing
         2. CV
         3. Thru
-    8. File Menu
-    9. [Clock Menu](#49-clock-menu)
+    4. [Clock Menu](#44-clock-menu)
         1. [BPM](#a-bpm)
         2. [Swing](#b-swing)
         3. [Clock Source](#c-clock-source)
-    10. Arpeggiator Menu
-    11. Randomizer Menu
-    12. Console Menu
+    8. Arpeggiator Menu
+    9. Randomizer Menu
+    10. Console Menu
 5. [Autotracks](#5-autotracks)
-    1. Global Autotracks
-    2. Envelope Autotracks
-    3. Editor Controls
-    4. CC List
-    5. Internal CC Messages
-    6. Note about Ableton
+    1. [Autotrack Viewer](#51-autotrack-viewer)
+    2. [Autotrack Triggers](#52-autotrack-triggers)
+    3. [Autotrack Curves](#53-autotrack-curves)
+        1. [Editing Linear Curves](#a-editing-linear-curves)
+        2. [Editing Function Curves](#b-editing-function-curves)
+        3. [Combining Curve Types](#c-combining-curve-types)
+        4. [Recording To Curves](#d-recording-to-curves)
+    4. [CC Messages](#54-cc-messages)
+        1. [CC Shortcut Lists](#b-cc-shortcut-lists)
+        2. [Internal CC Messages](#c-internal-cc-messages)
 6. [Loops](#6-loops)
-    1. Types of loops
-    2. Editing within Loop
+    1. The Loop Chain
+    2. Types of loops
+    3. Editing within A Loop
 7. [Arpeggiator](#7-arpeggiator)
     1. Step Lengths
     2. Modifiers
@@ -478,29 +478,20 @@ The Stepchild's functions are accessible through different *submenus*. The [Main
 
 ![The Main Menu](images/gifs/mainMenu.gif)
 
-The Stepchild's Main Menu can be opened by pressing ![Menu](images/buttons/menu.svg). The 12 icons of the main menu are links to different submenus and functions of the Stepchild.
+The Stepchild's Main Menu can be opened by pressing ![Menu](images/buttons/menu.svg), and contains 12 icons. Most of these icons are links to submenus, while some (like the [quicksave](#112-quicksaving) icon) directly call main menu functions.
 
-###### *The main menu links are:*
-|[Autotracks](#42-autotrack-menu)|[Loops](#43-loop-menu)|[Instruments](#44-instrument-menu)|[Settings](#46-settings)|
+|[Autotracks](#5-autotracks)|[Loops](#43-loop-menu)|[Instruments](#44-instrument-menu)|[Settings](#46-settings)|
 |:---:|:---:|:---:|:---:|
 |[Quicksave](#112-quicksaving)|[FX](#45-fx-menu)|[Random](#8-randomizer)|[Console](#12-console)
 |[MIDI](#47-midi-menu)|[Files](#48-file-menu)|[Clock](#49-clock-menu)|[Arp](#7-arpeggiator)
 
-The Main Menu links can be navigated using the Joystick ![all directions](images/buttons/joystick.svg) and selected by pressing ![select](images/buttons/select.svg). You can also jump directly to the [Loop Menu](#43-loop-menu) by pressing ![Loop](images/buttons/loop.svg).
+The Main Menu icons can be navigated using the Joystick ![all directions](images/buttons/joystick.svg) and selected by pressing ![select](images/buttons/select.svg). You can also jump directly into the [Loop Menu](#43-loop-menu) by pressing ![Loop](images/buttons/loop.svg) or into the [FX Menu](#45-fx-menu) by pressing ![New](images/buttons/new.svg).
 
-## 4.2 Autotrack Menu
+## 4.2 Loop Menu
 
-Opening up the [Autotrack Menu](#42-autotrack-menu) will take you directly to the Autotrack Viewer screen. This screen shows a cascading view of every Autotrack currently in the sequence and some info about it. Autotrack's can be created by pressing ![New](images/buttons/new.svg), deleted by pressing ![Delete](images/buttons/delete.svg), and muted by holding ![Shift](images/buttons/shift.svg) and pressing ![Delete](images/buttons/delete.svg).
+## 4.3 Instrument Menu
 
-Additionally, there are a few autotrack-specific controls that are useful. Holding ![Shift](images/buttons/shift.svg) will send a steady stream of CC messages from the active Autotrack using that track's channel and CC number. Turning ![A](images/buttons/A.svg) will change the CC value of the track, while turning ![B](images/buttons/B.svg) will change the channel value of the track.
-
-Finally, pressing ![A](images/buttons/A.svg) will bring up the [CC Selection](#52-cc-list) screen.
-
-## 4.3 Loop Menu
-
-## 4.4 Instrument Menu
-
-## 4.5 FX Menu
+## 4.4 FX Menu
 
 ###### *The FX Menu links on page 1 are:*
 
@@ -516,22 +507,19 @@ NA|NA|NA|NA
 |NA|NA|NA|NA|
 |NA|NA|NA|NA|
 
-## 4.6 Settings
+## 4.5 Settings
 
 ### a. Sequence
 ### b. Playback
 ### c. System
 
 
-## 4.7 MIDI Menu
+## 4.6 MIDI Menu
 ### a. Routing
 ### b. CV
 ### c. Thru
 
-## 4.8 File Menu
-The Stepchild stores sequences on its internal flash storage with the '.child' extension. There is also a settings file that can't be browsed directly from the File Menu but *can* be updated in the [Settings Menu](#46-settings).
-
-## 4.9 Clock Menu
+## 4.7 Clock Menu
 The Stepchild has a flexible clock that runs on its own core of the Pi Pico. Rather than using timer interrupts, the clock on the second core keeps track of how **late** or **early** it was each time it fires and dynamically delays or advances itself to come back in time.
 
 The Stepchild's **Clock Menu** has 3 parameters that can be experimented with to affect the timing of the sequence. 
@@ -563,23 +551,141 @@ When the Stepchild is in internal clock mode, however, it sends out clock messag
 
 # 5. Autotracks
 
-Autotracks are editable sequences of [CC Data](#a-a-brief-intro-to-midi) that can be sent and recorded to by the Stepchild. In the DAW world, they're essentially the same as "Automation" (hence the name) but are also similar to the "motion sequencing" capabilities of some hardware instruments.
+There is a tiny robot onboard the Stepchild that can autonamously alter parameters and send MIDI Control Change messages -- just kidding. Not quite as cool, but close, Autotracks are editable sequences of [CC Data](#a-a-brief-intro-to-midi) that can be sent and recorded to by the Stepchild. In the DAW world, they can act the same as "Automation" tracks, but also have some of the "motion sequencing" capabilities found on hardware instruments and the "envelope" capabilities of synthesizers and samplers.
 
-Autotracks on the Stepchild are stored as curves which are both algorithmically generateable and editable as individual points. They can be used like LFO envelopes, arbitrary function generators, and automation lanes, but aren't quite fast enough to be used as a wavetable or waveform to control another synth's amplifier (yet).
+Autotracks on the Stepchild are stored as curves which are both algorithmically generateable and editable as individual points. They can be used like LFOs, ADSR envelopes, arbitrary function generators, and automation lanes, but *aren't* quite fast enough to be used as a wavetable or waveform to control another synth's amplifier (yet).
 
-## 5.1 Autotrack Editor
+## 5.1 Autotrack Viewer
+
+Opening up the [Autotrack Menu](#42-autotrack-menu) will take you directly to the Autotrack Viewer screen, which lets you create, delete, and view Autotracks. The button controls for the viewer are pretty extensive, and are listed below:
+
+|Button|Function|
+|:---:|:---|
+|![New](images/buttons/new.svg)| Creates a new **Autotrack**|
+|![Delete](images/buttons/delete.svg)| Deletes the targeted **Autotrack**|
+|![Shift](images/buttons/shift.svg)+![Delete](images/buttons/delete.svg)| Un/mutes the targeted **Autotrack**|
+|![Play](images/buttons/play.svg)| Start [playing](#a-playing) the sequence.|
+|![Shift](images/buttons/shift.svg)+![Play](images/buttons/play.svg)| Prime/unprime the targeted **Autotrack**|
+|![Select](images/buttons/select.svg)| [Edit](#52-autotrack-editor) the curve data of the targeted **Autotrack**|
+|![Loop](images/buttons/loop.svg)| Set a [Trigger](#a-triggering-autotracks) for the targeted **Autotrack**|
+|![Shift](images/buttons/shift.svg)| Send a stream of [CC Messages](#a-a-brief-intro-to-midi) from the targeted **Autotrack**|
+|**Turning** ![A](images/buttons/A.svg)| Change the [CC Value](#a-a-brief-intro-to-midi) of the targeted **Autotrack**|
+|**Pressing** ![B](images/buttons/B.svg)| Enter the [CC Selection](#52-cc-list) screen.|
+|**Turning** ![B](images/buttons/B.svg)| Change the **Channel** of the targeted **Autotrack**|
+
+![Gif of the Autotrack Viewer](images/gifs/autotrack_viewer.gif)
+
+Typically, this screen is useful for **Creating**, [Editing](#52-autotrack-editor), setting [Autotrack Triggers](#52-autotrack-triggers), and testing the connection between a **track** and a DAW or MIDI device.
+
+## 5.2 Autotrack Triggers
+
+By default Autotracks are **global**, which means they start and stop playing when the [main sequence](#1-main-sequence) starts and stops (and play along with the clock). Global Autotracks follow the same looping behavior as the main sequence's loop, and reset every time the main sequence resets.
+
+Autotracks can *instead* be set to **trigger** when a note is played on a specific **track** or **channel**. When a **trigger** is set, the **Autotrack** will start playing when a note is played on the triggering track or channel.
+
+![Gif of an Autotrack Being Triggered](images/gifs/autotrack_gate.gif)
+
+Autotrack triggers are **gates** by default, meaning that they *only play when their trigger is active* and reset after the trigger ends. If a track *isn'* gated by its trigger, then the Track begins playing everytime its trigger fires but *doesn't* stop once the trigger ends.
+
+###### Think: honking your horn (gated) VS ringing a bell (not-gated).
+
+Pressing ![Loop](images/buttons/loop.svg) while in the **Autotrack Viewer** brings up the **Trigger Set** screen, which allows you to set a [Track](#c-tracks) or **Channel** to trigger the Autotrack. You can also toggle the **Gate** behavior of the Autotrack trigger.
+
+
+## 5.3 Autotrack Curves
  
-Pressing ![Select](images/buttons/select.svg) on a track in the [Autotrack Viewer](#42-autotrack-menu) screen will open it up in the Autotrack Editor. The Autotrack Editor gives you controls to experiment with the shape of your track and it's CC/Channel parameters.
+Pressing ![Select](images/buttons/select.svg) on a track in the [Autotrack Viewer](#42-autotrack-menu) screen will open it up in the **Autotrack Curve Editor**. 
 
-### a. Editing Point Curves
+![Autotrack Curve Editor](images/gifs/autotrack_curve_editor.gif)
 
-The simplest kind of Autotrack is point-based and is denoted by the ![Linear Icon]() symbol in the Autotrack Viewer. With this kind of curve you can move your cursor through time by moving ![Left or right](images/buttons/left_right.svg) and drag individual points up or down using ![up or down](images/buttons/up_down.svg). Selecting and point using ![Select](images/buttons/select.svg)
+The **Curve Editor** will display the current **curve** and **CC Value**,  **Channel** and **CC message** data, the **Input Source**, and the **Curve/Interpolation Type** data.
+
+In all editor screens, holding ![Shift](images/buttons/shift.svg) will continously send a CC message from the Autotrack. *This can be pretty helpful when setting up controllable parameters in a DAW, like Ableton Live, or testing MIDI devices*. While ![Shift](images/buttons/shift.svg) is held, turning ![A](images/buttons/A.svg) and ![B](images/buttons/B.svg) will change the Autotrack's **CC Message Type** and **Channel**, respectively.
+
+### a. Editing Linear Curves
+
+The simplest kind of Autotrack is point-based. To edit a point-based-curve, move your cursor through time by moving ![Left or right](images/buttons/left_right.svg) and drag a point up or down using ![up or down](images/buttons/up_down.svg). This will set the CC value at a **single** timestep.
+
+You can **interpolate** between points on a an Autotrack Curve by **selecting** two or more points using ![Select](images/buttons/select.svg) and pressing ![Loop](images/buttons/loop.svg).
+
+![Gif of a linear interpolation](images/gifs/linear_interpolate.gif)
+
+There are three interpolation algorithms you can use to create complex curves:
+|Interpolation Type| Description|
+|:---:|:---|
+|Linear|Draws a straight line between two points|
+|Elliptical (up)| Draws an arc between two points following the **bottom** half on an ellipse between two points|
+|Elliptical (down)| Draws an arc between two points following the **top** half on an ellipse between two points|
+
+###### Tip: Holding ![Shift](images/buttons/shift.svg) and pressing ![Selecting](images/buttons/select.svg) will deselect all points of the Autotrack. Do this after you interpolate between points! That way you won't accidentally re-interpolate an area you're happy with.
+
 ### b. Editing Function Curves
-### c. Combining Curves
 
-## 5.2 CC List
-## 5.3 Internal CC Messages
-## 5.4 Ableton Issues
+Autotrack curves can also be automatically generated using a **Function**. Pressing ![New](images/buttons/new.svg) will cycle through the Autotrack functions, regenerating the Autotrack each time based on the new function parameters. 
+
+![](images/gifs/curve_types.gif)
+
+###### Note: This will overwrite the current track if no points are selected, see [Combinging Curves](#c-combining-curve-types) for more details.
+
+
+The currently avilable curve types are:
+
+|f(x)|
+|:---:|
+|Sinewave|
+|Squarewave|
+|Sawtooth Wave|
+|Triangle Wave|
+|Random Wave|
+
+
+
+Curves can be edited by changing their **Period**,**Amplitude**,**Phase**, and **Y-Offset** by moving the **Joystick** ![All Directions](images/buttons/joystick.svg). Pressing ![Loop](images/buttons/loop.svg) toggles the editing controls between changing Period/Amplitude and Phase/Y-Offset, and holding ![Shift](images/buttons/shift.svg) while moving changes the parameter by 1.
+
+![Changing Function Parameters](images/gifs/curve_editing.gif)
+
+###### Note: You can invert between a rising or falling Sawtooth wave by inverting the amplitude of the curve!
+
+### c. Combining Curve Types
+
+If there are at least two selected points when ![New](images/buttons/new.svg) is pressed to cycle between **curve functions**, the new function will *only* overwrite the area in between the two (or more) selected points. 
+
+![Gif of curves being combined](images/gifs/combining_curves.gif)
+
+After setting the curve, you can hold ![Shift](images/buttons/shift.svg) and press ![New](images/buttons/new.svg) to jump back to [Linear Editing](#a-editing-linear-curves) mode and continue editing individual points, or add another **function curve** section to the Autotrack.
+
+### d. Recording to Curves
+
+By default, Autotracks are written to manually (using the editor and cursor) or by external MIDI input while recording. By holding down ![Copy](images/buttons/copy.svg) and moving either the **Joystick**, **A**, or **B**, the Autotrack can be set to record CC data internally from the corresponding button or control. Releasing ![Copy](images/buttons/copy.svg) without moving any input source will set the input source *back* to external MIDI.
+
+Entering record mode by holding ![Shift](images/buttons/shift.svg) and pressing ![Play](images/buttons/play.svg) will let you use either **X**, **Y**, **A**, or **B** to record in *real-time* to the Autotrack, overwriting existing data as you go.
+
+###### Tip: You can use some careful loop points to live record to a specific section of the Autotrack.
+
+## 5.4 CC Messages
+
+MIDI CC messages are used to control parameters of MIDI instruments beyond just note-on-and-off messages; each message type has an ID from 0-127, and contains a value from 0-127. This is a super powerful concept, and , but unfortunately almost every synthesizer and MIDI-capable instrument has a unique set of CC messages they respond to.
+
+Although you *can* set an Autotrack to any CC parameter manually by scrolling through them 1-by-1, the **CC Selection Screen** gives you slightly more information about the message you're assigning a track to output, and lets you access the Stepchild's [Internal CC Messages](#b-internal-cc-messages). Pressing ![B](images/buttons/B.svg) while in the [Autotrack Viewer](#51-autotrack-viewer) or the [Autotrack Editor](#53-autotrack-curves) brings up the **MIDI CC Selection Screen**:
+
+![Gif of the CC Shortcut List](images/gifs/CC_shortcut_list.gif)
+
+### a. CC Shortcut Lists
+
+The CC Selection Screen has tabs for different lists, each which *only* contain the valid CC Messages for a specific instrument or standard. The **Shortcut Lists** can be navigated with the **joystick** ![all directions](images/buttons/joystick.svg), or by pressing ![A](images/buttons/A.svg) and ![B](images/buttons/B.svg) to jump through the lists quicker. 
+
+Currently, the CC Selection Screen has shortcut lists for the MicroKORG, SP404mkII, and the Stepchild.
+
+### b.  Internal CC Messages
+
+The Stepchild also has 5 internal parameters that can be changed by an Autotrack: **Note Velocity**,**Note Probability**,**Track Pitch**, **Global BPM**, and **Global Swing Intensity**. Velocity, Probability, and Pitch are all **channel-dependent** and are only interpreted by notes and tracks sending on the same channel as the Autotrack.
+
+###### EX: As a "note velocity" Autotrack set to channel 2 plays, all notes sent on channel 2 from the stepchild will have their velocity set to the current CC value coming from that Autotrack. 
+
+This is probably the most powerful, but also potentially confusing feature of the Stepchild. Some suggestions of things to try first:
+1. Make an arpeggio by setting a sinewave curve to modulate **Track Pitch** on a track that sends a series of 1/8th notes.
+2. Make the *craziest* timing function ever by making a linear track that modulates **Global BPM**.
+3. Make a groovy, natural hihat pattern by making a curve to modulate **Note Velocity** with a very short period.
 
 # 6. Loops
 ## 6.1 Types of Loops
@@ -645,6 +751,8 @@ The **Warp** effect takes one section of sequence and deforms it to fit into ano
 Sections of a sequence can be **Warped** to be bigger or smaller, although warping a note to be smaller than a 1/48th note (two timesteps) will cause it to ~be deleted~ warp out of existence.
 
 # 11. Files
+
+The Stepchild stores sequences on its internal flash storage with the '.child' extension. There is also a settings file that can't be browsed directly from the File Menu but *can* be updated from the [Settings Menu](#46-settings) with user preferences.
 
 ## 11.1 Saving
 
