@@ -68,8 +68,8 @@
         3. [Combining Curve Types](#c-combining-curve-types)
         4. [Recording To Curves](#d-recording-to-curves)
     4. [CC Messages](#54-cc-messages)
-        1. [CC Shortcut Lists](#b-cc-shortcut-lists)
-        2. [Internal CC Messages](#c-internal-cc-messages)
+        1. [CC Shortcut Lists](#a-cc-shortcut-lists)
+        2. [Internal CC Messages](#b-internal-cc-messages)
 6. [Loops](#6-loops)
     1. The Loop Chain
     2. Types of loops
@@ -540,7 +540,7 @@ Opening up the [Autotrack Menu](#42-autotrack-menu) will take you directly to th
 |![New](images/buttons/new.svg)| Creates a new **Autotrack**|
 |![Delete](images/buttons/delete.svg)| Deletes the targeted **Autotrack**|
 |![Shift](images/buttons/shift.svg)+![Delete](images/buttons/delete.svg)| Un/mutes the targeted **Autotrack**|
-|![Play](images/buttons/play.svg)| Start [playing](#a-playing) the sequence.|
+|![Play](images/buttons/play.svg)| Start or stop [playing](#a-playing) the sequence.|
 |![Shift](images/buttons/shift.svg)+![Play](images/buttons/play.svg)| Prime/unprime the targeted **Autotrack**|
 |![Select](images/buttons/select.svg)| [Edit](#52-autotrack-editor) the curve data of the targeted **Autotrack**|
 |![Loop](images/buttons/loop.svg)| Set a [Trigger](#a-triggering-autotracks) for the targeted **Autotrack**|
@@ -551,7 +551,7 @@ Opening up the [Autotrack Menu](#42-autotrack-menu) will take you directly to th
 
 ![Gif of the Autotrack Viewer](images/gifs/autotrack_viewer.gif)
 
-Typically, this screen is useful for **Creating**, [Editing](#52-autotrack-editor), setting [Autotrack Triggers](#52-autotrack-triggers), and testing the connection between a **track** and a DAW or MIDI device.
+<!-- Typically, this screen is useful for **Creating**, [Editing](#52-autotrack-editor), setting [Autotrack Triggers](#52-autotrack-triggers), and testing the connection between a **track** and a DAW or MIDI device. -->
 
 ## 5.2 Autotrack Triggers
 
@@ -601,7 +601,7 @@ Autotrack curves can also be automatically generated using a **Function**. Press
 
 ![](images/gifs/curve_types.gif)
 
-###### Note: This will overwrite the current track if no points are selected, see [Combinging Curves](#c-combining-curve-types) for more details.
+###### Note: This will overwrite the current track if no points are selected, see [Combining Curves](#c-combining-curve-types) for more details.
 
 
 The currently avilable curve types are:
