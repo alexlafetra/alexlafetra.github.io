@@ -29,32 +29,31 @@
 </head>
 <body>
     <div id = "links">
-        <a class = "sketch_link" href = "digital/extra_special/index.html" target = "sketch_frame">extra_special</a>
-        <a class = "sketch_link" href = "digital/curve_paper_waves/index.html" target = "sketch_frame">curve_paper_waves</a>
-        <a class = "sketch_link" href = "digital/hedorah/index.html" target = "sketch_frame">hedorah</a>
-        <a class = "sketch_link" href = "digital/colorsynth/index.html" target = "sketch_frame">colorsynth</a>
-        <a class = "sketch_link" href = "digital/grid/index.html" target = "sketch_frame">grid</a>
-        <a class = "sketch_link" href = "digital/ink_friends/index.html" target = "sketch_frame">friends</a>
-        <a class = "sketch_link" href = "digital/ink_people/index.html" target = "sketch_frame">people</a>
-        <a class = "sketch_link" href = "digital/inkdot/index.html" target = "sketch_frame">dot</a>
-        <a class = "sketch_link" href = "digital/loops/index.html" target = "sketch_frame">loops</a>
-
-        <a class = "sketch_link" href = "digital/membrane_mosaic/index.html" target = "sketch_frame">loops</a>
-        <a class = "sketch_link" href = "digital/membrane_noodles/index.html" target = "sketch_frame">loops</a>
-        <a class = "sketch_link" href = "digital/membrane_sim/index.html" target = "sketch_frame">loops</a>
-        <a class = "sketch_link" href = "digital/membrane_sim_bloom/index.html" target = "sketch_frame">loops</a>
-        <a class = "sketch_link" href = "digital/trees/index.html" target = "sketch_frame">loops</a>
-        <a class = "sketch_link" href = "digital/trees_diagram/" target = "sketch_frame">loops</a>
-        <a class = "sketch_link" href = "digital/trees_roots/index.html" target = "sketch_frame">loops</a>
-
-
-
+        <a class = "sketch_link" href = "digital/extra_special/index.html" target = "_top">
+        <a class = "sketch_link" href = "digital/curve_paper_waves/index.html" target = "_top">
+        <a class = "sketch_link" href = "digital/hedorah/index.html" target = "_top">hedorah</a>
+        <a class = "sketch_link" href = "digital/colorsynth/index.html" target = "_top">colorsynth</a>
+        <a class = "sketch_link" href = "digital/grid/index.html" target = "_top">grid</a>
+        <a class = "sketch_link" href = "digital/ink_friends/index.html" target = "_top">friends</a>
+        <a class = "sketch_link" href = "digital/ink_people/index.html" target = "_top">people</a>
+        <a class = "sketch_link" href = "digital/inkdot/index.html" target = "_top">dot</a>
+        <a class = "sketch_link" href = "digital/loops/index.html" target = "_top">loops</a>
+        <a class = "sketch_link" href = "digital/membrane_mosaic/index.html" target = "_top">loops</a>
+        <a class = "sketch_link" href = "digital/membrane_noodles/index.html" target = "_top">loops</a>
+        <a class = "sketch_link" href = "digital/membrane_sim/index.html" target = "_top">loops</a>
+        <a class = "sketch_link" href = "digital/membrane_sim_bloom/index.html" target = "_top">loops</a>
+        <a class = "sketch_link" href = "digital/trees/index.html" target = "_top">loops</a>
+        <a class = "sketch_link" href = "digital/trees_roots/index.html" target = "_top">loops</a>
+        <a class = "sketch_link" href = "digital/trees_11.24.23/index.html" target = "_top"></a>
     </div>
     <div id = "sketch">
         <iframe name = "sketch_frame" id = "sketch_frame" src = "digital/extra_special/index.html"></iframe>
     </div>
 </body>
 <script>
-    // loadSketchFromURL();
+    let links = document.getElementsByClassName("sketch_link");
+    for( link of links){
+        link.innerHTML = link.href.substring(link.href.indexOf("digital/")+8,link.href.length-11);
+    }
 </script>
 </html>
