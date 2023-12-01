@@ -1,18 +1,14 @@
 let canvas;
 let tree;
-let roots;
+let tree2;
 let forest;
 let cam;
 
 const maximumNewBranches = 3;
-const maximumNewRoots = 3;
-
-// const angleVariation = 40;
-const angleVariation = 30;
-const rootAngleVariation = 40;
+const maxTotalBranches = 2000;
+const angleVariation = 40;
 const lengthVar = 5;
-//30 is a sweet spot
-const colorVar = 30;
+const colorVar = 50;
 
 //slower, but pretty
 const renderWithCurves = false;
@@ -22,92 +18,37 @@ let growthReps = 25;
 
 let scaleFactor = 1/2;
 let update = false;
-
-//draws circles on the tips
-let renderTips = true;
-//makes branches vary less in angle at lower indices
-let makeTreesGrowUpFirst = true;
-
-const floorHeight = 20;
-
-// const backgroundColor = [0,0,0];
-const backgroundColor = [255,255,255];
-
-let rotating = true;
-let usingColors = false;
-
-let renderTipsButton,makeTreesMoreNaturalButton,restartButton,pauseAnimationButton,useColorButton;
-
-
 function setup() {
-  canvas = createCanvas(400,400,WEBGL);
-  // canvas.style("margin","auto");
-  // canvas.style("display","block");
-  document.getElementsByTagName('canvas')[0].style.margin = "auto";
-
+  canvas = createCanvas(600,600,WEBGL);
+  
+  let startingPoint = new Point(0,0,0);
+  tree = new Tree(startingPoint,50,radians(angleVariation),lengthVar,PI/2);
+  
   //cam = createEasyCam();
   //document.oncontextmenu = ()=>false;
   
-  // smooth();
-  noSmooth();
-
-  renderTipsButton = createButton("🌱");
-  renderTipsButton.position(0,canvas.height);
-  renderTipsButton.mousePressed(function(){renderTips = !renderTips});
-
-  makeTreesMoreNaturalButton = createButton("📈");
-  makeTreesMoreNaturalButton.position(40,canvas.height);
-  makeTreesMoreNaturalButton.mousePressed(function(){makeTreesGrowUpFirst = !makeTreesGrowUpFirst});
-
-  pauseAnimationButton = createButton("⏸️");
-  pauseAnimationButton.position(80,canvas.height);
-  pauseAnimationButton.mousePressed(function(){rotating = !rotating});
-
-  restartButton = createButton("🔄");
-  restartButton.position(120,canvas.height);
-  restartButton.mousePressed(resetTrees);
-
-  useColorButton = createButton("🎨");
-  useColorButton.position(160,canvas.height);
-  useColorButton.mousePressed(function(){usingColors = !usingColors});
-
-  resetTrees();
-}
-
-function resetTrees(){
-  let startingPoint = new Point(0,0,0);
-  tree = new Tree(startingPoint,-20,radians(angleVariation),lengthVar,PI/2);
-  roots = new Tree(startingPoint,20,radians(rootAngleVariation),lengthVar,PI/2);
-}
-
-let rotationAngle = 0;
-
-function draw() {
-  //setting up canvas
-  background(backgroundColor);
-  if(rotating)
-    rotationAngle += 0.02;
-  rotateY(rotationAngle);
+  smooth();
   scale(scaleFactor);
-  translate(0,height/4);
+  tree.growNTimes(growthReps);
+  translate(0,-height/2);
+  background(0);
+  tree.render();
+}
 
-  //drawing base circle
-  push();
-  rotateX(PI/2);
-  strokeWeight(1);
-  stroke(180,180,180);
-  ellipse(0,0,100,100);
-  pop();
-
-  //drawing tree/roots
-  tree.render(renderTips);
-  roots.render(false);
+let n = 0;
+function draw() {
+  if(update){
+    scale(scaleFactor);
+    translate(0,-height/2);
+    background(0);
+    tree.render();
+    update = false;
+  }
 }
 
 function keyPressed(){
-  tree.grow(maximumNewBranches);
-  roots.grow(maximumNewRoots);
-  update = true;
+  //tree.grow();
+  //update = true;
 }
 
 class Tree{
@@ -117,25 +58,24 @@ class Tree{
     this.branches.push(new Branch(p1,p1,p1,branchLength,angle,angle,0,c));
     this.angleVariation = angleVariation;
     this.lengthVariation = lengthVariation;
-    this.growthReps = 0;
   }
-  grow(maxNewBranches){
+  grow(){
     let i = this.branches.length;
     for(let branch = 0; branch<i; branch++){
-      if(this.branches[branch].isTip && (abs(this.branches[branch].p1.y)>floorHeight || this.branches[branch].index<3)){
-        this.branches = this.branches.concat(this.branches[branch].divide(this.angleVariation,this.lengthVariation,maxNewBranches));
+      if(this.branches[branch].isTip){
+        this.branches = this.branches.concat(this.branches[branch].divide(this.angleVariation,this.lengthVariation,maximumNewBranches));
       }
     }
-    this.growthReps++;
+    growthReps++;
   }
   growNTimes(n){
     for(let i = 0; i<n; i++){
-      this.grow(maxNewBranches);
+      this.grow();
     }
   }
-  render(wTips){
+  render(){
     for(let branch of this.branches){
-      branch.render(wTips);
+      branch.render();
     }
   }
 }
@@ -143,6 +83,7 @@ class Tree{
 class Branch{
   constructor(p0,p1,p2,len,theta,phi,index,c){
     this.color = color(constrain(red(c)+random(-colorVar,colorVar),0,255),constrain(green(c)+random(-colorVar,colorVar),0,255),constrain(blue(c)+random(-colorVar,colorVar),0,255));
+    
     this.index = index;
     this.isTip = true;
     
@@ -171,10 +112,6 @@ class Branch{
       this.isTip = false;
     }
     
-    //make it so that trees are straighter when their index is shorter
-    if(makeTreesGrowUpFirst)
-      angleVariation = constrain(this.index*15,0,angleVariation);
-
     //make branches
     for(let i = 0; i<n; i++){
       //get new angles and length
@@ -188,20 +125,14 @@ class Branch{
     //return all the new branches
     return newBranches;
   }
-  render(wTips){
+  render(){
     
     noFill();
-    // stroke(red(this.color)-255/growthReps*this.index,green(this.color)-255/growthReps*this.index,blue(this.color)-255/growthReps*this.index);
-    if(usingColors)
-      stroke(this.color);
-    else{
-      stroke(constrain(this.index*16,0,255));
-    }
-
+    stroke(red(this.color)-255/growthReps*this.index,green(this.color)-255/growthReps*this.index,blue(this.color)-255/growthReps*this.index);
     //getting darker as the branches grow out
     //stroke(255-pow(this.index,1.5));
     //setting stroke weight to get thinner as the branches get further out
-    // strokeWeight(map(this.index,0.0,growthReps,5.0,0.1));
+    //strokeWeight(map(this.index,0.0,growthReps,5.0,0.1));
     strokeWeight(constrain(10/this.index,0.1,4));
     
     if(renderWithCurves){
@@ -220,14 +151,14 @@ class Branch{
     }
 
     //drawing flowers on the tips
-    if(this.isTip && wTips){
-     push();
-     translate(this.p1.x,this.p1.y,this.p1.z);
-     stroke(0,255,100);
-     strokeWeight(5);
-     point(0,0,0);
-     pop();
-    }
+    //if(this.isTip){
+    //  push();
+    //  translate(this.p1.x,this.p1.y,this.p1.z);
+    //  stroke(0,255,100);
+    //  strokeWeight(5);
+    //  point(0,0,0);
+    //  pop();
+    //}
   }
 }
 class Point{

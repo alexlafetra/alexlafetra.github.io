@@ -1,8 +1,6 @@
 let canvas;
 let tree;
 let tree2;
-let forest;
-let cam;
 
 const maximumNewBranches = 3;
 const maxTotalBranches = 1000;
@@ -14,24 +12,26 @@ const colorVar = 30;
 
 //slower, but pretty
 const renderWithCurves = false;
-const renderTips = true;
+const renderTips = false;
 const blossomSize = 3;
 const makeTreesGrowUpFirst = true;
 
 const floorHeight = -10;
 
 //25 is a pretty good sweet spot
-let growthReps = 10;
+let growthReps = 15;
 
 let scaleFactor = 1/4;
 let update = true;
 
 let lightMode = false;
 
+let neighborDetectionDistance = 100;
+
 let growthSlider;
 function setup() {
   canvas = createCanvas(600,600,WEBGL);
-  growthSlider = createSlider(0,30,1);
+  growthSlider = createSlider(0,30,growthReps,1);
   newTree();
   noSmooth();
 }
@@ -39,31 +39,45 @@ function setup() {
 let waiting = false;
 
 function newTree(){
-  let startingPoint = new Point(0,0,0);
-  tree = new Tree(startingPoint,-50,radians(angleVariation),lengthVar,PI/2);
+  tree = new Tree(new Point(-200,0,0),-50,radians(angleVariation),lengthVar,PI/2);
+  tree2 = new Tree(new Point(200,0,0),-50,radians(angleVariation),lengthVar,PI/2);
+
   smooth();
   scale(scaleFactor);
   translate(0,height/2);
   background(lightMode?255:0);
-  tree.grow(maximumNewBranches);
+  tree.grow(maximumNewBranches,tree2);
+  tree2.grow(maximumNewBranches,tree);
   tree.render();
+  tree2.render();
   waiting = false;
 }
 
 function draw() {
   growthReps = growthSlider.value();
   rotateY(frameCount/50);
+  let done = true;
   if(tree.growthReps<growthReps){
-    tree.grow(maximumNewBranches);
+    tree.grow(maximumNewBranches,tree2);
+    done = false;
   }
-  else if(!waiting){
-    setTimeout(newTree,1000);
+  if(tree2.growthReps<growthReps){
+    tree2.grow(maximumNewBranches,tree);
+    done = false;
+  }
+  if(!waiting && done){
+    // setTimeout(newTree,1000);
     waiting = true;
   }
   scale(scaleFactor);
   translate(0,height/2);
   background(lightMode?255:0);
   tree.render();
+  tree2.render();
+}
+
+function keyPressed(){
+  setTimeout(newTree,100);
 }
 
 class Tree{
@@ -75,11 +89,11 @@ class Tree{
     this.lengthVariation = lengthVariation;
     this.growthReps = 0;
   }
-  grow(maxNewBranches){
+  grow(maxNewBranches,t){
     let i = this.branches.length;
     for(let branch = 0; branch<i; branch++){
       if(this.branches[branch].isTip && (this.branches[branch].p1.y<floorHeight || this.branches[branch].index<5)){
-        this.branches = this.branches.concat(this.branches[branch].divide(this.angleVariation,this.lengthVariation,maxNewBranches));
+        this.branches = this.branches.concat(this.branches[branch].divide(this.angleVariation,this.lengthVariation,maxNewBranches,t));
       }
     }
     this.growthReps++;
@@ -111,10 +125,11 @@ class Branch{
     this.lastStemEnd = p1;
     this.p0 = p2;
     this.p1 = new Point(this.p0.x+len*sin(theta)*cos(phi),this.p0.y+len*sin(theta)*sin(phi),this.p0.z+len*cos(theta));
+
+    this.isTouching = false;
   }
   //branch grows into a random number of new branches
-  divide(angleVariation,lengthVariation,maxNewBranches){
-    
+  divide(angleVariation,lengthVariation,maxNewBranches,t){
     //grab the number of branches to grow;
     let n = floor(random(0,maxNewBranches));
     let newBranches = [];
@@ -134,6 +149,38 @@ class Branch{
     
     //make branches
     for(let i = 0; i<n; i++){
+      let closestDist = neighborDetectionDistance;
+      let closestPoint = this.p1;
+      for(let branch of t.branches){
+        if(branch.isTip){
+          let dist = distance3D(branch.p1,this.p1);
+          //if it's close enough to detect, make a branch in that direction
+          if(abs(dist)<closestDist){
+            closestDist = dist;
+            closestPoint = branch.p1;
+          }
+        }
+      }
+      if (closestDist < neighborDetectionDistance) {
+        let newLength = constrain(closestDist,this.len-lengthVariation,this.len + lengthVariation);
+        let directionToOtherTree = createVector(closestPoint.x - this.p1.x, closestPoint.y - this.p1.y, closestPoint.z - this.p1.z);
+        directionToOtherTree.normalize();
+        let newTheta = constrain(lerp(this.theta, directionToOtherTree.angleBetween(createVector(0, 0, 1)), 0.5), this.theta - angleVariation, this.theta + angleVariation);
+        let newPhi = constrain(atan2(directionToOtherTree.y, directionToOtherTree.x) + PI, this.phi - angleVariation, this.phi + angleVariation);
+    
+        // consider it touching if they're 1 unit apart
+        let newBranch = new Branch(this.lastStemEnd, this.p0, this.p1, newLength, newTheta, newPhi, this.index + 1, this.color);
+        if (closestDist < 10) {
+          newBranch.isTouching = true;
+        }
+        else{
+          newBranch.isTip = true;
+        }
+        newBranches.push(newBranch);
+        n--;
+        if(n<=0)
+          return newBranches;
+      }
       //get new angles and length
       let newPhi = this.phi+random(-angleVariation,angleVariation);
       let newTheta = this.theta+random(-angleVariation,angleVariation);
@@ -148,9 +195,8 @@ class Branch{
   render(){
     let colorScale = (lightMode?1:-1)*255/growthReps;
     noFill();
-    // stroke(red(this.color)-255/growthReps*this.index,green(this.color)-255/growthReps*this.index,blue(this.color)-255/growthReps*this.index);
-    stroke(red(this.color)+colorScale*this.index,green(this.color)+colorScale*this.index,blue(this.color)+colorScale*this.index);
-    //getting darker as the branches grow out
+    // stroke(red(this.color)+colorScale*this.index,green(this.color)+colorScale*this.index,blue(this.color)+colorScale*this.index);
+    stroke(this.color);
     //setting stroke weight to get thinner as the branches get further out
     strokeWeight(constrain(10/this.index,0.1,4));
     
@@ -179,6 +225,14 @@ class Branch{
      point(0,0,0);
      pop();
     }
+    if(this.isTouching){
+      push();
+      translate(this.p1.x,this.p1.y,this.p1.z);
+      stroke(0,255,100);
+      strokeWeight(10);
+      point(0,0,0);
+      pop();
+    }
   }
 }
 class Point{
@@ -199,4 +253,33 @@ function getPhi(p1,p2){
 
 function getTheta(p1,p2){
   return atan(sqrt(sq(p1.x-p2.x)+sq(p1.y-p2.y))/abs(p1.z-p2.z));
+}
+
+function findAnglesBetweenPoints(point1,point2) {
+  // Calculate the direction vector D
+  let D = {
+      x: point2.x - point1.x,
+      y: point2.y - point1.y,
+      z: point2.z - point1.z
+  };
+
+  // Calculate the magnitude of the direction vector D
+  let magnitudeD = Math.sqrt(D.x * D.x + D.y * D.y + D.z * D.z);
+
+  // Normalize the direction vector to get the unit vector N
+  let N = {
+      x: D.x / magnitudeD,
+      y: D.y / magnitudeD,
+      z: D.z / magnitudeD
+  };
+
+  // Calculate angles in radians
+  let theta = Math.acos(N.z);
+  let phi = Math.atan2(N.y, N.x);
+
+  // Convert angles to degrees
+  let thetaDeg = (theta * 180) / Math.PI;
+  let phiDeg = (phi * 180) / Math.PI;
+
+  return { theta: thetaDeg, phi: phiDeg };
 }
