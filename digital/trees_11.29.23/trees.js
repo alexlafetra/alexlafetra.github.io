@@ -4,9 +4,9 @@ let tree2;
 
 const maximumNewBranches = 3;
 const maxTotalBranches = 1000;
-const angleVariation = 40;
+let angleVariation = 40;
 // const lengthVar = 5;
-const lengthVar = 5;
+let lengthVar = 5;
 //30 is a sweet spot
 const colorVar = 30;
 
@@ -36,8 +36,6 @@ function setup() {
   noSmooth();
 }
 
-let waiting = false;
-
 function newTree(){
   tree = new Tree(new Point(0,0,600),40,radians(angleVariation),lengthVar,PI);
   tree2 = new Tree(new Point(0,0,-600),-40,radians(angleVariation),lengthVar,-PI);
@@ -50,9 +48,13 @@ function newTree(){
   tree2.grow(maximumNewBranches,tree);
   tree.render();
   tree2.render();
-  waiting = false;
+
+
   renderTips = (random(0,1)>0.5);
   blossomSize = random(1,10);
+  neighborDetectionDistance = random(10,1000);
+  angleVariation = random(10,45);
+
   setTimeout(newTree,1000);
 }
 
