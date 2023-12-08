@@ -21,7 +21,7 @@ let computePasses = 4;
 
 let brushRadius = 0.02;
 let stepSize = 0.9;
-let dA = 1.1;
+let dA = 1.0;
 let dB = 0.5;
 let k = 0.06;
 let f = 0.04;
@@ -94,6 +94,7 @@ function preload(){
   reactionDiffusionShader = loadShader('rxn.vert','rxn.frag');
   beautyShader = loadShader('aesthetic.vert','aesthetic.frag');
   font = loadFont('SourceSansPro-Regular.otf');
+  // font = loadFont('Lostar.ttf');
   img = loadImage('test.png');
 }
 
@@ -132,11 +133,11 @@ function createSliders(){
   const controls = createDiv();
   controls.id("controls");
 
-  stepSlider = new LabeledSlider(0.01,10,stepSize,0.01,"Diffusion Radius");
-  aSlider = new LabeledSlider(0,2,dA,0.01,"dA");
-  bSlider = new LabeledSlider(0,2,dB,0.01,"dB");
-  kSlider = new LabeledSlider(0,0.2,k,0.001,"kill");
-  fSlider = new LabeledSlider(0,0.2,f,0.001,"feed");
+  stepSlider = new LabeledSlider(1,10,stepSize,1,"Diffusion Radius");
+  aSlider = new LabeledSlider(0,1.5,dA,0.01,"dA");
+  bSlider = new LabeledSlider(0,1.5,dB,0.01,"dB");
+  kSlider = new LabeledSlider(0,0.06,k,0.0001,"kill");
+  fSlider = new LabeledSlider(0,0.12,f,0.0001,"feed");
   tSlider = new LabeledSlider(0,1,dT,0.01,"dT");
   computeSlider = new LabeledSlider(1,15,computePasses,1,"Compute Passes");
 
@@ -255,7 +256,7 @@ function draw() {
     reactionDiffusionShader.setUniform('uResolution',[width*pixelDensity(),height*pixelDensity()]);
     reactionDiffusionShader.setUniform('uMouse',[getMouseX(),mouseY/(height)]);
     reactionDiffusionShader.setUniform('uMouseHeld',mouseHeld);
-    reactionDiffusionShader.setUniform('uBrushRadius',mouseHeld?getMouseSpeed():max(getMouseSpeed(),0.01));
+    reactionDiffusionShader.setUniform('uBrushRadius',max(getMouseSpeed(),0.01));
     reactionDiffusionShader.setUniform('uFramecount',frameCount);
     reactionDiffusionShader.setUniform('uPetriDish',petriDish);
     reactionDiffusionShader.setUniform('stepSize',[stepSize/(width*pixelDensity()),stepSize/(height*pixelDensity())]);
