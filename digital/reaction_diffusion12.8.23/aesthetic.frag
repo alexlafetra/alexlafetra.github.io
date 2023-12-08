@@ -1,6 +1,6 @@
 precision highp float;
 
-uniform vec3 uColorPallette[7]; 
+uniform vec4 uColorPallette[7]; 
 uniform sampler2D uTexture;
 
 uniform float uResolution;
@@ -9,7 +9,7 @@ varying vec2 vTexCoord;
 
 
 // //borrowed from https://openprocessing.org/sketch/496452/
-vec3 getShading(float val){
+vec4 getShading(float val){
     val = clamp(val, 0.0, 0.99999);
     float lum_steps = val * 6.0;
     float frac = fract(lum_steps);
@@ -25,5 +25,5 @@ vec3 getShading(float val){
 
 void main(){
     vec2 val = texture2D(uTexture,vTexCoord.xy).rg;
-    gl_FragColor = vec4(getShading(val.r*val.r),1.0);
+    gl_FragColor = getShading(val.r*val.r);
 }
