@@ -84,6 +84,7 @@ let mouseHeld = false;
 let lastMousePos;
 
 let showRenderLayer = false;
+let petriDish = false;
 
 let font;
 let img;
@@ -108,10 +109,10 @@ const MAXWIDTH = 600;
 const MAXHEIGHT = 600;
 function windowResized(){
   resizeCanvas(min(windowWidth,MAXWIDTH),min(windowHeight,MAXHEIGHT));
-   //create framebuffers
-   renderLayer = createFramebuffer(width,height,{format:FLOAT});
-   computeLayer = createFramebuffer(width,height,{format:FLOAT});
-   displayLayer = createFramebuffer(width,height,{format:FLOAT});
+  //recreate framebuffers
+  renderLayer = createFramebuffer(width,height,{format:FLOAT});
+  computeLayer = createFramebuffer(width,height,{format:FLOAT});
+  displayLayer = createFramebuffer(width,height,{format:FLOAT});
 }
 
 function randPallette(){
@@ -150,6 +151,10 @@ function createSliders(){
   randomColorButton = createButton("Randomize Pallette");
   randomColorButton.mousePressed(randPallette);
   randomColorButton.parent(controls);
+
+  petriButton = createButton("Put it in a dish");
+  petriButton.mousePressed(() => {petriDish = !petriDish;});
+  petriButton.parent(controls);
 
 }
 
@@ -191,6 +196,7 @@ function setup() {
   // mainCanvas.getTexture(computeLayer).setInterpolation(LINEAR,LINEAR);
   // mainCanvas.getTexture(renderLayer).setInterpolation(LINEAR,LINEAR);
   // mainCanvas.getTexture(displayLayer).setInterpolation(LINEAR,LINEAR);
+
   textFont(font);
   textSize(200);
   textAlign(CENTER);
@@ -208,6 +214,7 @@ function initializeComputeLayer(){
   strokeWeight(200);
   stroke(255,0,0);
   text("rxn",0,75);
+  // image(img,-width/2,-height/2,width,height);
   computeLayer.end();
 }
 
@@ -250,6 +257,7 @@ function draw() {
     reactionDiffusionShader.setUniform('uMouseHeld',mouseHeld);
     reactionDiffusionShader.setUniform('uBrushRadius',mouseHeld?getMouseSpeed():max(getMouseSpeed(),0.01));
     reactionDiffusionShader.setUniform('uFramecount',frameCount);
+    reactionDiffusionShader.setUniform('uPetriDish',petriDish);
     reactionDiffusionShader.setUniform('stepSize',[stepSize/(width*pixelDensity()),stepSize/(height*pixelDensity())]);
     reactionDiffusionShader.setUniform('dA',dA);
     reactionDiffusionShader.setUniform('dB',dB);
@@ -268,6 +276,7 @@ function draw() {
   beautyShader.setUniform('uTexture',renderLayer);
   beautyShader.setUniform('uComputeTexture',computeLayer);
   beautyShader.setUniform('uColorPallette',pallette);
+  beautyShader.setUniform('uPetriDish',petriDish);
   beautyShader.setUniform('uResolution',[width*pixelDensity(),height*pixelDensity()]);
   rect(-width/2,-height/2,width,height);
   displayLayer.end();

@@ -11,6 +11,7 @@ uniform int uFramecount;
 
 uniform vec2 uMouse;
 uniform bool uMouseHeld;
+uniform bool uPetriDish;
 uniform mediump float uBrushRadius;
 
 //reaction constants
@@ -64,6 +65,12 @@ void main() {
     gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
     return;
   }
+
+  //putting it in a petri dish
+  if(uPetriDish && distance(pixel,vec2(0.5))>0.48){
+    gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    return;
+  }
   
   vec4 textureColor = texture2D(uComputeTexture,pixel);
 
@@ -80,7 +87,4 @@ void main() {
   float newB = b + ((dB * lap.g) + (reaction) - ((k + f) * b ))*dT;
 
   gl_FragColor = vec4(newA, newB, textureColor.b, 1.0);
-    // gl_FragColor = textureColor;
-    // gl_FragColor = vec4(newB,newB,newB,1.0);
-    // gl_FragColor = vec4(newA,newA,newA,1.0);
 }

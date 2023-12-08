@@ -7,6 +7,8 @@ uniform float uResolution;
 
 varying vec2 vTexCoord;
 
+uniform bool uPetriDish;
+
 
 // //borrowed from https://openprocessing.org/sketch/496452/
 vec4 getShading(float val){
@@ -25,5 +27,13 @@ vec4 getShading(float val){
 
 void main(){
     vec2 val = texture2D(uTexture,vTexCoord.xy).rg;
+    vec2 pixel = vTexCoord.xy;
+    //putting it in a petri dish
+    float dist = distance(pixel,vec2(0.5));
+    if(uPetriDish && dist>0.48){
+        float d1 = 2.0 - 0.48/(dist*dist);
+        gl_FragColor = vec4(uColorPallette[0].r+d1,uColorPallette[0].g+d1,uColorPallette[0].b+d1,1.0-50.0*(dist-0.48));
+        return;
+    }
     gl_FragColor = getShading(val.r*val.r);
 }
