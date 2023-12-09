@@ -1,5 +1,5 @@
 
-precision highp float;
+precision lowp float;
 //texture coordinates received from vert shader
 varying vec2 vTexCoord;
 

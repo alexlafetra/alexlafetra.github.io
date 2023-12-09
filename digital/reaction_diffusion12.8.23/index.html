@@ -7,6 +7,7 @@
   <!-- for some reason, frameBuffer() is only available from this package?? -->
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script> -->
   <script language="javascript" type="text/javascript" src="labeledSlider.js"></script>
+  <script language="javascript" type="text/javascript" src="input.js"></script>
 
   <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
   <script language="javascript" type="text/javascript" src="libraries/p5.min.js"></script>
@@ -16,6 +17,7 @@
   <style>
     html{
       height:100%;
+      overflow:hidden;
     }
     body {
       height:100%;
@@ -30,14 +32,6 @@
       display:block;
       width:auto;
     }
-    .slider-container{
-      float:right;
-    }
-    .button-container{
-      width:100px;
-      text-align:center;
-
-    }
     #controls{
       width:fit-content;
       height:fit-content;
@@ -46,17 +40,33 @@
       position:absolute;
       right:0;
       top:0;
-      background-color:rgb(97, 95, 101);
-      border-radius:0px 0px 10px 10px;
+      background-color: white;
+      border-radius:0px 0px 0px 10px;
       border-width:2px;
-      /* border:solid; */
-      border-color:black;
+      border:solid;
+      border-color:rgb(60,60,60);
+      border-top:none;
+      border-right:none;
       padding:20px;
       transition:0.5s;
-      font-family:arial;
-      font-weight:bold;
-      color:black;
+      font-family:'Times New Roman', Times, serif;
+      /* font-weight:bold; */
+      color:rgb(60,60,60);
       justify-items: right;
+    }
+
+    /* for the sliders */
+    #controls input{
+      width:100%;
+      float:right;
+    }
+
+    #controls button{
+      color:rgb(60,60,60);
+      border-radius:3px;
+    }
+    #controls button:hover{
+      background-color:white;
     }
   </style>
 </head>

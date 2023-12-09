@@ -8,6 +8,7 @@ let mainCanvas;
 //main shader, and the post processing shader
 let reactionDiffusionShader;
 let beautyShader;
+let embossShader;
 
 //Used to store the renderable data
 let renderLayer;
@@ -15,17 +16,18 @@ let renderLayer;
 let computeLayer;
 //Used to render the pretty graphics
 let displayLayer;
+let embossLayer;
 
 //simulation controls
 let computePasses = 4;
 
-let brushRadius = 0.02;
-let stepSize = 0.9;
-let dA = 1.0;
-let dB = 0.5;
-let k = 0.06;
-let f = 0.04;
-let dT = 1.0;
+let brushRadius;
+let stepSize;
+let dA;
+let dB;
+let k;
+let f;
+let dT;
 
 //post-processing colors
 
@@ -69,40 +71,53 @@ let pallette1 = [
   0.00, 0.00, 0.00, 1.0
 ];
 
-//Sliders/controls
-let stepSlider;
-let aSlider;
-let bSlider;
-let kSlider;
-let fSlider;
-let tSlider;
-let computeSlider;
-let resetButton;
-let swapPalletteButton;
-let randomColorButton;
-let fillButton;
-let debugButton;
-let mouseHeld = false;
-let lastMousePos;
+// R     G      B    A
+let bwPallette = [
+  0.00, 0.00, 0.00, 1.0,
+  0.00, 0.00, 0.00, 1.0,
+  0.60, 0.60, 0.60, 1.0,
+  0.70, 0.70, 0.70, 1.0,
+  0.90, 0.90, 0.90, 1.0,
+  1.00, 1.00, 1.00, 1.0,
+  1.0, 1.0, 1.0, 1.0
+];
+let bwPallette1 = [
+  0.80, 0.80, 0.80, 1.0,
+  0.40, 0.40, 0.40, 1.0,
+  0.30, 0.30, 0.30, 1.0,
+  0.20, 0.20, 0.20, 1.0,
+  0.10, 0.10, 0.10, 1.0,
+  0.00, 0.00, 0.00, 1.0,
+  0.00, 0.00, 0.00, 1.0
+];
 
+let shineScale = 13.0;
+
+let blackAndWhite = false;
 let showRenderLayer = false;
 let petriDish = false;
+let embossed = false;
 
 let font;
 let img;
+
+const defaultParams = {stepSize:1.0,dA:1,dB:0.2,k:0.06,f:0.04,dT:1,computePasses:4};
 
 //preload your shader files
 function preload(){
   reactionDiffusionShader = loadShader('rxn.vert','rxn.frag');
   beautyShader = loadShader('aesthetic.vert','aesthetic.frag');
+  embossShader = loadShader('aesthetic.vert','emboss.frag');
   font = loadFont('SourceSansPro-Regular.otf');
-  // font = loadFont('Lostar.ttf');
-  img = loadImage('test.png');
 }
 
 //should clear out the graphics buffers
 //and reset the sim parameters/sliders
 function reset(){
+  loadParameters(defaultParams);
+}
+
+function clearScreen(){
   computeLayer.begin();
   background(0);
   computeLayer.end();
@@ -141,78 +156,18 @@ function fillScreen(){
   computeLayer.end();
 }
 
-//create the input sliders + reset button
-function createSliders(){
-  const controls = createDiv();
-  controls.id("controls");
-
-  stepSlider = new LabeledSlider(0.01,10,stepSize,0.01,"Diffusion Radius");
-  aSlider = new LabeledSlider(0,1.5,dA,0.01,"dA");
-  bSlider = new LabeledSlider(0,1.5,dB,0.01,"dB");
-  kSlider = new LabeledSlider(0,0.06,k,0.0001,"kill");
-  fSlider = new LabeledSlider(0,0.12,f,0.0001,"feed");
-  tSlider = new LabeledSlider(0,1,dT,0.01,"dT");
-  computeSlider = new LabeledSlider(1,15,computePasses,1,"Compute Passes");
-
-  resetButton = createButton("Clear");
-  resetButton.mousePressed(reset);
-  resetButton.parent(controls);
-
-  swapPalletteButton = createButton("Swap Color");
-  swapPalletteButton.mousePressed(swapPallette);
-  swapPalletteButton.parent(controls);
-
-  randomColorButton = createButton("Randomize Pallette");
-  randomColorButton.mousePressed(randPallette);
-  randomColorButton.parent(controls);
-
-  petriButton = createButton("Put it in a dish");
-  petriButton.mousePressed(() => {petriDish = !petriDish;});
-  petriButton.parent(controls);
-
-  fillButton = createButton("Fill Screen");
-  fillButton.mousePressed(fillScreen);
-  fillButton.parent(controls);
-
-  debugButton = createButton("Show Texture Data");
-  debugButton.mousePressed(() => {showRenderLayer = !showRenderLayer;});
-  debugButton.parent(controls);
-
-}
-
-const CLOSEHEIGHT = '-220px';
-const OPENHEIGHT = '0px';
-
-
-function keyPressed(){
-  const panel = document.getElementById("controls");
-  if(panel.style.top == CLOSEHEIGHT){
-    panel.style.top = OPENHEIGHT;
-  }
-  else{
-    panel.style.top = CLOSEHEIGHT;
-  }
-}
-//grab values from sliders and load into sim
-function updateSliders(){
-  stepSize = stepSlider.value();
-  dA = aSlider.value();
-  dB = bSlider.value();
-  k = kSlider.value();
-  f = fSlider.value();
-  dT = tSlider.value();
-  computePasses = computeSlider.value();
-}
-
 function setup() {
 
   mainCanvas = createCanvas(min(windowWidth,MAXWIDTH),min(windowHeight,MAXHEIGHT),WEBGL);
   createSliders();
+  loadParameters(defaultParams);
 
   //create framebuffers
   renderLayer = createFramebuffer(width,height,{format:FLOAT});
   computeLayer = createFramebuffer(width,height,{format:FLOAT});
   displayLayer = createFramebuffer(width,height,{format:FLOAT});
+  embossLayer = createFramebuffer(width,height,{format:FLOAT});
+
 
   //Not sure what these do! keeping them around just in case
   // mainCanvas.getTexture(computeLayer).setInterpolation(LINEAR,LINEAR);
@@ -225,44 +180,26 @@ function setup() {
   pixelDensity(1);
 
   lastMousePos = createVector(mouseX,mouseY);
-  initializeComputeLayer();
+  initializeComputeLayer("rxn");
+}
+
+function keyPressed(){
+  initializeComputeLayer(key);
 }
 
 //creating some initial geometry to diffuse from
-function initializeComputeLayer(){
+function initializeComputeLayer(string){
   computeLayer.begin();
   background(0,255,0);
   fill(255,0,0);
   strokeWeight(200);
   stroke(255,0,0);
-  text("rxn",0,75);
+  text(string,0,75);
   // image(img,-width/2,-height/2,width,height);
   computeLayer.end();
 }
 
-function mousePressed(){
-  mouseHeld = true;
-}
-function mouseReleased(){
-  mouseHeld = false;
-}
-
-//measures the distance between two mouse positions
-function getMouseSpeed(){
-  //turning it into a vector bc i'm lazy and don't want to write a distance function
-  let currentMousePos = createVector(mouseX,mouseY);
-  const distance = p5.Vector.dist(currentMousePos,lastMousePos);
-  lastMousePos = currentMousePos;
-  return distance/width;
-}
-
-//Cuts mouse position in half so it renders over double-canvas
-function getMouseX(){
-  // let m = mouseX;
-  // if(m>width/2)
-  //   m-=width/2;
-  // return 2*m/width;
-  return mouseX/width;
+function drawToDummyLayer(string){
 }
 
 function draw() {
@@ -297,7 +234,7 @@ function draw() {
   shader(beautyShader);
   beautyShader.setUniform('uTexture',renderLayer);
   beautyShader.setUniform('uComputeTexture',computeLayer);
-  beautyShader.setUniform('uColorPallette',pallette);
+  beautyShader.setUniform('uColorPallette',blackAndWhite?bwPallette:pallette);
   beautyShader.setUniform('uPetriDish',petriDish);
   beautyShader.setUniform('uResolution',[width*pixelDensity(),height*pixelDensity()]);
   rect(-width/2,-height/2,width,height);
@@ -305,10 +242,22 @@ function draw() {
 
   image(displayLayer, -width/2, -height/2, width, height);
 
+
+
+  if(embossed){
+    embossLayer.begin();
+    clear();
+    shader(embossShader);
+    embossShader.setUniform('uTexture',renderLayer);
+    embossShader.setUniform('uShineScale',shineScale);
+    embossShader.setUniform('uResolution',width);
+
+    rect(-width/2,-height/2,width,height);
+    embossLayer.end();
+    image(embossLayer, -width/2, -height/2, width, height);
+  }
+
   //drawing the render layer to the main canvas
   if(showRenderLayer)
     image(renderLayer, -width/2, -height/2, width/4, height/4);
-
-  //For testing:
-  // image(computeLayer, -width/2, -height/2, width/2, height);
 }

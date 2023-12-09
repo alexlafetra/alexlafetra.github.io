@@ -3,25 +3,22 @@
 precision highp float;
 
 uniform sampler2D uPositionTexture;
+uniform sampler2D uVelocityTexture;
 varying vec2 vTexCoord;
 
 void main(){
-    float dist;
-    //this is a very inefficient idea
-    for(int x1 = 0; x1<10; x1++){
-        for(int y1 = 0; y1<10; y1++){
-            vec4 particleLocation = texture2D(uPositionTexture,vec2(x1,y1));
-            vec2 pixel = gl_FragCoord.xy;
+    // float dist;
+    vec4 particlePosition = texture2D(uPositionTexture,vTexCoord.xy);
 
-            //calculate distance from each particle
-            dist = distance(particleLocation.xy,pixel)/800.0;
-            if(dist<0.10){
-                gl_FragColor = vec4(1.0,0.0,0.0,1.0);
-                return;
-            }
-        }
-    }
-    // gl_FragColor = vec4(0.0,1.0,0.0,1.0);
-    gl_FragColor = vec4(dist,dist,dist,1.0);
-    // gl_FragColor = vec4(dist/800.0,dist/800.0,dist/800.0,1.0);
+    vec4 particleVelocity = texture2D(uVelocityTexture,vTexCoord.xy);
+
+    vec4 newPosition = vec4(particlePosition + (particleVelocity-0.5)/2.0);
+    // if(newPosition.x>1.0)
+    //     newPosition.x = 0.0;
+    // if(newPosition.y>1.0)
+    //     newPosition.y = 0.0;
+    // if(newPosition.z>1.0)
+    //     newPosition.z = 0.0;
+
+    gl_FragColor = vec4(newPosition.x,newPosition.y,newPosition.z,1.0);
 }

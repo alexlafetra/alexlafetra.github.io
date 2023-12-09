@@ -1,12 +1,10 @@
-precision highp float;
+precision lowp float;
 
 attribute vec3 aPosition;
 attribute vec2 aTexCoord;
 
 //Varying variable to pass the texture coordinates into the fragment shader
 varying vec2 vTexCoord;
-
-uniform sampler2D uComputeTexture;
 
 void main(){
     vec2 positionVec2 = aPosition.xy * 2.0 - 1.0;

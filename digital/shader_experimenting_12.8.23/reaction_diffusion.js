@@ -10,7 +10,8 @@ let positionShader;
 let noiseTex;
 let posTex;
 
-let dampForce = 0.1;
+let dampForce = 0.003;
+let exitRadius = 300;
 
 function preload(){
   //this shader updates velocities, using the flow field
@@ -31,6 +32,7 @@ function setup(){
   pixelDensity(1);
   setupFlowField();
   setupPositions();
+  setupVelocity();
 }
 
 function draw(){
@@ -42,16 +44,42 @@ function draw(){
   velocityShader.setUniform("uVelocityTexture",velocityTexture);
   velocityShader.setUniform("uPositionTexture",positionTexture);
   velocityShader.setUniform("uDampForce",dampForce);
+  velocityShader.setUniform("uMousePos",[mouseX/width,mouseY/height]);
   rect(-velocityTexture.width/2,-velocityTexture.height/2,velocityTexture.width,velocityTexture.height);
   velocityTexture.end();
-
   resetShader();
 
-  //drawing the positions!
-  finalTexture.begin();
+  //updating positions
+  positionTexture.begin();
   shader(positionShader);
+  positionShader.setUniform("uVelocityTexture",velocityTexture);
   positionShader.setUniform("uPositionTexture",positionTexture);
-  rect(-finalTexture.width/2,-finalTexture.height/2,finalTexture.width,finalTexture.height);
+  positionShader.setUniform("uExitRadius",exitRadius);
+  rect(-positionTexture.width/2,-positionTexture.height/2,positionTexture.width, positionTexture.height);
+  positionTexture.end();
+
+  //drawing positions
+  finalTexture.begin();
+  positionTexture.loadPixels();
+  background(255);
+  // fill(200,0,0);
+  strokeWeight(1);
+  for(let x1 = 0; x1 < 100; x1++){
+    if(x1>10)
+      break;
+    for(let y1 = 0; y1 < 100; y1++){
+
+      let index = 4 * ((y1) * width  + (x1));
+
+      let rgb = [positionTexture.pixels[index],positionTexture.pixels[index+1],positionTexture.pixels[index+2]];
+      // ellipse(map(rgb[0],0,255,-width/2,width/2),map(rgb[1],0,255,-height/2,height/2),10,10);
+      push();
+      translate(map(rgb[0],0,255,-width/2,width/2),map(rgb[1],0,255,-height/2,height/2),map(rgb[2],0,255,-height/2,height/2));
+      // point(map(rgb[0],0,255,-width/2,width/2),map(rgb[1],0,255,-height/2,height/2));
+      ellipse(0,0,5,5);
+      pop();
+    }
+  }
   finalTexture.end();
 
   image(finalTexture,-width/2,-height/2,width,height);
@@ -68,8 +96,14 @@ function setupPositions(){
 
 function setupFlowField(){
   flowTexture.begin();
-  image(noiseTex,-width/2,-height/2,width,height);
+  image(noiseTex,-flowTexture.width/2,-flowTexture.height/2,flowTexture.width,flowTexture.height);
   flowTexture.end();
+}
+
+function setupVelocity(){
+  velocityTexture.begin();
+  background(127.4);
+  velocityTexture.end();
 }
 
 function writeNewRandomPositions(){
