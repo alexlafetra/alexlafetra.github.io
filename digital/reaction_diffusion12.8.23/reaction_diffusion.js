@@ -80,6 +80,8 @@ let computeSlider;
 let resetButton;
 let swapPalletteButton;
 let randomColorButton;
+let fillButton;
+let debugButton;
 let mouseHeld = false;
 let lastMousePos;
 
@@ -128,12 +130,23 @@ function swapPallette(){
   [pallette,pallette3] = [pallette3,pallette];
 }
 
+function fillScreen(){
+  computeLayer.begin();
+  background(0,255,0);
+  fill(255,0,0);
+  const rnd = random(0,20);
+  for(let i = 0; i<rnd; i++){
+    ellipse(random(-width/2,width/2),random(-width/2,width/2),random(1,100),random(1,100));
+  }
+  computeLayer.end();
+}
+
 //create the input sliders + reset button
 function createSliders(){
   const controls = createDiv();
   controls.id("controls");
 
-  stepSlider = new LabeledSlider(1,10,stepSize,1,"Diffusion Radius");
+  stepSlider = new LabeledSlider(0.01,10,stepSize,0.01,"Diffusion Radius");
   aSlider = new LabeledSlider(0,1.5,dA,0.01,"dA");
   bSlider = new LabeledSlider(0,1.5,dB,0.01,"dB");
   kSlider = new LabeledSlider(0,0.06,k,0.0001,"kill");
@@ -156,6 +169,14 @@ function createSliders(){
   petriButton = createButton("Put it in a dish");
   petriButton.mousePressed(() => {petriDish = !petriDish;});
   petriButton.parent(controls);
+
+  fillButton = createButton("Fill Screen");
+  fillButton.mousePressed(fillScreen);
+  fillButton.parent(controls);
+
+  debugButton = createButton("Show Texture Data");
+  debugButton.mousePressed(() => {showRenderLayer = !showRenderLayer;});
+  debugButton.parent(controls);
 
 }
 
