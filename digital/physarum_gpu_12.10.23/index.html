@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Particle System with Texture</title>
+  <style>
+    body { margin: 0; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const gl = canvas.getContext('webgl');
+
+    if (!gl) {
+      console.error('Unable to initialize WebGL. Your browser may not support it.');
+    }
+
+    // Vertex shader program
+    const vsSource = `
+      attribute vec2 aVertexPosition;
+      varying vec2 vTextureCoord;
+      void main(void) {
+        gl_Position = vec4(aVertexPosition, 0.0, 1.0);
+        vTextureCoord = (aVertexPosition + 1.0) / 2.0;
+      }
+    `;
+
+    // Fragment shader program
+    const fsSource = `
+      precision mediump float;
+      uniform sampler2D uSampler;
+      varying vec2 vTextureCoord;
+      void main(void) {
+        gl_FragColor = texture2D(uSampler, vTextureCoord);
+      }
+    `;
+
+    // Initialize shaders
+    function initShaderProgram(gl, vsSource, fsSource) {
+      const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
+      const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
+
+      const shaderProgram = gl.createProgram();
+      gl.attachShader(shaderProgram, vertexShader);
+      gl.attachShader(shaderProgram, fragmentShader);
+      gl.linkProgram(shaderProgram);
+
+      if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+        console.error('Unable to initialize the shader program: ' + gl.getProgramInfoLog(shaderProgram));
+        return null;
+      }
+
+      return shaderProgram;
+    }
+
+    // Compile shader
+    function loadShader(gl, type, source) {
+      const shader = gl.createShader(type);
+
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+      }
+
+      return shader;
+    }
+
+    // Create shader program
+    const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
+
+    // Get attribute and uniform locations
+    const programInfo = {
+      program: shaderProgram,
+      attribLocations: {
+        vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
+      },
+      uniformLocations: {
+        sampler: gl.getUniformLocation(shaderProgram, 'uSampler'),
+      },
+    };
+
+    // Create buffer for the quad
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    const positions = new Float32Array([
+      -1.0, -1.0,
+      1.0, -1.0,
+      -1.0, 1.0,
+      1.0, 1.0,
+    ]);
+    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+    // Set up the canvas
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    // Use the shader program
+    gl.useProgram(programInfo.program);
+
+    // Set up attributes
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.vertexAttribPointer(programInfo.attribLocations.vertexPosition, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
+
+    // Create texture and set particle data
+    const texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    const particleData = new Uint8Array([
+      255, 255, 255, 255, // Particle 1 (white)
+      255, 255, 255, 255, // Particle 2 (white)
+      255, 255, 255, 255, // Particle 3 (white)
+    ]);
+
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, particleData.length / 4, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, particleData);
+
+    // Set texture filtering options
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+    // Set the texture uniform
+    gl.uniform1i(programInfo.uniformLocations.sampler, 0);
+
+    // Draw quad
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, positions.length / 2);
+  </script>
+</body>
+</html>
