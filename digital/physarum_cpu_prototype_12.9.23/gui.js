@@ -50,6 +50,7 @@ const guiSliders = [];
 function initGui(){
     let gui = createDiv();
     gui.id("gui");
+    new GuiButton("Show Grid",()=>{renderGrid = !renderGrid});
     new GuiButton("Show Vectors",()=>{renderVectors = !renderVectors});
     new GuiButton("Show Sensors",()=>{renderSensors = !renderSensors});
     new GuiButton("Show Particles",()=>{renderParticles = !renderParticles});

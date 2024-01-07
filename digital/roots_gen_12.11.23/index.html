@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- for some reason, frameBuffer() is only available from this package?? -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script> -->
+  <script language="javascript" type="text/javascript" src="gui.js"></script>
+
+  <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
+  <script language="javascript" type="text/javascript" src="libraries/p5.min.js"></script>
+  <script language="javascript" type="text/javascript" src="main.js"></script>
+  <!-- OK, YOU CAN MAKE CHANGES BELOW THIS LINE AGAIN -->
+
+  <style>
+    html{
+      height:100%;
+      overflow:hidden;
+    }
+    body {
+      height:100%;
+      padding: 0;
+      margin: 0;
+      display:flex;
+      justify-content: center;
+      align-items: center;
+    }
+    canvas{
+      margin:auto;
+      display:block;
+      width:auto;
+    }
+    #gui{
+      width:fit-content;
+      height:fit-content;
+      display:flex;
+      flex-direction:column;
+      position:absolute;
+      right:0;
+      top:0;
+      background-color: white;
+      border-radius:0px 0px 0px 10px;
+      border-width:2px;
+      border:solid;
+      border-color:rgb(60,60,60);
+      border-top:none;
+      border-right:none;
+      padding:20px;
+      transition:0.5s;
+      font-family:'Times New Roman', Times, serif;
+      color:rgb(60,60,60);
+      justify-items: right;
+    }
+
+    /* for the sliders */
+    #controls input{
+      width:100%;
+      float:right;
+    }
+
+    #controls button{
+      color:rgb(60,60,60);
+      border-radius:3px;
+    }
+    #controls button:hover{
+      background-color:white;
+    }
+  </style>
+</head>
+
+<body>
+</body>
+</html>

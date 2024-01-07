@@ -1,7 +1,10 @@
 "use strict"
 //Emulating physarum transport networks
 
+//Nice blog post:
 //https://cargocollective.com/sagejenson/physarum
+//And a scientific paper (need 2 read this)
+//https://uwe-repository.worktribe.com/output/980579
 
 //each particle:
 /*
@@ -19,7 +22,7 @@
 
     This is a prototype for the cpu, just so I can get it working.
 
-    Now I'm thinking:
+    After writing this, I'm thinking:
     particles store position and velocity on two textures, and there's a render layer. 
     Pass all three to the velocityShader:
     1. Vel shader gets position from position texture
@@ -30,7 +33,7 @@
     1. get vel from vel texture
     2. add it to the position (making sure to wrap bounds)
 
-    to draw the 
+    to draw the ... see how do i draw the trails to a texture?
     
 */
 
@@ -48,6 +51,7 @@ let lookAheadDistance = 2.5;
 let renderVectors = false;
 let renderSensors = false;
 let renderParticles = false;
+let renderGrid = true;
 let diffuseGrid = false;
 let diffusionStrength = 1.0;
 
@@ -146,13 +150,8 @@ class MoldCell{
             }
         }
         if(renderVectors){
-            push();
             stroke(0,255,0);
-            translate(this.position.x*scaleX,this.position.y*scaleY);
-            let temp = this.velocity;
-            temp.setMag(10.0);
-            line(0,0,temp.x,temp.y);
-            pop();
+            line(this.position.x*scaleX,this.position.y*scaleY,this.position.x*scaleX+this.velocity.x*scaleX,this.position.y*scaleY+this.velocity.y*scaleY);
         }
     }
 };
@@ -244,14 +243,16 @@ class PetriDish{
         this.decay();
     }
     render(){
-        noStroke();
-        for(let i = 0; i<this.width; i++){
-            for(let j = 0; j<this.height; j++){
-                fill(this.trailData[i][j]);
-                push();
-                translate(i*this.scaleX,j*this.scaleY);
-                rect(0,0,this.scaleX,this.scaleY);
-                pop();
+        if(renderGrid){
+            noStroke();
+            for(let i = 0; i<this.width; i++){
+                for(let j = 0; j<this.height; j++){
+                    fill(this.trailData[i][j]);
+                    push();
+                    translate(i*this.scaleX,j*this.scaleY);
+                    rect(0,0,this.scaleX,this.scaleY);
+                    pop();
+                }
             }
         }
         stroke(255);
