@@ -44,23 +44,22 @@ let dampValueSlider;
 let particleSlider;
 let decaySlider;
 let randomSlider;
-let imageOpacitySlider;
 let particleSizeSlider;
 let particleLifespanSlider;
 let forceStrengthSlider;
+let fieldStrengthSlider;
 
 const guiSliders = [];
 function initGui(){
     let gui = createDiv();
     gui.id("gui");
-    dampValueSlider = new GuiSlider(0.001,0.02,dampValue,0.001,"Damping",'dampValue');
-    particleSlider = new GuiSlider(1,dataTextureDimension*dataTextureDimension,NUMBER_OF_PARTICLES,1,"Particles",'NUMBER_OF_PARTICLES');
-    decaySlider = new GuiSlider(0.01,0.3,decayValue,0.01,"decay",'decayValue');
-    randomSlider = new GuiSlider(0,2.0,randomScale,0.01,"random",'randomScale');
-    imageOpacitySlider = new GuiSlider(0,255,imageOpacity,1.0,"Opacity",'imageOpacity');
+    dampValueSlider = new GuiSlider(0.001,0.02, flowField.velDampValue,0.001,"Damping",'dampValue');
+    particleSlider = new GuiSlider(1,dataTextureDimension*dataTextureDimension,flowField.particleCount,1,"Particles",'NUMBER_OF_PARTICLES');
+    decaySlider = new GuiSlider(0.01,0.3,flowField.trailDecayValue,0.01,"decay",'decayValue');
+    randomSlider = new GuiSlider(0,2.0,flowField.randomAmount,0.01,"Random Amount",'randomScale');
     particleLifespanSlider = new GuiSlider(1,200,flowField.particleAgeLimit,1,"Age",'imageOpacity');
     particleSizeSlider = new GuiSlider(0,20.0,flowField.pointSize,0.1,"Size",'imageOpacity');
-    forceStrengthSlider = new GuiSlider(0,1.0,flowField.forceStrength,0.001,"Force",'imageOpacity');
+    forceStrengthSlider = new GuiSlider(0,0.5,flowField.forceStrength,0.001,"Force",'imageOpacity');
 
     new GuiButton("Reset",()=>{flowField.reset()});
     new GuiButton("Show Map",()=>{showingMap = !showingMap});
@@ -77,12 +76,12 @@ function initGui(){
 }
 
 function updateSliders(){
-    decayValue = decaySlider.value();
-    dampValue = dampValueSlider.value();
-    NUMBER_OF_PARTICLES = particleSlider.value();
-    randomScale = randomSlider.value();
-    imageOpacity = imageOpacitySlider.value();
+    flowField.velDampValue = dampValueSlider.value();
+    flowField.particleCount = particleSlider.value();
+    flowField.randomAmount = randomSlider.value();
+    flowField.trailDecayValue = decaySlider.value();
     flowField.particleAgeLimit = particleLifespanSlider.value();
     flowField.pointSize = particleSizeSlider.value();
     flowField.forceStrength = forceStrengthSlider.value();
+
 }

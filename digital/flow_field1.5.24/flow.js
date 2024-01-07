@@ -1,15 +1,4 @@
-let decayValue = 0.1;
-let lookAheadDistance = 2.5;
-
 let dataTextureDimension = 1200;
-
-let NUMBER_OF_PARTICLES = 32000;
-
-let dampValue = 0.002;
-let flowScale = 3.0;
-let randomScale = 0.0;
-let diffusionStrength = 1.0;
-let imageOpacity = 0;
 
 let randomShader;
 let drawParticlesProgram;
@@ -57,13 +46,17 @@ function fillFBOwithRandom(fbo,scale,seed){
 class FlowField{
     constructor(points,mask,colors,flowFShader){
         //Parameters
-        this.particleCount = 90000;
+        this.particleCount = 32000;
         this.trailDecayValue = 0.1;
         this.pointSize = 1.3;
         this.opacity = 200;
         this.particleAgeLimit = 80;
         this.velDampValue = 0.008;
         this.forceStrength = 1.0;
+        this.fieldStrength = 0.01;
+        this.randomAmount = 0.0;
+
+        this.backgroundColor = {r:0.2*255,g:0.2*255,b:0.1*255};
 
         this.showDataTextures = false;
 
@@ -115,6 +108,7 @@ class FlowField{
         this.flowShader.setUniform('uPoint8',[points[7].x,points[7].y]);
         this.flowShader.setUniform('uPoint9',[points[8].x,points[8].y]);
         this.flowShader.setUniform('uPoint10',[points[9].x,points[9].y]);
+        this.flowShader.setUniform('uFlowCoef',this.fieldStrength);
         rect(-width/2,-height/2,width,height);
         fbo.end();
     }
@@ -123,8 +117,8 @@ class FlowField{
         shader(this.updatePositionShader);
         this.updatePositionShader.setUniform('uParticleVelTexture',this.velTexture);
         this.updatePositionShader.setUniform('uParticlePosTexture',this.uPositionTexture);
-        this.updatePositionShader.setUniform('uDamp',dampValue);
-        this.updatePositionShader.setUniform('uRandomScale',randomScale);
+        this.updatePositionShader.setUniform('uDamp',this.velDampValue);
+        this.updatePositionShader.setUniform('uRandomScale',this.randomAmount);
         this.updatePositionShader.setUniform('uTime',millis()%3000);
         this.updatePositionShader.setUniform('uAgeLimit',this.particleAgeLimit/100.0);
         this.updatePositionShader.setUniform('uParticleAgeTexture',this.ageTexture);
@@ -171,7 +165,8 @@ class FlowField{
         this.trailLayer.begin();
         //fade the trails
         // background(0,decayValue*255);
-        background(0.4*255,0.4*255,0.2*255,decayValue*255);
+        // background(0.2*255,0.2*255,0.1*255,decayValue*255);
+        background(this.backgroundColor.r,this.backgroundColor.g,this.backgroundColor.b,this.trailDecayValue*255);
         //Clearing framebuffer,resetting viewport
 
         //setting ID attributes (or trying to at least)
@@ -203,7 +198,7 @@ class FlowField{
         this.pointShader.setUniform('uColorTexture',this.ageTexture);
         this.pointShader.setUniform('uTextureDimensions',[dataTextureDimension,dataTextureDimension]);
         this.pointShader.setUniform('uParticleSize',this.pointSize);
-        gl.drawArrays(gl.POINTS,0,NUMBER_OF_PARTICLES);
+        gl.drawArrays(gl.POINTS,0,this.particleCount);
         this.trailLayer.end();
         image(this.trailLayer,-width/2,-height/2,width,height);
     }
@@ -222,7 +217,7 @@ class FlowField{
         this.uPositionTexture.loadPixels();
         strokeWeight(this.pointSize);
         stroke(0);
-        for(let i = 0; i<min(NUMBER_OF_PARTICLES,10000); i++){
+        for(let i = 0; i<min(this.particleCount,10000); i++){
             let x = this.uPositionTextureture.pixels[i*4];
             let y = this.uPositionTextureture.pixels[i*4+1];
             point(x*width-width/2,y*height-height/2);
@@ -288,11 +283,17 @@ uniform float uForceStrength;
 varying vec2 vParticleCoord;
 
 void main(){
+    //Get position in clip space
     vec4 screenPosition = texture2D(uParticlePos,vParticleCoord);
+    //Get current velocity
     vec4 oldVel = texture2D(uParticleVel,vParticleCoord);
+    //Get the acceleration/force from the flow field texture
     vec4 flowForce = texture2D(uFlowFieldTexture,screenPosition.xy);
-    vec2 vel = uForceStrength*vec2(flowForce.x,flowForce.y)+(1.0-uForceStrength)*vec2(oldVel.x,oldVel.y);
-    gl_FragColor = vec4(vel,1.0,1.0);
+    //Add the force to the current vel
+    vec2 newVel = uForceStrength*vec2(flowForce.x,flowForce.y)+(1.0-uForceStrength)*vec2(oldVel.x,oldVel.y);
+    // vec2 newVel = uForceStrength*vec2(flowForce.x,flowForce.y)+vec2(oldVel.x,oldVel.y)/2.0;
+    // newVel/=2.0;
+    gl_FragColor = vec4(newVel,1.0,1.0);
 }
 `;
 
