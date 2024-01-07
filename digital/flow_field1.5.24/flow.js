@@ -200,7 +200,7 @@ class FlowField{
         shader(this.pointShader);
         this.pointShader.setUniform('uVelocityTexture',this.velTexture);
         this.pointShader.setUniform('uPositionTexture',this.uPositionTexture);
-        this.pointShader.setUniform('uColorTexture',this.colorMap);
+        this.pointShader.setUniform('uColorTexture',this.ageTexture);
         this.pointShader.setUniform('uTextureDimensions',[dataTextureDimension,dataTextureDimension]);
         this.pointShader.setUniform('uParticleSize',this.pointSize);
         gl.drawArrays(gl.POINTS,0,NUMBER_OF_PARTICLES);
@@ -559,7 +559,7 @@ precision highp float;
 varying vec4 vColor;
 void main() {
     // gl_FragColor = vec4(0.4,0.3,0.1,0.1);
-    gl_FragColor = vec4(vColor.x*2.0,0.6,0.4,1.0);
+    gl_FragColor = vec4(1.0, 0.55, 0.0,1.0-vColor.x);
     // gl_FragColor = vec4(0.1,0.0,0.6,1.0);
     // vec3 color1 = vec3(1.0, 0.55, 0.0);
     // vec3 color2 = vec3(0.226,0.000,0.615);

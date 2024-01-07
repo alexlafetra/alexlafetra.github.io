@@ -61,21 +61,8 @@ function setup(){
 
 
 function draw(){
-    p[0].x = mouseX/width;
-    p[0].y = mouseY/height;
-
-    // for(let i = 0; i<p.length; i++){
-    //     p[i].x += f[i].x/width;
-    //     p[i].y += f[i].y/height;
-    //     if(p[i].x<0)
-    //         p[i].x = 1;
-    //     if(p[i].x>1)
-    //         p[i].x = 0;
-    //     if(p[i].y<0)
-    //         p[i].y = 1;
-    //     if(p[i].y>1)
-    //         p[i].y = 0;
-    // }
+    p[9].x = mouseX/width;
+    p[9].y = mouseY/height;
 
     updateSliders();
     flowField.renderGL();
