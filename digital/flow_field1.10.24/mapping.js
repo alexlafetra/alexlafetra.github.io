@@ -33,6 +33,8 @@
 let bayTracts;//Object with all the tract geo+data 
 
 //CA geometry from https://github.com/arcee123/GIS_GEOJSON_CENSUS_TRACTS/tree/master
+//Actually no, they're shapefiles taken from the US Census website and 
+//exported as geoJSON files using QGIS
 let tractGeometry;
 
 //Data from my census work (make a way for this to be raw from the US census site)
@@ -54,10 +56,6 @@ let geoOffset;
 let oakHolcTracts;
 let sfHolcTracts;
 let sjHolcTracts;
-
-let threshold = 0.1;
-let mapTexture;
-let holcTexture;
 
 function cleanCensusData(){
     //parsing tract/county codes into 'Tract' and 'County' columns respectively
@@ -113,6 +111,13 @@ function search(tractID,column){
     console.log(tract2020);
 }
 
+
+/*
+This is an okay way of doing tract conversions for preliminary exploration, but eventually you should make this a lot better.
+Ideas for better:
+store tract data as new object data, like "equivalent2010Data:[tract:001,pop:0001]"
+then, after all the tracts are processed, decide how to compare these data to the 2020 data
+*/
 function convertTracts(dataIn,conversionSheet,substantiallyChangedTracts,oldGeoIDColumnName,newGeoIDColumnName,whichYear,silently){
     //New array of p5.TableRow objects to store the data in
     let convertedData = new p5.Table();
@@ -291,9 +296,11 @@ function alignGeoAndData(features){
             bayTracts.push(tract);
         }
     }
-    console.log("Missing tracts:");
-    for(let i of missingTracts){
-        console.log(i);
+    if(missingTracts.length){
+        console.log("Missing tracts:");
+        for(let i of missingTracts){
+            console.log(i);
+        }
     }
 }
 
@@ -326,28 +333,11 @@ function getTotalStats(){
     }
 }
 
-let pointsAndWeights = [];
-
 function renderCentroids(geometryOffset){
     //rendering each tract
     for(let tract of bayTracts){
         if(!tract.hasData)
             continue;
-        // let whitePopulation2000 = parseFloat(tract.data2000.obj['White'].replace(/,/g, ''));
-        // let whitePopulation2020 = parseFloat(tract.data2020.obj['White'].replace(/,/g, ''));
-
-        // let blackPopulation2000 = parseFloat(tract.data2000.obj['Black'].replace(/,/g, ''));
-        // let blackPopulation2020 = parseFloat(tract.data2020.obj['Black'].replace(/,/g, ''));
-
-        // let asianPopulation2000 = parseFloat(tract.data2000.obj['Asian'].replace(/,/g, ''));
-        // let asianPopulation2020 = parseFloat(tract.data2020.obj['Asian'].replace(/,/g, ''));
-
-        // let totalPopulation2000 = parseFloat(tract.data2000.obj['Total'].replace(/,/g, ''));
-        // let totalPopulation2020 = parseFloat(tract.data2020.obj['Total'].replace(/,/g, ''));
-
-        // let value = ((whitePopulation2020/totalPopulation2020)-(whitePopulation2000/totalPopulation2000));
-        // if(value>threshold){
-        // }
         stroke(0,255,0);
         if(tract.isClicked){
             fill(255);
@@ -427,6 +417,11 @@ function temp_style(tract){
           let val2 = blackPopulation2020/totalPopulation2020 - blackPopulation2000/totalPopulation2000;
           let val3 = asianPopulation2020/totalPopulation2020 - asianPopulation2000/totalPopulation2000;
           fill(map(val1,-0.1,0.3,0,255),0.0,map(val2,-0.1,0.3,0,255));
+
+            // let whitePplComparison = whitePopulation2020/whitePopulation2000;
+            // let blackPplComparison = blackPopulation2020/blackPopulation2000;
+
+            // fill(whitePplComparison*125,0,blackPplComparison*125);
         //   fill(map(val1,-0.5,0.5,0,255),map(val3,-0.5,0.5,0,255),map(val2,-0.5,0.5,0,255));
 
           // fill(map(val,1,-1,0,100),100,map(val,-1,1,0,100));
@@ -444,7 +439,7 @@ function temp_style(tract){
           // fill(totalPopulation2020/totalPopulation2000*50);
 }
 
-function style_4(tract){
+function colorStyle_whiteRatioComparison(tract){
     let whitePopulation2000 = tract.data2000.obj['White'];
     let whitePopulation2020 = tract.data2020.obj['White'];
 
@@ -460,9 +455,113 @@ function style_4(tract){
     let val1 = whitePopulation2020/totalPopulation2020 - whitePopulation2000/totalPopulation2000;
     let val2 = blackPopulation2020/totalPopulation2020 - blackPopulation2000/totalPopulation2000;
     let val3 = asianPopulation2020/totalPopulation2020 - asianPopulation2000/totalPopulation2000;
-    // fill(map(val1,-0.5,0.5,0,255),map(val3,-0.5,0.5,0,255),map(val2,-0.5,0.5,0,255));
-    fill(map(val1,-0.5,0.5,0,255),map(val3,-0.5,0.5,0,255),map(val2,-0.5,0.5,0,255));
+
+    fill(map(val1,-0.4,0.3,0,255),0.0,map(val1,-0.1,0.8,255,0));
 }
+function colorStyle_blackRatioComparison(tract){
+    let whitePopulation2000 = tract.data2000.obj['White'];
+    let whitePopulation2020 = tract.data2020.obj['White'];
+
+    let blackPopulation2000 = tract.data2000.obj['Black'];
+    let blackPopulation2020 = tract.data2020.obj['Black'];
+
+    let asianPopulation2000 = tract.data2000.obj['Asian'];
+    let asianPopulation2020 = tract.data2020.obj['Asian'];
+
+    let totalPopulation2000 = tract.data2000.obj['Total'];
+    let totalPopulation2020 = tract.data2020.obj['Total'];
+
+    let val1 = whitePopulation2020/totalPopulation2020 - whitePopulation2000/totalPopulation2000;
+    let val2 = blackPopulation2020/totalPopulation2020 - blackPopulation2000/totalPopulation2000;
+    let val3 = asianPopulation2020/totalPopulation2020 - asianPopulation2000/totalPopulation2000;
+
+    fill(map(val2,-0.1,0.6,0,255),map(val2,-0.1,0.3,0,255),0);
+}
+function colorStyle_asianRatioComparison(tract){
+    let whitePopulation2000 = tract.data2000.obj['White'];
+    let whitePopulation2020 = tract.data2020.obj['White'];
+
+    let blackPopulation2000 = tract.data2000.obj['Black'];
+    let blackPopulation2020 = tract.data2020.obj['Black'];
+
+    let asianPopulation2000 = tract.data2000.obj['Asian'];
+    let asianPopulation2020 = tract.data2020.obj['Asian'];
+
+    let totalPopulation2000 = tract.data2000.obj['Total'];
+    let totalPopulation2020 = tract.data2020.obj['Total'];
+
+    let val1 = whitePopulation2020/totalPopulation2020 - whitePopulation2000/totalPopulation2000;
+    let val2 = blackPopulation2020/totalPopulation2020 - blackPopulation2000/totalPopulation2000;
+    let val3 = asianPopulation2020/totalPopulation2020 - asianPopulation2000/totalPopulation2000;
+
+    fill(0.0,map(val3,-0.1,0.3,0,255),map(val3,-0.1,0.6,0,255));
+}
+
+function colorStyle_whiteBlackComparison2020_2000(tract){
+    let whitePopulation2000 = tract.data2000.obj['White'];
+    let whitePopulation2020 = tract.data2020.obj['White'];
+
+    let blackPopulation2000 = tract.data2000.obj['Black'];
+    let blackPopulation2020 = tract.data2020.obj['Black'];
+
+    let asianPopulation2000 = tract.data2000.obj['Asian'];
+    let asianPopulation2020 = tract.data2020.obj['Asian'];
+
+    let whitePplComparison = whitePopulation2020/whitePopulation2000;
+    let blackPplComparison = blackPopulation2020/blackPopulation2000;
+    let asianPplComparison = asianPopulation2020/asianPopulation2000;
+
+    fill(whitePplComparison*125,0,blackPplComparison*125);
+}
+function colorStyle_whiteComparison2020_2000(tract){
+    let whitePopulation2000 = tract.data2000.obj['White'];
+    let whitePopulation2020 = tract.data2020.obj['White'];
+
+    let blackPopulation2000 = tract.data2000.obj['Black'];
+    let blackPopulation2020 = tract.data2020.obj['Black'];
+
+    let asianPopulation2000 = tract.data2000.obj['Asian'];
+    let asianPopulation2020 = tract.data2020.obj['Asian'];
+
+    let whitePplComparison = whitePopulation2020/whitePopulation2000;
+    let blackPplComparison = blackPopulation2020/blackPopulation2000;
+    let asianPplComparison = asianPopulation2020/asianPopulation2000;
+
+    fill(whitePplComparison*125,0,blackPplComparison*125);
+}
+function colorStyle_blackComparison2020_2000(tract){
+    let whitePopulation2000 = tract.data2000.obj['White'];
+    let whitePopulation2020 = tract.data2020.obj['White'];
+
+    let blackPopulation2000 = tract.data2000.obj['Black'];
+    let blackPopulation2020 = tract.data2020.obj['Black'];
+
+    let asianPopulation2000 = tract.data2000.obj['Asian'];
+    let asianPopulation2020 = tract.data2020.obj['Asian'];
+
+    let whitePplComparison = whitePopulation2020/whitePopulation2000;
+    let blackPplComparison = blackPopulation2020/blackPopulation2000;
+    let asianPplComparison = asianPopulation2020/asianPopulation2000;
+
+    fill(whitePplComparison*125,0,blackPplComparison*125);
+}
+function colorStyle_asianComparison2020_2000(tract){
+    let whitePopulation2000 = tract.data2000.obj['White'];
+    let whitePopulation2020 = tract.data2020.obj['White'];
+
+    let blackPopulation2000 = tract.data2000.obj['Black'];
+    let blackPopulation2020 = tract.data2020.obj['Black'];
+
+    let asianPopulation2000 = tract.data2000.obj['Asian'];
+    let asianPopulation2020 = tract.data2020.obj['Asian'];
+
+    let whitePplComparison = whitePopulation2020/whitePopulation2000;
+    let blackPplComparison = blackPopulation2020/blackPopulation2000;
+    let asianPplComparison = asianPopulation2020/asianPopulation2000;
+
+    fill(asianPplComparison*125,0,255-asianPplComparison*125);
+}
+
 function whiteProportion(tract){
     let whitePopulation2000 = tract.data2000.obj['White'];
     let whitePopulation2020 = tract.data2020.obj['White'];
@@ -480,63 +579,6 @@ function whiteProportion(tract){
     let r = map(changeInProportion,-0.3,0.3,0,255);
     let b = map(changeInProportion,0.3,-0.3,0,255);
     fill(r,r,r);
-}
-function style_1(tract){
-    let whitePopulation2000 = tract.data2000.obj['White'];
-    let whitePopulation2020 = tract.data2020.obj['White'];
-
-    let blackPopulation2000 = tract.data2000.obj['Black'];
-    let blackPopulation2020 = tract.data2020.obj['Black'];
-
-    let asianPopulation2000 = tract.data2000.obj['Asian'];
-    let asianPopulation2020 = tract.data2020.obj['Asian'];
-
-    let totalPopulation2000 = tract.data2000.obj['Total'];
-    let totalPopulation2020 = tract.data2020.obj['Total'];
-
-    let val1 = whitePopulation2020/totalPopulation2020 - whitePopulation2000/totalPopulation2000;
-    let val2 = blackPopulation2020/totalPopulation2020 - blackPopulation2000/totalPopulation2000;
-    let val3 = asianPopulation2020/totalPopulation2020 - asianPopulation2000/totalPopulation2000;
-    // fill(map(val1,-0.5,0.5,0,255),map(val3,-0.5,0.5,0,255),map(val2,-0.5,0.5,0,255));
-    fill(map(val1,-0.5,0.5,0,255),0,0);
-}
-function style_2(tract){
-    let whitePopulation2000 = tract.data2000.obj['White'];
-    let whitePopulation2020 = tract.data2020.obj['White'];
-
-    let blackPopulation2000 = tract.data2000.obj['Black'];
-    let blackPopulation2020 = tract.data2020.obj['Black'];
-
-    let asianPopulation2000 = tract.data2000.obj['Asian'];
-    let asianPopulation2020 = tract.data2020.obj['Asian'];
-
-    let totalPopulation2000 = tract.data2000.obj['Total'];
-    let totalPopulation2020 = tract.data2020.obj['Total'];
-
-    let val1 = whitePopulation2020/totalPopulation2020 - whitePopulation2000/totalPopulation2000;
-    let val2 = blackPopulation2020/totalPopulation2020 - blackPopulation2000/totalPopulation2000;
-    let val3 = asianPopulation2020/totalPopulation2020 - asianPopulation2000/totalPopulation2000;
-    // fill(map(val1,-0.5,0.5,0,255),map(val3,-0.5,0.5,0,255),map(val2,-0.5,0.5,0,255));
-    fill(0,map(val3,-0.5,0.5,0,255),0);
-}
-function style_3(tract){
-    let whitePopulation2000 = tract.data2000.obj['White'];
-    let whitePopulation2020 = tract.data2020.obj['White'];
-
-    let blackPopulation2000 = tract.data2000.obj['Black'];
-    let blackPopulation2020 = tract.data2020.obj['Black'];
-
-    let asianPopulation2000 = tract.data2000.obj['Asian'];
-    let asianPopulation2020 = tract.data2020.obj['Asian'];
-
-    let totalPopulation2000 = tract.data2000.obj['Total'];
-    let totalPopulation2020 = tract.data2020.obj['Total'];
-
-    let val1 = whitePopulation2020/totalPopulation2020 - whitePopulation2000/totalPopulation2000;
-    let val2 = blackPopulation2020/totalPopulation2020 - blackPopulation2000/totalPopulation2000;
-    let val3 = asianPopulation2020/totalPopulation2020 - asianPopulation2000/totalPopulation2000;
-    // fill(map(val1,-0.5,0.5,0,255),map(val3,-0.5,0.5,0,255),map(val2,-0.5,0.5,0,255));
-    fill(0,0,map(val2,-0.5,0.5,0,255));
 }
 
 //Draws tract geometry, can be filled for different data visualizations
@@ -577,15 +619,6 @@ function printDemographics(tract){
     console.log("      "+round(tract.data2000.get('Asian'))+"|"+round(tract.data2020.get('Asian')));
 }
 
-function fillPointsAndWeightsWithRandom(){
-    pointsAndWeights = [];
-    for(let i = 0; i<13; i+=3){
-        pointsAndWeights.push(random(1));
-        pointsAndWeights.push(random(1));
-        pointsAndWeights.push(random(1.3));
-    }
-}
-
 function clickClosestCentroid(coord){
     let closestDistance = null;
     let closestIndex = 0;
@@ -623,12 +656,26 @@ function renderHOLCTracts(geometryOffset,holcTracts){
     for(let tract of holcTracts.features){
         let polygons = tract.geometry.coordinates;
         let grade = tract.properties.grade;
-        if(grade != "D")
-            continue;
-        let color = tract.properties.fill;
-        let industrial = tract.properties.industrial;
-        stroke(255);
-        noFill();
+        let color;
+        switch(grade){
+            case 'A':
+                color = {r:100,g:100,b:255};
+                break;
+            case 'B':
+                color = {r:100,g:200,b:155};
+                break;
+            case 'C':
+                color = {r:255,g:215,b:0};
+                break;
+            case 'D':
+                color = {r:255,g:0,b:0};
+                break;
+            case null:
+                color = {r:155,g:155,b:155};
+                break;
+        }
+        stroke(color.r,color.g,color.b);
+        fill(color.r,color.g,color.b,20);
 
         //these are multipolygons, so you need to iterate over each one
         for(let shape of polygons){
@@ -644,23 +691,11 @@ function renderHOLCTracts(geometryOffset,holcTracts){
     }
 }
 
-function renderMap(){
-    mapTexture.begin();
-    renderTracts(geoOffset,temp_style);
-
-    // drawing points
-    // let sigPoints = getSignificantPoints(mostWhiteChange,5);
-    // for(let i = 0; i<sigPoints.length; i++){
-    //     push();
-    //     strokeWeight(5);
-    //     stroke(255,0,0);
-    //     let x = (sigPoints[i].x+geoOffset.x)*scale.x+offset.x;
-    //     let y = (sigPoints[i].y+geoOffset.y)*scale.y+offset.y;
-    //     translate(x,y);
-    //     point(0,0);
-    //     pop();
-    // }
-    mapTexture.end();
+function renderMap(tex,bg,colorStyle){
+    tex.begin();
+    background(bg);
+    renderTracts(geoOffset,colorStyle);
+    tex.end();
 }
 
 function renderMapOutline(c){
@@ -682,56 +717,80 @@ function renderMapOutline(c){
     mapTexture.end();
 
 }
-
-//get the average distance to all centroids * the weight of those centroids
-function calculateAvgWeightedDistance(x,y){
-    let pointA = createVector(x,y);
-    let distance = 0;
-    for(let point of pointsAndWeights){
-        let pointB = createVector(point.x,point.y);
-        distance+=p5.Vector.dist(pointA,pointB)*point.weight;
-    }
-    distance/=pointsAndWeights.length;
-    return 1-distance;
+function mostWhiteChange(tract){
+   return (tract.data2020.obj.White/tract.data2020.obj.Total)/(tract.data2000.obj.White/tract.data2000.obj.Total);
+}
+function mostBlackChange(tract){
+    return (tract.data2020.obj.Black/tract.data2020.obj.Total)/(tract.data2000.obj.Black/tract.data2000.obj.Total);
+}
+function mostAsianChange(tract){
+    return (tract.data2020.obj.Asian/tract.data2020.obj.Total)/(tract.data2000.obj.Asian/tract.data2000.obj.Total);
+}
+function whitePeopleComparedTo2000(tract){
+    return tract.data2020.obj.White/tract.data2000.obj.White;
+}
+function blackPeopleComparedTo2000(tract){
+    // return tract.data2020.obj.Black/tract.data2000.obj.Black;
+    return tract.data2020.obj.White/tract.data2000.obj.White;
+}
+function asianPeopleComparedTo2000(tract){
+    return tract.data2020.obj.Asian/tract.data2000.obj.Asian;
 }
 
-
-
-function mostWhitePeople(a,b){
-    if(a.whitePopulation2000>b.whitePopulation2000)
-        return 1;
-    else
-        return -1;
-}
-
-function mostWhiteChange(a,b){
+function testFunction(a,b){
     if(!a.hasData || !b.hasData)
         return 0;
 
-    let changeA = a.data2020.obj.White/a.data2020.obj.Total - a.data2000.obj.White/a.data2000.obj.Total;
-    let changeB = b.data2020.obj.White/b.data2020.obj.Total - b.data2000.obj.White/b.data2000.obj.Total;
-    // console.log(a);
+    let A = presets[activePreset].demographicFunction(a);
+    let B = presets[activePreset].demographicFunction(b);
 
-    if(changeA>changeB)
+    if(A>B)
         return -1;
-    else if(changeB>changeA)
+    else if(B>A)
         return 1;
     else
         return 0;
 }
 
-function getTopNTracts(testFunction,n){
+function getTopNTracts(n){
     let vals = bayTracts.toSorted(testFunction);
     return vals.slice(0,n);
 }
-
-function getSignificantPoints(testFunction,n){
-    let tracts = getTopNTracts(testFunction,n);
-    let coordinates = [];
-    for(let i = 0; i<n; i++){
-        coordinates.push(tracts[i].centroid);
+function getBottomNTracts(n){
+    let vals = bayTracts.toSorted(testFunction);
+    //be careful to skip the tracts that don't have data, which will be at the bottom
+    for(let i = vals.length-1; i>=0; i--){
+        if(vals[i].hasData){
+            return vals.slice((i-n),i);
+        }
     }
-    return coordinates;
+}
+
+function getSignificantPoints(n){
+    let tracts = getTopNTracts(n);
+    let points = [];
+    for(let i = 0; i<n; i++){
+        let point = {
+            x:((tracts[i].centroid.x+geoOffset.x)*scale.x+offset.x)/width+0.5,
+            y:((tracts[i].centroid.y+geoOffset.y)*scale.y+offset.y)/height+0.5,
+            strength:presets[activePreset].demographicFunction(tracts[i])
+        }
+        points.push(point);
+    }
+    return points;
+}
+function getLeastSignificantPoints(n){
+    let tracts = getBottomNTracts(n);
+    let points = [];
+    for(let i = 0; i<n; i++){
+        let point = {
+            x:((tracts[i].centroid.x+geoOffset.x)*scale.x+offset.x)/width+0.5,
+            y:((tracts[i].centroid.y+geoOffset.y)*scale.y+offset.y)/height+0.5,
+            strength:presets[activePreset].demographicFunction(tracts[i])
+        }
+        points.push(point);
+    }
+    return points;
 }
 
 function loadData(){
@@ -740,18 +799,19 @@ function loadData(){
     sfHolcTracts = loadJSON("data/geographic/SF_HOLC.json");
     sjHolcTracts = loadJSON("data/geographic/SJ_HOLC.json");
 
-    // data2000 = loadTable('data/Census/Tracts_by_Race_2000.csv','csv','header');
     data2000 = loadTable('data/Census/CONVERTED_Tracts_by_Race_2000.csv','csv','header');
     data2020 = loadTable('data/Census/Tracts_by_Race_2020.csv','csv','header');
 
     //Only need these for converting
+    // data2000 = loadTable('data/Census/Tracts_by_Race_2000.csv','csv','header');
+
     // substantiallyChanged2000 = loadTable('data/Census/Substantially_Changed_2000.csv');
     // substantiallyChanged2010 = loadTable('data/Census/Substantially_Changed_2010.csv');
     // conversions2000to2010 = loadTable('data/Census/2010_to_2000.csv','csv','header');
     // conversions2010to2020 = loadTable('data/Census/2020_to_2010.csv','csv','header');
 }
 
-function setupMapTexture(){
+function setupMapData(){
     let features = tractGeometry.features;
     bayTracts = features;
 
@@ -766,10 +826,10 @@ function setupMapTexture(){
     holcTexture = createFramebuffer(width,height);
 
     //the manual offset
-    offset = {x:250,y:300};
+    offset = {x:350,y:400};
 
     //manually adjusting the scale to taste
-    let s = 700;
+    let s = 800;
     scale = {x:s,y:s*(-1.25)};
 
     //setting the offsets so that the first point in the first shape is centered

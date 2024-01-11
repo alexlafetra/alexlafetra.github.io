@@ -39,12 +39,14 @@
             window.parent.postMessage({newURL:pageName});
         }
     </script>
+    <script language="javascript" type="text/javascript" src="../scripts/libraries/p5.min.js"></script>
+    <script language="javascript" type="text/javascript" src="wireframe_pram.js"></script>
+
 </head>
 <body id = "about_body">
-    <!-- <img id = "exploded_diagram" src = "images/Exploded View.svg" style = "position:absolute;"> -->
+    <main style = "width:100%;position:absolute;bottom:15px;"></main>
     <div class = "single_centered_div" id = "title">
         <img id = "img1" src = "images/stepchild_slow.gif" onclick = "popIcon()">
-        <img id = "img2" src = "images/metal_logo_black_text.png">
         <p id = "ascii_title" class = "ascii" onclick = "swapAscii()">   ________  ________  ________      ________  ________  ________  ________  ________  ________   ________  _______    _______ 
   /        \/    /   \/        \    /        \/        \/        \/        \/        \/    /   \ /        \/       \ _/       \
  /        _/         /         /   /        _/        _/         /         /         /         /_/       //        //         /
@@ -62,15 +64,13 @@
         <p id = "about" class = "info_text">
             You can read more about the Stepchild <a href = "info.html">here</a> and find the online user manual  <a href = "manual/manual.html">here</a>.
         </p>
-        <span class = "ascii" style = "margin:auto;width:10%;display:block;margin-top:-10px;font-size:14pt;">
-            __.
-       _    \  \
-        \____)__\
-        |========|
-         \______/
-          _/  \_
-         (_)  (_)
-        </span>
+    </div>
+    <div id = "bottom_links" style = "position:absolute;bottom:20px;width:100%;text-align:center;color:black;">
+        <a href = "home.html?page=home" style = "color:black;">Home</a>
+        <a href = "preorder.html?page=preorder" style = "color:black;">Preorder</a>
+        <a href = "info.html?page=info" style = "color:black;">Info</a>
+        <a href = "manual.html?page=manual" style = "color:black;">Manual</a>
+        <a>Github</a>
     </div>
     <p class = "ascii_hidden">
  _________  ___  ___  _______           ________  _________  _______   ________  ________  ___  ___  ___  ___       ________     

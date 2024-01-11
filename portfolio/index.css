@@ -1,0 +1,28 @@
+html{
+    background:white;
+    font-size:14pt;
+}
+#main{
+    display:grid;
+    width:100%;
+    height:100%;
+    grid-template-columns: 40% 60%;
+    grid-template-rows: 40% 20% auto;
+    grid-template-areas:
+        "intro thesis"
+        "intro recentWork"
+        "intro recentWork"
+
+}
+.title{
+    font-weight:bold;
+    font-style:italic;
+}
+
+#thesis_blurb{
+    grid-area:thesis;
+}
+
+#mapping_blurb{
+    grid-area:mapping;
+}

@@ -15,7 +15,6 @@ function genRandomPoints(n){
 }
 
 function preload(){
-    // loadData();
     flowFieldShader = loadShader('flowMap.vert','flowMap.frag');
     randomShader = createShader(defaultVert,randomFrag);
 }
@@ -30,27 +29,15 @@ function setup(){
     mainCanvas = createCanvas(1000,1000,WEBGL);
     gl = mainCanvas.GL;
 
-    // setupMapTexture();
-    // renderMapOutline(color(255));
-    // renderMap();
-
-    // let points = getSignificantPoints(mostWhiteChange,10);
-    // for(let i = 0; i<points.length;i++){
-    //     points[i].x = ((points[i].x+geoOffset.x)*scale.x+offset.x)/width+0.5;
-    //     points[i].y = ((points[i].y+geoOffset.y)*scale.y+offset.y)/height+0.5;
-    // }
-    // p = points;
-
     p = genRandomPoints(10);
 
     //creating map mask
     let mask = createFramebuffer({width:width,height:height,format:FLOAT});
     mask.begin();
     background(255);
-    // renderTracts(geoOffset,() => {fill(255)});
     mask.end();
 
-    flowField = new FlowField(p,mask,mapTexture,flowFieldShader);
+    flowField = new FlowField(p,mask,null,flowFieldShader);
 
     initGui();
     flowField.update();
@@ -70,7 +57,4 @@ function draw(){
     flowField.updateFlow(p,flowField.flowFieldTexture);
     flowField.update();
 
-    if(showingMap){
-        image(mapTexture,-width/2,-height/2,width,height);
-    }
 }

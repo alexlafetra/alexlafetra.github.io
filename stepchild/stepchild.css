@@ -168,9 +168,9 @@ to { transform: translateY(-200%); }
 }
 
 canvas {
-    position: absolute;
+    /* position: absolute; */
     pointer-events: none;
-    top:0;
+    /* top:0; */
 }
 
 #main_page_iframe{

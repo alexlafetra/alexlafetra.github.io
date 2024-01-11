@@ -81,3 +81,7 @@ canvas{
     overflow: hidden;
     object-fit: cover;
 }
+
+#collisionElement{
+    
+}

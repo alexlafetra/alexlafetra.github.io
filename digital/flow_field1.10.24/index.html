@@ -17,18 +17,44 @@
       margin: 0;
       display:flex;
       justify-content: center;
-      align-items: center;
+      /* align-items: center; */
+    }
+    #gui{
+      /* width:fit-content; */
+      height:fit-content;
+      display:flex;
+      flex-direction:column;
+      position:relative;
+      background-color: white;
+      padding:20px;
+      transition:0.5s;
+      font-family:'Times New Roman', Times, serif;
+      color:rgb(60,60,60);
+      justify-items: right;
     }
     canvas{
       margin:auto;
       display:block;
       width:auto;
     }
+    #chart_title{
+      font-family: Arial, Helvetica, sans-serif;
+      font-size:40px;
+      font-weight:bolder;
+    }
+    #chart_description{
+      font-family:'Times New Roman', Times, serif;
+      font-style:italic;
+      font-size:20px;
+    }
   </style>
 </head>
 
 <body>
-  <!-- <canvas id = "main"></canvas> -->
+  <main>
+    <div id = "chart_title"></div>
+  </main>
+  <div id = "gui"><div id = "chart_description"></div></div>
 </body>
   <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
   <script language="javascript" type="text/javascript" src="libraries/p5.min.js"></script>
@@ -37,6 +63,5 @@
   <script language="javascript" type="text/javascript" src="mapping.js"></script>
   <script language="javascript" type="text/javascript" src="flow.js"></script>
   <script language="javascript" type="text/javascript" src="main.js"></script>
-
   <!-- <script language="javascript" type="text/javascript" src="webGL_test.js"></script> -->
 </html>

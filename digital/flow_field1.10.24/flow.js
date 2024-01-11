@@ -1,5 +1,4 @@
-let dataTextureDimension = 1200;
-
+let dataTextureDimension = 200;
 let randomShader;
 let drawParticlesProgram;
 let drawParticlesProgLocs;
@@ -27,7 +26,6 @@ function initGL(){
         uTextureDimensions: gl.getUniformLocation(drawParticlesProgram, 'uTextureDimensions'),
         uMatrix: gl.getUniformLocation(drawParticlesProgram, 'uMatrix'),
     };
-    console.log(drawParticlesProgLocs);
     ids = new Array(dataTextureDimension*dataTextureDimension).fill(0).map((_, i) => i);
     idBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, idBuffer);
@@ -44,21 +42,24 @@ function fillFBOwithRandom(fbo,scale,seed){
 }
 
 class FlowField{
-    constructor(points,mask,colors,flowFShader){
+    constructor(mask,colors,flowFShader){
         //Parameters
-        this.particleCount = 32000;
-        this.trailDecayValue = 0.1;
+        this.particleCount = 40000;
+        this.trailDecayValue = 0.05;
         this.pointSize = 1.3;
         this.opacity = 200;
-        this.particleAgeLimit = 80;
-        this.velDampValue = 0.008;
-        this.forceStrength = 1.0;
+        this.particleAgeLimit = 150;
+        this.velDampValue = 0.001;
+        this.forceStrength = 0.4;
         this.fieldStrength = 0.01;
-        this.randomAmount = 0.0;
+        this.randomAmount = 0.5;
+        this.friction = 0.0;
 
-        this.backgroundColor = {r:0.2*255,g:0.2*255,b:0.1*255};
+        // this.backgroundColor = {r:0.2*255,g:0.2*255,b:0.1*255};
+        this.backgroundColor = {r:0,g:0,b:0};
 
-        this.showDataTextures = false;
+        this.maskParticles = true;
+        this.normalizeVelocity = false;
 
         //Shaders
         this.updatePositionShader = createShader(updatePositionVert,updatePositionFrag);
@@ -74,7 +75,7 @@ class FlowField{
         this.uPositionTextureBuffer = createFramebuffer({width:dataTextureDimension,height:dataTextureDimension,format:FLOAT,textureFiltering:NEAREST});
         this.velTexture = createFramebuffer({width:dataTextureDimension,height:dataTextureDimension,format:FLOAT,textureFiltering:NEAREST});
         this.velTextureBuffer = createFramebuffer({width:dataTextureDimension,height:dataTextureDimension,format:FLOAT,textureFiltering:NEAREST});
-        this.flowFieldTexture = this.createFlowFieldFromPoints(points);
+        this.flowFieldTexture = createFramebuffer({width:width,height:height});
         
         this.trailLayer = createFramebuffer({width:width,height:height,format:FLOAT});
         this.trailBuffer = createFramebuffer({width:width,height:height,format:FLOAT});
@@ -88,27 +89,15 @@ class FlowField{
         //set up the field
         initGL();
 
-        this.reset();
+        this.resetParticles();
     }
-    createFlowFieldFromPoints(points){
-        const fbo = createFramebuffer({width:width,height:height});
-        this.updateFlow(points,fbo);
-        return fbo;
-    }
-    updateFlow(points,fbo){
+    updateFlow(fbo){
         fbo.begin();
         shader(this.flowShader);
-        this.flowShader.setUniform('uPoint1',[points[0].x,points[0].y]);
-        this.flowShader.setUniform('uPoint2',[points[1].x,points[1].y]);
-        this.flowShader.setUniform('uPoint3',[points[2].x,points[2].y]);
-        this.flowShader.setUniform('uPoint4',[points[3].x,points[3].y]);
-        this.flowShader.setUniform('uPoint5',[points[4].x,points[4].y]);
-        this.flowShader.setUniform('uPoint6',[points[5].x,points[5].y]);
-        this.flowShader.setUniform('uPoint7',[points[6].x,points[6].y]);
-        this.flowShader.setUniform('uPoint8',[points[7].x,points[7].y]);
-        this.flowShader.setUniform('uPoint9',[points[8].x,points[8].y]);
-        this.flowShader.setUniform('uPoint10',[points[9].x,points[9].y]);
-        this.flowShader.setUniform('uFlowCoef',this.fieldStrength);
+        //just a note: attractors and repulsors are FLAT arrays of x,y,strength values
+        //Which means they're just a 1x(nx3) flat vector, not an nx3 multidimensional vector
+        this.flowShader.setUniform('uAttractors',attractors);
+        this.flowShader.setUniform('uRepulsors',repulsors);
         rect(-width/2,-height/2,width,height);
         fbo.end();
     }
@@ -124,6 +113,8 @@ class FlowField{
         this.updatePositionShader.setUniform('uParticleAgeTexture',this.ageTexture);
         this.updatePositionShader.setUniform('uParticleTrailTexture',this.trailLayer);
         this.updatePositionShader.setUniform('uParticleMask',this.particleMask);
+        this.updatePositionShader.setUniform('uUseMaskTexture',this.maskParticles);
+        this.updatePositionShader.setUniform('uNormalizeVelocity',this.normalizeVelocity);
         quad(-1,-1,1,-1,1,1,-1,1);//upside down bc the textures get flipped
         this.uPositionTextureBuffer.end();
         [this.uPositionTexture,this.uPositionTextureBuffer] = [this.uPositionTextureBuffer,this.uPositionTexture];
@@ -132,6 +123,7 @@ class FlowField{
         this.velTextureBuffer.begin();
         shader(this.updateVelShader);
         this.updateVelShader.setUniform('uForceStrength',this.forceStrength);
+        this.updateVelShader.setUniform('uFriction',this.friction);
         this.updateVelShader.setUniform('uParticleVel',this.velTexture);
         this.updateVelShader.setUniform('uParticlePos',this.uPositionTexture);
         this.updateVelShader.setUniform('uFlowFieldTexture',this.flowFieldTexture);
@@ -148,7 +140,7 @@ class FlowField{
         this.ageTextureBuffer.end();
         [this.ageTexture,this.ageTextureBuffer] = [this.ageTextureBuffer,this.ageTexture];
     }
-    reset(){
+    resetParticles(){
         let r = random();
         fillFBOwithRandom(this.uPositionTexture,1.0,r);
         fillFBOwithRandom(this.uPositionTextureBuffer,1.0,r);
@@ -164,11 +156,7 @@ class FlowField{
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.trailLayer.aaFramebuffer);
         this.trailLayer.begin();
         //fade the trails
-        // background(0,decayValue*255);
-        // background(0.2*255,0.2*255,0.1*255,decayValue*255);
         background(this.backgroundColor.r,this.backgroundColor.g,this.backgroundColor.b,this.trailDecayValue*255);
-        //Clearing framebuffer,resetting viewport
-
         //setting ID attributes (or trying to at least)
         gl.bindBuffer(gl.ARRAY_BUFFER, idBuffer);
         gl.enableVertexAttribArray(drawParticlesProgLocs.id);
@@ -185,17 +173,15 @@ class FlowField{
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.uPositionTexture.colorTexture);
         gl.activeTexture(gl.TEXTURE1);
-        // gl.bindTexture(gl.TEXTURE_2D, this.velTexture.colorTexture);
-        gl.bindTexture(gl.TEXTURE_2D, this.ageTexture.colorTexture);
-        gl.activeTexture(gl.TEXTURE2);
         gl.bindTexture(gl.TEXTURE_2D, this.colorMap.colorTexture);
+        // gl.bindTexture(gl.TEXTURE_2D, this.velTexture.colorTexture);
 
         rotateZ(PI);
 
         shader(this.pointShader);
         this.pointShader.setUniform('uVelocityTexture',this.velTexture);
         this.pointShader.setUniform('uPositionTexture',this.uPositionTexture);
-        this.pointShader.setUniform('uColorTexture',this.ageTexture);
+        this.pointShader.setUniform('uColorTexture',this.colorMap);
         this.pointShader.setUniform('uTextureDimensions',[dataTextureDimension,dataTextureDimension]);
         this.pointShader.setUniform('uParticleSize',this.pointSize);
         gl.drawArrays(gl.POINTS,0,this.particleCount);
@@ -231,12 +217,11 @@ class FlowField{
         image(this.trailLayer,width/4,-height/2,width/4,height/4);
     }
     renderData(){
-        if(this.showDataTextures){
-            image(this.flowFieldTexture,-width/2,-height/2,width/8,height/8);
-            image(this.velTexture,-3*width/8,-height/2,width/8,height/8);
-            image(this.uPositionTexture,-width/4,-height/2,width/8,height/8);
-            // image(this.particleMask,-width/8,-height/2,width/8,height/8);
-        }
+        image(this.velTexture,-width/2,-height/2,width/8,height/8);
+        image(this.uPositionTexture,-3*width/8,-height/2,width/8,height/8);
+    }
+    renderFlowMap(){
+        image(this.flowFieldTexture,-width/2,-height/2,width,height);
     }
     update(){
         this.updateAge();
@@ -279,6 +264,7 @@ uniform sampler2D uParticlePos;
 uniform sampler2D uFlowFieldTexture;
 
 uniform float uForceStrength;
+uniform float uFriction;
 
 varying vec2 vParticleCoord;
 
@@ -291,8 +277,8 @@ void main(){
     vec4 flowForce = texture2D(uFlowFieldTexture,screenPosition.xy);
     //Add the force to the current vel
     vec2 newVel = uForceStrength*vec2(flowForce.x,flowForce.y)+(1.0-uForceStrength)*vec2(oldVel.x,oldVel.y);
-    // vec2 newVel = uForceStrength*vec2(flowForce.x,flowForce.y)+vec2(oldVel.x,oldVel.y)/2.0;
-    // newVel/=2.0;
+    // vec2 newVel = uForceStrength*vec2(flowForce.x,flowForce.y)+(1.0-uFriction)*vec2(oldVel.x,oldVel.y);
+
     gl_FragColor = vec4(newVel,1.0,1.0);
 }
 `;
@@ -406,6 +392,8 @@ uniform float uDamp;
 uniform float uRandomScale;
 uniform float uTime;
 uniform float uAgeLimit;
+uniform bool uUseMaskTexture;
+uniform bool uNormalizeVelocity;
 
 varying vec2 vParticleCoord;
 
@@ -418,11 +406,11 @@ float random (vec2 st) {
 vec4 wrap(vec4 v, float minVal, float maxVal){
     if(v.x<minVal)
         v.x = maxVal;
-    if(v.x>=maxVal)
+    if(v.x>maxVal)
         v.x = minVal;
     if(v.y<minVal)
         v.y = maxVal;
-    if(v.y>=maxVal)
+    if(v.y>maxVal)
         v.y = minVal;
     return v;
 }
@@ -447,24 +435,28 @@ void main(){
         textureVelocity += uRandomScale*vec4(sin(random(texturePosition.xx)),cos(random(texturePosition.yy)),1.0,1.0);
     }
     //creating the new position
-    // vec4 newPos = texturePosition + uDamp*(normalize(textureVelocity));
-    vec4 newPos = texturePosition + uDamp*(textureVelocity);
-
-    
+    vec4 newPos = vec4(0.0);
+    if(uNormalizeVelocity){
+        newPos = texturePosition + uDamp*(normalize(textureVelocity));
+    } 
+    else{
+        newPos = texturePosition + uDamp*(textureVelocity);
+    }
     //checking to see if it's within the mask
-
-    float val = texture2D(uParticleMask,newPos.xy).x;
-    if(val<0.5){
-        //try to place the particle 100 times
-        for(int i = 0; i<100; i++){
-            vec2 replacementPos = vec2(random(vParticleCoord*uTime),random(vParticleCoord/uTime));
-            val = texture2D(uParticleMask,replacementPos).x;
-            if(val>0.5){
-                gl_FragColor = vec4(replacementPos.xy,1.0,1.0);
-                return;
+    if(uUseMaskTexture){
+        float val = texture2D(uParticleMask,newPos.xy).x;
+        if(val<0.5){
+            //try to place the particle 100 times
+            for(int i = 0; i<100; i++){
+                vec2 replacementPos = vec2(random(vParticleCoord*uTime),random(vParticleCoord/uTime));
+                val = texture2D(uParticleMask,replacementPos).x;
+                if(val>0.5){
+                    gl_FragColor = vec4(replacementPos.xy,1.0,1.0);
+                    return;
+                }
             }
+            return;
         }
-        return;
     }
 
     gl_FragColor = wrap(newPos,0.0,1.0);    //wrapping bounds
@@ -526,6 +518,7 @@ void main(){
 `;
 
 const drawParticlesVS = glsl`
+//attribute that we pass in using an array, to tell the shader which particle we're drawing
 attribute float id;
 uniform sampler2D uPositionTexture;
 uniform sampler2D uVelocityTexture;
@@ -544,14 +537,13 @@ vec4 getValueFrom2DTextureAs1DArray(sampler2D tex, vec2 dimensions, float index)
 }
 
 void main() {
-  // pull the position from the texture
+    // pull the position from the texture
     vec4 position = getValueFrom2DTextureAs1DArray(uPositionTexture, uTextureDimensions, id);
-    vColor = getValueFrom2DTextureAs1DArray(uVelocityTexture, uTextureDimensions, id);
-    // vColor = texture2D(uColorTexture,position.xy);
-    // vColor = texture2D(uVelocityTexture,position.xy);
+    // vColor  = getValueFrom2DTextureAs1DArray(uColorTexture, uTextureDimensions, id);
+    vColor = texture2D(uColorTexture,position.xy);
 
-  gl_Position = vec4(position.x,position.y,1.0,1.0)-vec4(0.5);
-  gl_PointSize = uParticleSize;
+    gl_Position = vec4(position.x,position.y,1.0,1.0)-vec4(0.5);
+    gl_PointSize = uParticleSize;
 }
 `;
 
@@ -559,12 +551,9 @@ const drawParticlesFS = glsl`
 precision highp float;
 varying vec4 vColor;
 void main() {
-    // gl_FragColor = vec4(0.4,0.3,0.1,0.1);
-    gl_FragColor = vec4(1.0, 0.55, 0.0,1.0-vColor.x);
-    // gl_FragColor = vec4(0.1,0.0,0.6,1.0);
-    // vec3 color1 = vec3(1.0, 0.55, 0.0);
-    // vec3 color2 = vec3(0.226,0.000,0.615);
-    // vec3 finalColor = mix(color1,color2,vColor.x);
-    // gl_FragColor = vec4(vColor.xyz,1.0);
+    // gl_FragColor = vec4(1.0);
+    // gl_FragColor = vec4(1.0, 0.55, 0.0,1.0-vColor.x);
+    gl_FragColor = vec4(0.3)+vColor;
+    // gl_FragColor = vColor;
 }
 `;

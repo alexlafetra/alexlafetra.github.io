@@ -5,7 +5,9 @@ let cohesionMultiplier = 1.3;
 let tiltMultiplier = 1.5;
 let separationMultiplier = 1.8;
 let alignmentMultiplier = 1;
+let avoidanceMultiplier = 1;
 let maxBoids = 150;
+const pointSize = 32;
 let pallette;
 let zAngle;
 
@@ -65,6 +67,13 @@ function draw(){
   faceMouse();
 }
 
+function isWithinRect(p,rect,margin){
+  if(p.x>rect.x-margin && p.x<(rect.x+rect.width+margin) && p.y>rect.y-margin && p.y<(rect.y+rect.height+margin)){
+    return true;
+  }
+  return false;
+}
+
 class Boid {
   constructor(){
     this.position = createVector(random(width), random(height));
@@ -100,17 +109,17 @@ class Boid {
   
   edges(){
     if (this.position.x > width){
-      this.position.x = 0;
+      this.position.x-=width;;
     }
     if (this.position.x < 0){
-      this.position.x = width;
+      this.position.x+=width;
     }
   
     if (this.position.y > height){
-      this.position.y = 0;
+      this.position.y-=height;
     }
     if (this.position.y < 0){
-      this.position.y = height;
+      this.position.y+=height;
     }
   }
   
@@ -216,6 +225,33 @@ class Boid {
     return steering;
   }
 
+  avoidElements(boids){
+    let steering = createVector();
+    let elements = document.getElementsByClassName("collisionElement");
+    let collisionMargin = pointSize-20;
+    let total = 0;
+    //avoid element if it's within a certain distance
+    for(let element of elements){
+      //get element size and position
+      let loc = element.getBoundingClientRect();
+      let centerPos = {y:loc.y+loc.height/2,x:loc.x+loc.width/2};
+      if(isWithinRect(this.position,loc,collisionMargin)){
+        let d = dist(
+          this.position.x,
+          this.position.y,
+          centerPos.x,
+          centerPos.y);
+        steering.add(p5.Vector.sub(this.position,createVector(centerPos.x,centerPos.y)));
+        // steering.mult();
+        total++;
+      }
+    }
+    if(total>0){
+      steering.div(total);
+    }
+    return steering;
+  }
+
   //adding all the forces
   flock(boids){
     this.acceleration.set(0,0);
@@ -224,16 +260,20 @@ class Boid {
     let separation = this.separation(boids);
     let mouse = this.mouse(boids);
     let tilt  = this.tilt(boids);  
+    let avoidance = this.avoidElements(boids);
 
     separation.mult(separationMultiplier);
     cohesion.mult(cohesionMultiplier);
     alignment.mult(alignmentMultiplier);
     tilt.mult(tiltMultiplier);
+    avoidance.mult(avoidanceMultiplier);
     
     this.acceleration.add(alignment);
     this.acceleration.add(cohesion);
     this.acceleration.add(separation);
     this.acceleration.add(tilt);
+    this.acceleration.add(avoidance);
+
     if(mouseX<width && mouseY<height){
       this.acceleration.add(mouse.mult(mouseMultiplier));
     }
@@ -245,7 +285,7 @@ class Boid {
     this.velocity.limit(this.maxSpeed);
   }
   show(){
-    strokeWeight(32);
+    strokeWeight(pointSize);
     stroke(this.color);
     point(this.position.x,this.position.y);
   }
