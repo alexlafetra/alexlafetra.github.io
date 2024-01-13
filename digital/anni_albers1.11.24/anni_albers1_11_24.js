@@ -360,7 +360,7 @@ let vThreadCanvas;
 let aThreadCanvas;
 function setup() {
   setAttributes('antialias',false);
-  mainCanvas = createCanvas(500,windowHeight,WEBGL);
+  mainCanvas = createCanvas(800,800,WEBGL);
   grainShader = createShader(grainShaderVert,grainShaderFrag);
   stitchShader = createShader(stitchShaderVert,stitchShaderFrag);
   // pixelDensity(1);
