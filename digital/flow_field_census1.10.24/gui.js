@@ -35,6 +35,7 @@ class GuiSlider{
 class GuiButton{
     constructor(text,clickHandler){
         this.button = createButton(text);
+        this.button.addClass("gui_button");
         this.button.mouseClicked(clickHandler);
         this.button.parent(document.getElementById("gui"));
     }
@@ -56,6 +57,7 @@ class GuiDropdown{
         for(let i = 0; i<options.length;i++){
             this.selector.option(options[i].title,i);
         }
+        this.selector.addClass("gui_select");
         this.selector.selected(defaultOption);
         this.selector.parent(document.getElementById("gui"));
     }
@@ -113,6 +115,7 @@ function initGui(){
 
     new GuiButton("Reset Particles",()=>{flowField.resetParticles()});
     new GuiButton("Save FF and Choro.",()=>{saveFlowField();saveChoropleth();});
+    new GuiButton("Log Attractors/Repulsors",()=>{logAttractors();});
     new GuiButton("Save GIF",()=>{saveGif('flowfield_'+presets[activePreset].text+'.gif',2);});
 
     // new GuiButton("Cool Mode",()=>{

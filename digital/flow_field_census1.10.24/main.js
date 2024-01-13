@@ -37,9 +37,31 @@ class DemographicVis{
     }
     setActive(index){
         document.getElementById("chart_title").innerHTML = this.title;
-        document.getElementById("chart_description").innerHTML = this.description;
+        document.getElementById("chart_attractor_equation").innerHTML = this.description;
         activePreset = index;
         renderMap(mapTexture,color(0),presets[activePreset].colorStyle);
+        calculateAttractors(NUMBER_OF_ATTRACTORS);
+    }
+}
+
+class Preset{
+    constructor(title,description,map,aPoints,rPoints){
+        this.title = title;
+        this.description = description;
+        this.mapImage = map;
+        this.attractors = aPoints;
+        this.repulsors = rPoints;
+    }
+    setActive(index){
+        document.getElementById("chart_title").innerHTML = this.title;
+        document.getElementById("chart_attractor_equation").innerHTML = this.description;
+        activePreset = index;
+        attractors = this.attractors;
+        repulsors = this.repulsors;
+        mapTexture.begin();
+        image(this.mapImage,-width/2,-height/2,width,height);
+        mapTexture.end();
+        flowField.colorMap = mapTexture;
     }
 }
 
@@ -71,9 +93,14 @@ function saveFlowField(){
 function saveChoropleth(){
     saveCanvas(mapTexture, 'choropleth.png','png');
 }
+function logAttractors(){
+    console.log(JSON.stringify(attractors));
+    console.log(JSON.stringify(repulsors));
+}
 
 function preload(){
-    loadData();
+    // loadData();
+    loadPresetMaps();
 }
 
 //20 is about the limit
@@ -83,30 +110,36 @@ function gatherDemographicMaxMins(n){
     return points;
 }
 
+let preset0;
+
 function setup(){
 
     //create canvas and grab webGL context
     setAttributes('antialias',false);
     // pixelDensity(1);
-    mainCanvas = createCanvas(1200,1200,WEBGL);
+    mainCanvas = createCanvas(min(windowWidth,1000),min(windowHeight,1000),WEBGL);
     gl = mainCanvas.GL;
 
     flowFieldShader = createShader(flowMapVert,flowMapFrag);
     randomShader = createShader(defaultVert,randomFrag);
 
+    whiteComparisonPreset = new Preset("Change in White Population",
+    "White Pop<sub>2000</sub> / White Pop<sub>2020</sub>",preset0Map,preset0Attractors,preset0Repulsors);
+
     //Preset color/flows
-    whiteComparisonPreset = new DemographicVis("Change in White Population",
-                                            "White Population<sub>2000</sub> / White Population<sub>2020</sub>",colorStyle_whiteComparison2020_2000,whitePeopleComparedTo2000);
+    // whiteComparisonPreset = new DemographicVis("Change in White Population",
+    //                                         "White Pop<sub>2000</sub> / White Pop<sub>2020</sub>",colorStyle_whiteComparison2020_2000,whitePeopleComparedTo2000);
     blackComparisonPreset = new DemographicVis("Change in Black Population",
-                                            "Black Population<sub>2000</sub> / Black Population<sub>2020</sub>",colorStyle_blackComparison2020_2000,blackPeopleComparedTo2000);
+                                            "Population<sub>Black 2000</sub> / Population<sub>Black 2020</sub>",colorStyle_blackComparison2020_2000,blackPeopleComparedTo2000);
     asianComparisonPreset = new DemographicVis("Change in Asian Population",
-                                            "Asian Population<sub>2000</sub> / Asian Population<sub>2020</sub>",colorStyle_asianComparison2020_2000,asianPeopleComparedTo2000);
+                                            "Population<sub>Asian 2000</sub> / Population<sub>Asian 2020</sub>",colorStyle_asianComparison2020_2000,asianPeopleComparedTo2000);
     whiteProportionComparisonPreset = new DemographicVis("Change In Proportion of White Population",
                                             "(White2000)/(White2020)",colorStyle_whiteRatioComparison,mostWhiteChange);
     blackProportionComparisonPreset = new DemographicVis("Change In Proportion of Black Population",
                                             "(White2000)/(White2020)",colorStyle_blackRatioComparison,mostBlackChange);
     asianProportionComparisonPreset = new DemographicVis("Change In Proportion of Asian Population",
                                             "(White2000)/(White2020)",colorStyle_asianRatioComparison,mostAsianChange);
+
 
     presets = [
         whiteComparisonPreset,
@@ -118,7 +151,21 @@ function setup(){
     ];
 
     //parsing data and attaching it to tract geometry
-    setupMapData();
+    // setupMapData();
+    // saveTable(data2000,'CONVERTED_Tracts_by_Race_2000.csv');
+    mapTexture = createFramebuffer(width,height);
+    holcTexture = createFramebuffer(width,height);
+
+    //the manual offset
+    offset = {x:350,y:400};
+
+    //manually adjusting the scale to taste
+    let s = 800;
+    scale = {x:s,y:s*(-1.25)};
+
+    //setting the offsets so that the first point in the first shape is centered
+    // let samplePoint = bayTracts[0].geometry.coordinates[0][0][0];
+    // geoOffset = {x:-samplePoint[0],y:-samplePoint[1]};
     
     // console.log("Loaded and parsed Census Data:");
     // console.log(bayTracts);
@@ -127,7 +174,7 @@ function setup(){
     tractOutlines = createFramebuffer();
     tractOutlines.begin();
     strokeWeight(2);
-    renderTractOutlines(geoOffset,color(255,4));
+    // renderTractOutlines(geoOffset,color(255,4));
     tractOutlines.end();
 
     //setting up the flow texture and drawing the map colors
@@ -137,8 +184,8 @@ function setup(){
     //creating map mask
     let mask = createFramebuffer({width:width,height:height,format:FLOAT});
     mask.begin();
-    background(0);
-    renderTracts(geoOffset,() => {fill(255)});
+    // background(0);
+    // renderTracts(geoOffset,() => {fill(255)});
     mask.end();
 
     flowField = new FlowField(mask,mapTexture,flowFieldShader);
@@ -147,19 +194,19 @@ function setup(){
 
     flowField.update();
 
-    holcTexture.begin();
-    renderHOLCTracts(geoOffset,oakHolcTracts);
-    renderHOLCTracts(geoOffset,sfHolcTracts);
-    renderHOLCTracts(geoOffset,sjHolcTracts);
-    holcTexture.end();
+    // holcTexture.begin();
+    // renderHOLCTracts(geoOffset,oakHolcTracts);
+    // renderHOLCTracts(geoOffset,sfHolcTracts);
+    // renderHOLCTracts(geoOffset,sjHolcTracts);
+    // holcTexture.end();
 
     presets[activePreset].setActive(activePreset);
+    // calculateAttractors(NUMBER_OF_ATTRACTORS);
 }
 
 
 function draw(){
     updateSliders();
-    calculateAttractors(NUMBER_OF_ATTRACTORS);
     flowField.updateFlow(flowField.flowFieldTexture);
     flowField.update();
 
@@ -184,51 +231,3 @@ function draw(){
     }
 
 }
-
-const flowMapFrag = glsl`
-precision mediump float;
-
-varying vec2 vTexCoord;
-
-uniform vec3 uAttractors[`+NUMBER_OF_ATTRACTORS+glsl`];
-uniform vec3 uRepulsors[`+NUMBER_OF_ATTRACTORS+glsl`];
-
-uniform float uStrengthEffect;
-
-void main(){
-    vec2 c = vec2(0.0);
-    //calculate attractors/repulsors
-    for(int i = 0; i<`+NUMBER_OF_ATTRACTORS+glsl`; i++){
-        //add a vector pointing toward the attractor from this pixel
-        //scaled by the inverse square of the distance AND the scale factor
-        float dA = distance(uAttractors[i].xy,vTexCoord);
-        c+=uAttractors[i].z*(uAttractors[i].xy-vTexCoord)/(dA*dA);
-        // c+=(uAttractors[i].xy-vTexCoord)/(dA*dA);
-
-        float dR = distance(uRepulsors[i].xy,vTexCoord);
-        c+=uRepulsors[i].z*(-uRepulsors[i].xy+vTexCoord)/(dR*dR);
-        // c+=(-uRepulsors[i].xy+vTexCoord)/(dR*dR);
-    }
-    c = normalize(c);
-
-    gl_FragColor = vec4(c.x,c.y,1.0,1.0);
-}
-`;
-
-const flowMapVert = glsl`
-precision mediump float;
-
-attribute vec3 aPosition;
-attribute vec2 aTexCoord;
-
-//Varying variable to pass the texture coordinates into the fragment shader
-varying vec2 vTexCoord;
-
-void main(){
-    // //passing aTexCoord into the frag shader
-    vTexCoord = aTexCoord;
-    vec2 positionVec2 = aPosition.xy * 2.0 - 1.0;
-    //always gotta end by setting gl_Position equal to something;
-    gl_Position = vec4(positionVec2,aPosition.z,1.0);
-}
-`;

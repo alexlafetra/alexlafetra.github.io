@@ -17,7 +17,7 @@ class ClothThread{
     this.done = false;
     this.thickness = 5;
     // this.thickness = threadDensity;
-    this.noiseAmplitude = 0.5;
+    this.noiseAmplitude = 0.01;
   }
   grow(){
     if(this.points[this.points.length-1].y>height/2 || this.points[this.points.length-1].x>width/2){
@@ -53,13 +53,21 @@ class ClothThread{
     }
     return;
   }
+  checkOffscreen(bound){
+    if(points[0].y<bound){
+      this.age = 0;
+      this.done = false;
+      points[0] = {x:0,y:height/2};
+      points[1] = {x:this.maxLength*noise(this.age/10),y:height/2};
+    }
+  }
 }
 
 class AnniLine{
   constructor(x,y,theta,w,c,seed){
     this.seed = seed;
     this.width = w;//max L-R boundaries of the curve
-    this.hue = c;//line hue
+    this.color = c;//line hue
     this.start = {x:x,y:y};//start point
     this.theta = theta;//start angle
     this.points = [];//array holding the two current points
@@ -67,8 +75,6 @@ class AnniLine{
     this.direction = UPRIGHT;//direction the curve is currently moving in
     this.count = 0;//how many steps the curve has taken in the current direction
     this.len = 2;//length multiplier of each step (randomized so this doesn't matter)
-    // this.threadGap = 3;//gap between the different strands of the line
-    // this.thickness = 5;//stroke thickness of the line
     this.threadGap = 5;
     this.thickness = 5;
     this.vertAngleChange = PI/40;//amount the curve bends by (larger vals ==> tighter turns)
@@ -181,7 +187,6 @@ class AnniLine{
       for(let otherPoint of other.points){
         if(p5.Vector.dist(createVector(point.x,point.y),createVector(otherPoint.x,otherPoint.y))<threshold && point.y<otherPoint.y){
           this.points[this.points.length - 1] = other.points[other.points.length-1];
-          this.hue = (other.hue+this.hue)/2;
           this.render();
           this.done = true;
         }
@@ -223,7 +228,7 @@ class AnniLine{
     
     colorMode(HSB,100);
     let n = 20*noise(this.points[this.points.length-1].y/50);
-    stroke(n+this.hue,100,100);
+    stroke(n+hue(this.color),saturation(this.color),brightness(this.color));
     strokeWeight(this.thickness*noise(this.age/100));
     line(this.points[this.points.length-1].x,this.points[this.points.length-1].y,this.points[this.points.length-2].x,this.points[this.points.length-2].y);
 
@@ -270,74 +275,23 @@ class AnniLine{
 }
 
 function randomColor(){
-  // return color(255,200,100);
-  return color(random(100,255),random(0,150),random(100,255));
+  // return color(255,255,100);
+  return color(random(0,255),random(0,255),random(0,255));
 }
 
-function getColor(pallette,index,thickness){
-  switch(pallette){
-    //black,red,white,red
-    case 0:
-      switch(floor(index/thickness)%4){
-         case 0:
-           return color(50,50,100);
-         case 1:
-          return color(255,0,0);
-         case 2:
-           return color(255,200,250);
-         case 3:
-           return color(255,0,0);
-      }
-      break;
-     //blue white blue black
-     case 1:
-      switch(floor(index/thickness)%4){
-         case 0:
-           return color(100,150,255);
-         case 1:
-          return color(255,255,255);
-         case 2:
-           return color(100,100,255);
-         case 3:
-           return color(100,50,50);
-      }
-      break;
-     //blue red
-     case 2:
-      switch(floor(index/thickness)%4){
-        case 0:
-            return color(70,20,20);
-        case 1:
-          return color(150,180,200);
-         case 2:
-           return color(250,220,200);
-         case 3:
-           return color(150,180,200);
-      }
-      break;
-      //blue red
-     case 3:
-      switch(floor(index/thickness)%8){
-        case 0:
-          return color(50,50,100);
-        case 1:
-         return color(255,0,0);
-        case 2:
-          return color(255,200,250);
-        case 3:
-          return color(255,0,0);
-        case 4:
-          return color(255,150,150);
-        case 5:
-          return color(255,0,0);
-        case 6:
-          return color(255,200,250);
-        case 7:
-          return color(255,0,0);
-      }
-      break;
+class WeaveColor{
+  constructor(colors){
+    this.colors = colors;
+  }
+  getColor(index,thickness){
+    let which = floor(index/thickness)%this.colors.length;
+    return this.colors[which];
   }
 }
+
+let weavePallettes;
+let anniPallettes;
+
 
 let vertThreads = [];
 let horThreads = [];
@@ -358,11 +312,11 @@ const UPLEFT = 2;
 const RIGHT = 3;
 const DOWN = 0;
 const UP = 2;
-const threadDensity = 4;
+let threadDensity = 4;
 const stitchErrorChance = 0.01;
 
-const vStripeWidth = 6;
-const hStripeWidth = 12;
+let vStripeWidth = 6;
+let hStripeWidth = 12;
 
 let stitchShader;
 let grainShader;
@@ -377,13 +331,13 @@ let stitchPatternBuffer2;
 let hThreadCanvas;
 let vThreadCanvas;
 let aThreadCanvas;
-function setup() {
-  setAttributes('antialias',false);
-  mainCanvas = createCanvas(800,800,WEBGL);
-  grainShader = createShader(grainShaderVert,grainShaderFrag);
-  stitchShader = createShader(stitchShaderVert,stitchShaderFrag);
-  // pixelDensity(1);
-  
+
+let currentPalette;
+let currentBg;
+
+let screenStart
+
+function reset(){
   hThreadCanvas = createFramebuffer();
   vThreadCanvas = createFramebuffer();
   aThreadCanvas = createFramebuffer();
@@ -393,16 +347,38 @@ function setup() {
   stitchPatternBuffer = createFramebuffer();
   stitchPatternBuffer2 = createFramebuffer();
 
-  // anniLines = [new AnniLine(-width/6,-height/2,PI,50,0,0),new AnniLine(width/6,-height/2,0,50,0,1),new AnniLine(width/3,-height/2,PI,50,0,2),new AnniLine(-width/3,-height/2,0,50,0,3)];
-  // anniLines = [new AnniLine(-width/6,-height/2,PI,width/10,10,0),new AnniLine(width/6,-height/2,0,width/10,0,1)];
-  anniLines = [new AnniLine(-width/6,-height/2,PI,width/10,90,0),new AnniLine(width/6,-height/2,0,width/10,90,1)];
-    // anniLines = [new AnniLine(-width/6,-height/2,PI,width/10,50,0),new AnniLine(width/6,-height/2,0,width/10,50,1)];
+  vStripeWidth = floor(random(1,20));
+  hStripeWidth = floor(random(1,20));
 
+  threadDensity = floor(random(4,8));
   NUMBER_OF_HORIZONTAL_THREADS = floor(width/threadDensity);
   NUMBER_OF_VERTICAL_THREADS = floor(height/threadDensity);
 
+  // anniLines = [new AnniLine(-width/6,-height/2,PI,50,0,0),new AnniLine(width/6,-height/2,0,50,0,1),new AnniLine(width/3,-height/2,PI,50,0,2),new AnniLine(-width/3,-height/2,0,50,0,3)];
+  // anniLines = [new AnniLine(-width/6,-height/2,PI,width/10,10,0),new AnniLine(width/6,-height/2,0,width/10,0,1)];
+  anniLines = [new AnniLine(-width/6,-height/2,PI,random(1,width/2),random(anniPallettes),0),new AnniLine(width/6,-height/2,0,random(1,width/2),randomColor(),0)];
+    // anniLines = [new AnniLine(-width/6,-height/2,PI,width/10,50,0),new AnniLine(width/6,-height/2,0,width/10,50,1)];
+
+  horThreads = [];
+  vertThreads = [];
+
+  let pal1 = random(weavePallettes);
+  let pal2 = random(weavePallettes);
+  pal1 = new WeaveColor(randomPallette());
+  pal2 = new WeaveColor(randomPallette());
+  for(let i = 0; i<NUMBER_OF_HORIZONTAL_THREADS; i++){
+    horThreads.push(new ClothThread(-width/2+i*width/NUMBER_OF_HORIZONTAL_THREADS+width/(NUMBER_OF_HORIZONTAL_THREADS*2),-height/2,pal1.getColor(i,vStripeWidth),i,DOWN));
+  }
+  for(let i = 0; i<NUMBER_OF_VERTICAL_THREADS; i++){
+    vertThreads.push(new ClothThread(-width/2,-height/2+i*height/NUMBER_OF_VERTICAL_THREADS+height/(NUMBER_OF_VERTICAL_THREADS*2),pal2.getColor(i,hStripeWidth),i,RIGHT));
+  }
+
+  // currentBg = randomBackground();
+  currentBg = randomColor();
+
   //creating stitch pattern
   stitchPatternBuffer.begin();
+  clear();
   let count = 0;
   noStroke();
   for(let i = 0; i<NUMBER_OF_HORIZONTAL_THREADS;i++){
@@ -414,13 +390,37 @@ function setup() {
     count++;
   }
   stitchPatternBuffer.end();
-  
-  for(let i = 0; i<NUMBER_OF_HORIZONTAL_THREADS; i++){
-    horThreads.push(new ClothThread(-width/2+i*width/NUMBER_OF_HORIZONTAL_THREADS+width/(NUMBER_OF_HORIZONTAL_THREADS*2),-height/2,getColor(2,i,vStripeWidth),i,DOWN));
+}
+
+function randomBackground(){
+  return random([color(255,80,50),color(150,200,255),color(250,200,180),color(80,80,80),color(0),color(255)]);
+}
+
+function randomPallette(){
+  let number = floor(random(1,10));
+  let colors = [];
+  for(let i = 0; i<number; i++){
+    colors.push(randomColor());
   }
-  for(let i = 0; i<NUMBER_OF_VERTICAL_THREADS; i++){
-    vertThreads.push(new ClothThread(-width/2,-height/2+i*height/NUMBER_OF_VERTICAL_THREADS+height/(NUMBER_OF_VERTICAL_THREADS*2),getColor(2,i,hStripeWidth),i,RIGHT));
-  }
+  return colors;
+}
+
+function setup() {
+  setAttributes('antialias',false);
+  mainCanvas = createCanvas(800,800,WEBGL);
+  grainShader = createShader(grainShaderVert,grainShaderFrag);
+  stitchShader = createShader(stitchShaderVert,stitchShaderFrag);
+  // pixelDensity(1);
+
+  weavePallettes = [new WeaveColor([color(50,50,100),color(255,0,0),color(255,200,250),color(255,0,0)]), 
+                    new WeaveColor([color(100,150,255),color(255),color(100,100,255),color(100,50,50)]), 
+                    new WeaveColor([color(70,20,20),color(150,180,200),color(250,220,200),color(150,180,200)]),
+                    new WeaveColor([color(50,50,100),color(255,0,0),color(255,200,250),color(255,0,0),color(255,150,150),color(255,0,0),color(255,200,250),color(255,0,0)]),
+                    new WeaveColor([color(0,200,255),color(255,200,250),color(55,100,150),color(255,200,250)])];
+  anniPallettes = [
+    90,50,0,10,30,77
+  ];
+  reset();
 }
 
 //empty arrays when all the objects in them are done growing/rendering
@@ -438,6 +438,10 @@ function checkForDone(){
     }
   }
   vertThreads = [];
+}
+
+function mousePressed(){
+  reset();
 }
 
 function draw() {
@@ -475,18 +479,11 @@ function draw() {
   stitchShader.setUniform('uVertStitches',vThreadCanvas);
   stitchShader.setUniform('uHorzStitches',hThreadCanvas);
   quad(1,-1,-1,-1,-1,1,1,1);
-
   frameBuffer.end();
 
   frameBuffer2.begin();
-  //orange bg
-  background(255,80,50);
-  //baby blue bg
-  // background(150,200,255);
-  //Tan bg
-  // background(250,200,180);
-  // background(0);
-  // background(80,80,80);
+
+  background(currentBg);
 
   noStroke();
   shader(stitchShader);

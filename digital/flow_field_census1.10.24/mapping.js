@@ -730,8 +730,8 @@ function whitePeopleComparedTo2000(tract){
     return tract.data2020.obj.White/tract.data2000.obj.White;
 }
 function blackPeopleComparedTo2000(tract){
-    // return tract.data2020.obj.Black/tract.data2000.obj.Black;
-    return tract.data2020.obj.White/tract.data2000.obj.White;
+    return tract.data2020.obj.Black/tract.data2000.obj.Black;
+    // return tract.data2020.obj.White/tract.data2000.obj.White;
 }
 function asianPeopleComparedTo2000(tract){
     return tract.data2020.obj.Asian/tract.data2000.obj.Asian;
@@ -819,20 +819,4 @@ function setupMapData(){
     alignGeoAndData(features);
     getTotalStats();
     calculateGeographicCenters();
-
-    // saveTable(data2000,'CONVERTED_Tracts_by_Race_2000.csv');
-
-    mapTexture = createFramebuffer(width,height);
-    holcTexture = createFramebuffer(width,height);
-
-    //the manual offset
-    offset = {x:350,y:400};
-
-    //manually adjusting the scale to taste
-    let s = 800;
-    scale = {x:s,y:s*(-1.25)};
-
-    //setting the offsets so that the first point in the first shape is centered
-    let samplePoint = bayTracts[0].geometry.coordinates[0][0][0];
-    geoOffset = {x:-samplePoint[0],y:-samplePoint[1]};
 }
