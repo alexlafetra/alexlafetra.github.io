@@ -12,24 +12,26 @@ class ClothThread{
     this.color = c;
     this.points = [];
     this.points.push(this.start);
-    this.maxLength = 5.8;
+    this.maxLength = 10.8;
     this.age = 0;
     this.done = false;
-    this.thickness = 0.8*threadDensity;
+    this.thickness = 5;
+    // this.thickness = threadDensity;
+    this.noiseAmplitude = 0.5;
   }
   grow(){
     if(this.points[this.points.length-1].y>height/2 || this.points[this.points.length-1].x>width/2){
       this.done = true;
       return false;
     }
-    noiseSeed(this.age+this.seed);
+    noiseSeed(this.seed);
     let len = this.maxLength*noise(this.age/10);
     let newPoint 
     if(this.direction == DOWN){
-      newPoint = {x:this.points[this.points.length-1].x+0.5*noise(this.age/10)-0.25,y:this.points[this.points.length-1].y+len};
+      newPoint = {x:this.points[this.points.length-1].x+this.noiseAmplitude*(noise(this.age/0.1)-0.5),y:this.points[this.points.length-1].y+len};
     }
     else if(this.direction == RIGHT){
-      newPoint = {x:this.points[this.points.length-1].x+len,y:this.points[this.points.length-1].y+0.5*noise(this.age/10)-0.25};
+      newPoint = {x:this.points[this.points.length-1].x+len,y:this.points[this.points.length-1].y+this.noiseAmplitude*(noise(this.age/0.1)-0.5)};
     }
     this.points.push(newPoint);
     if(this.points.length>2){
@@ -39,10 +41,10 @@ class ClothThread{
     return true;
   }
   render(){
-    noiseSeed(this.age+this.seed);
+    noiseSeed(this.seed);
     noFill();
     stroke(this.color);
-    strokeWeight(this.thickness*noise(this.age/10));
+    strokeWeight(map(noise(this.age/6),0,1,1,this.thickness));
     line(this.points[this.points.length-1].x,this.points[this.points.length-1].y,this.points[this.points.length-2].x,this.points[this.points.length-2].y);
   }
   growAcrossScreen(){
@@ -220,14 +222,10 @@ class AnniLine{
     line(this.points[this.points.length-1].x-gap-this.dropShadow.x,this.points[this.points.length-1].y-gap-this.dropShadow.y,this.points[this.points.length-2].x-gap-this.dropShadow.x,this.points[this.points.length-2].y-gap-this.dropShadow.y);
     
     colorMode(HSB,100);
-    stroke(20*noise(this.points[this.points.length-1].y/50)+this.hue,100,100);
-    // stroke(0);
-
+    let n = 20*noise(this.points[this.points.length-1].y/50);
+    stroke(n+this.hue,100,100);
     strokeWeight(this.thickness*noise(this.age/100));
     line(this.points[this.points.length-1].x,this.points[this.points.length-1].y,this.points[this.points.length-2].x,this.points[this.points.length-2].y);
-    
-    // colorMode(HSB,100);
-    stroke(20*noise(this.points[this.points.length-1].y/50)+this.hue,100,100);
 
     strokeWeight(this.thickness*noise(this.age/200));
     line(this.points[this.points.length-1].x+gap,this.points[this.points.length-1].y+gap,this.points[this.points.length-2].x+gap,this.points[this.points.length-2].y+gap);
@@ -317,6 +315,27 @@ function getColor(pallette,index,thickness){
            return color(150,180,200);
       }
       break;
+      //blue red
+     case 3:
+      switch(floor(index/thickness)%8){
+        case 0:
+          return color(50,50,100);
+        case 1:
+         return color(255,0,0);
+        case 2:
+          return color(255,200,250);
+        case 3:
+          return color(255,0,0);
+        case 4:
+          return color(255,150,150);
+        case 5:
+          return color(255,0,0);
+        case 6:
+          return color(255,200,250);
+        case 7:
+          return color(255,0,0);
+      }
+      break;
   }
 }
 
@@ -339,8 +358,8 @@ const UPLEFT = 2;
 const RIGHT = 3;
 const DOWN = 0;
 const UP = 2;
-const threadDensity = 5;
-const stitchErrorChance = 0.05;
+const threadDensity = 4;
+const stitchErrorChance = 0.01;
 
 const vStripeWidth = 6;
 const hStripeWidth = 12;
@@ -377,6 +396,7 @@ function setup() {
   // anniLines = [new AnniLine(-width/6,-height/2,PI,50,0,0),new AnniLine(width/6,-height/2,0,50,0,1),new AnniLine(width/3,-height/2,PI,50,0,2),new AnniLine(-width/3,-height/2,0,50,0,3)];
   // anniLines = [new AnniLine(-width/6,-height/2,PI,width/10,10,0),new AnniLine(width/6,-height/2,0,width/10,0,1)];
   anniLines = [new AnniLine(-width/6,-height/2,PI,width/10,90,0),new AnniLine(width/6,-height/2,0,width/10,90,1)];
+    // anniLines = [new AnniLine(-width/6,-height/2,PI,width/10,50,0),new AnniLine(width/6,-height/2,0,width/10,50,1)];
 
   NUMBER_OF_HORIZONTAL_THREADS = floor(width/threadDensity);
   NUMBER_OF_VERTICAL_THREADS = floor(height/threadDensity);
@@ -385,7 +405,7 @@ function setup() {
   stitchPatternBuffer.begin();
   let count = 0;
   noStroke();
-  for(let i = 0.5; i<NUMBER_OF_HORIZONTAL_THREADS;i++){
+  for(let i = 0; i<NUMBER_OF_HORIZONTAL_THREADS;i++){
     for(let j = 0; j<NUMBER_OF_VERTICAL_THREADS;j++){
       fill(((count%2)||(random(1)<stitchErrorChance))?'red':'blue');
       rect(i*width/NUMBER_OF_HORIZONTAL_THREADS-width/2,j*height/NUMBER_OF_VERTICAL_THREADS-height/2,threadDensity,threadDensity);
@@ -460,13 +480,13 @@ function draw() {
 
   frameBuffer2.begin();
   //orange bg
-  // background(255,80,50);
+  background(255,80,50);
   //baby blue bg
   // background(150,200,255);
   //Tan bg
   // background(250,200,180);
   // background(0);
-  background(80,80,80);
+  // background(80,80,80);
 
   noStroke();
   shader(stitchShader);
@@ -487,6 +507,8 @@ function draw() {
   grainBuffer.end();
 
   image(grainBuffer,-width/2,-height/2,width,height);
+  // tint(255,100);
+  // image(stitchPatternBuffer,-width/2,-height/2,width,height);
 }
 
 const glsl = x => x;
