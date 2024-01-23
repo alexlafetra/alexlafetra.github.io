@@ -14,14 +14,20 @@
         }
         body{
             height:100%;
+            width:100%;
             padding: 0;
             margin: 0;
-            display:flex;
-            /* justify-content: center; */
-            align-items: center;
+            /* display:flex; */
+            /* justify-content: center;
+            align-items: center; */
         }
         #links{
-            width:80vw;
+            /* width:80vw; */
+            width:100%;
+            max-width:400px;
+            margin:auto;
+            display:block;
+            /* border-style:solid; */
         }
         .subheader{
             font-weight:bold;
@@ -33,9 +39,10 @@
         .project_link{
             margin-top:10px;
             width:100%;
+            max-width:400px;
             height:120px;
             display:grid;
-            grid-template-columns: 200px;
+            grid-template-columns: 50%;
             grid-template-rows: 20px;
             grid-template-areas: "date image"
                                  "title image"
@@ -43,6 +50,8 @@
         .project_link img{
             width:120px;
             grid-area: image;
+            display:block;
+            justify-self: right;
         }
         .project_link a{
             grid-area: title;
