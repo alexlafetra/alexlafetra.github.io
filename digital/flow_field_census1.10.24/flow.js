@@ -42,7 +42,7 @@ function fillFBOwithRandom(fbo,scale,seed){
 }
 
 class FlowField{
-    constructor(mask,colors,flowFShader){
+    constructor(mask,presetIndex){
         //Parameters
         this.particleCount = 40000;
         this.trailDecayValue = 0.05;
@@ -55,18 +55,25 @@ class FlowField{
         this.randomAmount = 0.5;
         this.friction = 0.0;
 
-        // this.backgroundColor = {r:0.2*255,g:0.2*255,b:0.1*255};
         this.backgroundColor = {r:0,g:0,b:0};
+
+        this.presetIndex = presetIndex;
 
         this.maskParticles = true;
         this.normalizeVelocity = false;
+
+        this.isActive = true;
+
+        //data
+        this.attractors = attractors;
+        this.repulsors = repulsors;
 
         //Shaders
         this.updatePositionShader = createShader(updatePositionVert,updatePositionFrag);
         this.updateAgeShader = createShader(ageVert,ageFrag);
         this.updateVelShader = createShader(updateVelVert,updateVelFrag);
         this.pointShader = createShader(drawParticlesVS,drawParticlesFS);
-        this.flowShader = flowFShader;
+        this.flowShader = createShader(flowMapVert,flowMapFrag);
 
         //Texture Buffers
         this.ageTexture = createFramebuffer({width:dataTextureDimension,height:dataTextureDimension,format:FLOAT,textureFiltering:NEAREST});
@@ -81,25 +88,31 @@ class FlowField{
         this.trailBuffer = createFramebuffer({width:width,height:height,format:FLOAT});
 
         this.particleMask = mask;
-        if(colors)
-            this.colorMap = colors;
-        else
-            this.colorMap = createFramebuffer({width:width,height:height,format:FLOAT});
+        this.mapTexture = createFramebuffer(width,height);
+        this.renderMapTexture();
 
         //set up the field
         initGL();
 
         this.resetParticles();
     }
-    updateFlow(fbo){
-        fbo.begin();
+    renderMapTexture(){
+        renderMap(this.mapTexture,color(0),presets[this.presetIndex].colorStyle);
+    }
+    renderImageAsMapTexture(img){
+        this.mapTexture.begin();
+        image(img,-this.mapTexture.width/2,-this.mapTexture.height/2,this.mapTexture.width,this.mapTexture.height);
+        this.mapTexture.end();
+    }
+    updateFlow(){
+        this.flowFieldTexture.begin();
         shader(this.flowShader);
         //just a note: attractors and repulsors are FLAT arrays of x,y,strength values
         //Which means they're just a 1x(nx3) flat vector, not an nx3 multidimensional vector
-        this.flowShader.setUniform('uAttractors',attractors);
-        this.flowShader.setUniform('uRepulsors',repulsors);
+        this.flowShader.setUniform('uAttractors',this.attractors);
+        this.flowShader.setUniform('uRepulsors',this.repulsors);
         rect(-width/2,-height/2,width,height);
-        fbo.end();
+        this.flowFieldTexture.end();
     }
     updatePos(){
         this.uPositionTextureBuffer.begin();
@@ -173,7 +186,7 @@ class FlowField{
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.uPositionTexture.colorTexture);
         gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.colorMap.colorTexture);
+        gl.bindTexture(gl.TEXTURE_2D, this.mapTexture.colorTexture);
         // gl.bindTexture(gl.TEXTURE_2D, this.velTexture.colorTexture);
 
         rotateZ(PI);
@@ -181,7 +194,7 @@ class FlowField{
         shader(this.pointShader);
         this.pointShader.setUniform('uVelocityTexture',this.velTexture);
         this.pointShader.setUniform('uPositionTexture',this.uPositionTexture);
-        this.pointShader.setUniform('uColorTexture',this.colorMap);
+        this.pointShader.setUniform('uColorTexture',this.mapTexture);
         this.pointShader.setUniform('uTextureDimensions',[dataTextureDimension,dataTextureDimension]);
         this.pointShader.setUniform('uParticleSize',this.pointSize);
         gl.drawArrays(gl.POINTS,0,this.particleCount);
@@ -220,12 +233,35 @@ class FlowField{
         image(this.velTexture,-width/2,-height/2,width/8,height/8);
         image(this.uPositionTexture,-3*width/8,-height/2,width/8,height/8);
     }
-    renderFlowMap(){
-        image(this.flowFieldTexture,-width/2,-height/2,width,height);
-    }
-    update(){
+    updateParticles(){
         this.updateAge();
         this.updatePos();
         this.updateVel();
+    }
+    calculateAttractors(n){
+        this.attractors = [];
+        this.repulsors = [];
+        let a = getSignificantPoints(n,presets[this.presetIndex].demographicFunction);
+        let r = getLeastSignificantPoints(n,presets[this.presetIndex].demographicFunction);
+    
+        let min = r[0].strength;
+        let max = a[0].strength;
+    
+        for(let point of a){
+            this.attractors.push(point.x);
+            this.attractors.push(point.y);
+            // attractors.push(map(point.strength,min,max,0,forceScale));
+            this.attractors.push(1.0);
+        }
+        for(let point of r){
+            this.repulsors.push(point.x);
+            this.repulsors.push(point.y);
+            this.repulsors.push(1.0);
+            // repulsors.push(map(point.strength,max,min,0,forceScale));
+        }
+    }
+    setPresetAttractors(){
+        this.attractors = presets[this.presetIndex].attractors;
+        this.repulsors = presets[this.presetIndex].repulsors;
     }
 }

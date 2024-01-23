@@ -1,6 +1,7 @@
 let flowField;
-let mapTexture;
+let flowFields = [];
 let holcTexture;
+let mask;
 
 let attractors = [];
 let repulsors = [];
@@ -21,12 +22,17 @@ let presets;
 let activePreset = 0;
 
 const NUMBER_OF_ATTRACTORS = 20;
+const forceScale = 100.0;
 
 let showingMap = false;
 let showingTractOutlines = false;
 let showHOLCTracts = false;
 let showParticles = true;
 let showFlowMap = false;
+
+//controls whether or not the sim will load with prerendered data/choropleths
+//or with the full dataset, allowing you to explore/experiment
+const devMode = true;
 
 class DemographicVis{
     constructor(title,description,color,data){
@@ -35,12 +41,14 @@ class DemographicVis{
         this.colorStyle = color;
         this.demographicFunction = data;
     }
-    setActive(index){
+    setActive(index,ff){
         document.getElementById("chart_title").innerHTML = this.title;
         document.getElementById("chart_attractor_equation").innerHTML = this.description;
         activePreset = index;
-        renderMap(mapTexture,color(0),presets[activePreset].colorStyle);
-        calculateAttractors(NUMBER_OF_ATTRACTORS);
+        ff.presetIndex = activePreset;
+        ff.renderMapTexture();
+        ff.calculateAttractors(NUMBER_OF_ATTRACTORS);
+        ff.updateFlow();
     }
 }
 
@@ -48,20 +56,18 @@ class Preset{
     constructor(title,description,map,aPoints,rPoints){
         this.title = title;
         this.description = description;
-        this.mapImage = map;
+        this.mapIndex = map;
         this.attractors = aPoints;
         this.repulsors = rPoints;
     }
-    setActive(index){
+    setActive(index,ff){
         document.getElementById("chart_title").innerHTML = this.title;
         document.getElementById("chart_attractor_equation").innerHTML = this.description;
         activePreset = index;
-        attractors = this.attractors;
-        repulsors = this.repulsors;
-        mapTexture.begin();
-        image(this.mapImage,-width/2,-height/2,width,height);
-        mapTexture.end();
-        flowField.colorMap = mapTexture;
+        ff.presetIndex = activePreset;
+        ff.renderImageAsMapTexture(presetChoropleths[presets[activePreset].mapIndex]);
+        ff.setPresetAttractors();
+        ff.updateFlow();
     }
 }
 
@@ -77,30 +83,38 @@ function calculateAttractors(n){
     for(let point of a){
         attractors.push(point.x);
         attractors.push(point.y);
-        // attractors.push(map(point.strength,min,max,0,forceScale));
-        attractors.push(1.0);
+        attractors.push(map(point.strength,min,max,0,forceScale));
+        // attractors.push(1.0);
     }
     for(let point of r){
         repulsors.push(point.x);
         repulsors.push(point.y);
-        repulsors.push(1.0);
-        // repulsors.push(map(point.strength,max,min,0,forceScale));
+        repulsors.push(map(point.strength,max,min,0,forceScale));
+                // repulsors.push(1.0);
     }
 }
 function saveFlowField(){
     saveCanvas(flowField.flowFieldTexture,'flowfield.png','png');
 }
 function saveChoropleth(){
-    saveCanvas(mapTexture, 'choropleth.png','png');
+    saveCanvas(flowFields[0].mapTexture, 'choropleth.png','png');
 }
 function logAttractors(){
     console.log(JSON.stringify(attractors));
     console.log(JSON.stringify(repulsors));
 }
+function saveMask(){
+    saveCanvas(flowField.particleMask, 'flowFieldMask.png','png');
+}
+function saveTracts(){
+    saveJSON(bayTracts,"tracts.json");
+}
 
 function preload(){
-    // loadData();
-    loadPresetMaps();
+    if(devMode)
+        loadData();
+    else
+        loadPresetMaps();
 }
 
 //20 is about the limit
@@ -112,23 +126,11 @@ function gatherDemographicMaxMins(n){
 
 let preset0;
 
-function setup(){
-
-    //create canvas and grab webGL context
-    setAttributes('antialias',false);
-    // pixelDensity(1);
-    mainCanvas = createCanvas(min(windowWidth,1000),min(windowHeight,1000),WEBGL);
-    gl = mainCanvas.GL;
-
-    flowFieldShader = createShader(flowMapVert,flowMapFrag);
-    randomShader = createShader(defaultVert,randomFrag);
-
-    whiteComparisonPreset = new Preset("Change in White Population",
-    "White Pop<sub>2000</sub> / White Pop<sub>2020</sub>",preset0Map,preset0Attractors,preset0Repulsors);
+function setup_DevMode(){
 
     //Preset color/flows
-    // whiteComparisonPreset = new DemographicVis("Change in White Population",
-    //                                         "White Pop<sub>2000</sub> / White Pop<sub>2020</sub>",colorStyle_whiteComparison2020_2000,whitePeopleComparedTo2000);
+    whiteComparisonPreset = new DemographicVis("Change in White Population",
+                                            "White Pop<sub>2000</sub> / White Pop<sub>2020</sub>",colorStyle_whiteComparison2020_2000,whitePeopleComparedTo2000);
     blackComparisonPreset = new DemographicVis("Change in Black Population",
                                             "Population<sub>Black 2000</sub> / Population<sub>Black 2020</sub>",colorStyle_blackComparison2020_2000,blackPeopleComparedTo2000);
     asianComparisonPreset = new DemographicVis("Change in Asian Population",
@@ -139,8 +141,6 @@ function setup(){
                                             "(White2000)/(White2020)",colorStyle_blackRatioComparison,mostBlackChange);
     asianProportionComparisonPreset = new DemographicVis("Change In Proportion of Asian Population",
                                             "(White2000)/(White2020)",colorStyle_asianRatioComparison,mostAsianChange);
-
-
     presets = [
         whiteComparisonPreset,
         blackComparisonPreset,
@@ -151,10 +151,11 @@ function setup(){
     ];
 
     //parsing data and attaching it to tract geometry
-    // setupMapData();
-    // saveTable(data2000,'CONVERTED_Tracts_by_Race_2000.csv');
-    mapTexture = createFramebuffer(width,height);
-    holcTexture = createFramebuffer(width,height);
+    setupMapData();
+
+    //setting the offsets so that the first point in the first shape is centered
+    let samplePoint = bayTracts[0].geometry.coordinates[0][0][0];
+    geoOffset = {x:-samplePoint[0],y:-samplePoint[1]};
 
     //the manual offset
     offset = {x:350,y:400};
@@ -163,68 +164,102 @@ function setup(){
     let s = 800;
     scale = {x:s,y:s*(-1.25)};
 
-    //setting the offsets so that the first point in the first shape is centered
-    // let samplePoint = bayTracts[0].geometry.coordinates[0][0][0];
-    // geoOffset = {x:-samplePoint[0],y:-samplePoint[1]};
-    
-    // console.log("Loaded and parsed Census Data:");
-    // console.log(bayTracts);
-
     //drawing tract outlines to an overlay
     tractOutlines = createFramebuffer();
     tractOutlines.begin();
     strokeWeight(2);
-    // renderTractOutlines(geoOffset,color(255,4));
+    renderTractOutlines(geoOffset,color(255,100));
     tractOutlines.end();
 
-    //setting up the flow texture and drawing the map colors
-    // calculateAttractors(NUMBER_OF_ATTRACTORS);
-    // renderMap(mapTexture,color(0),presets[activePreset].colorStyle);
+    holcTexture.begin();
+    renderHOLCTracts(geoOffset,oakHolcTracts);
+    renderHOLCTracts(geoOffset,sfHolcTracts);
+    renderHOLCTracts(geoOffset,sjHolcTracts);
+    holcTexture.end();
 
     //creating map mask
-    let mask = createFramebuffer({width:width,height:height,format:FLOAT});
     mask.begin();
-    // background(0);
-    // renderTracts(geoOffset,() => {fill(255)});
+    background(0);
+    renderTracts(geoOffset,() => {fill(255)});
     mask.end();
+}
 
-    flowField = new FlowField(mask,mapTexture,flowFieldShader);
+function setup_Prerendered(){
+    whiteComparisonPreset = new Preset("Change in White Population",
+    "White Pop<sub>2000</sub> / White Pop<sub>2020</sub>",0,preset0Attractors,preset0Repulsors);
+
+    presets = [
+        whiteComparisonPreset
+        //, blackComparisonPreset,
+        // asianComparisonPreset,
+        // whiteProportionComparisonPreset,
+        // blackProportionComparisonPreset,
+        // asianProportionComparisonPreset
+    ];
+
+    //creating map mask
+    mask.begin();
+    image(presetFlowMask,-mask.width/2,-mask.height/2,mask.width,mask.height);
+    mask.end();
+}
+
+function setup(){
+
+    //create canvas and grab webGL context
+    setAttributes('antialias',false);
+    // pixelDensity(1);
+    mainCanvas = createCanvas(min(windowWidth,1000),min(windowHeight,1000),WEBGL);
+    gl = mainCanvas.GL;
+
+    randomShader = createShader(defaultVert,randomFrag);
+
+    // saveTable(data2000,'CONVERTED_Tracts_by_Race_2000.csv');
+    holcTexture = createFramebuffer(width,height);
+    mask = createFramebuffer({width:width,height:height});
+
+    if(devMode)
+        setup_DevMode();
+    else
+        setup_Prerendered();
+
+    for(let i = 0; i<3; i++){
+        flowFields.push(new FlowField(mask,i));
+        flowFields[i].calculateAttractors(NUMBER_OF_ATTRACTORS);
+    }
+
 
     initGui();
-
-    flowField.update();
-
-    // holcTexture.begin();
-    // renderHOLCTracts(geoOffset,oakHolcTracts);
-    // renderHOLCTracts(geoOffset,sfHolcTracts);
-    // renderHOLCTracts(geoOffset,sjHolcTracts);
-    // holcTexture.end();
-
-    presets[activePreset].setActive(activePreset);
-    // calculateAttractors(NUMBER_OF_ATTRACTORS);
+    presets[0].setActive(0,flowFields[0]);
+    presets[1].setActive(1,flowFields[1]);
+    presets[2].setActive(2,flowFields[2]);
 }
 
 
 function draw(){
     updateSliders();
-    flowField.updateFlow(flowField.flowFieldTexture);
-    flowField.update();
 
-    if(showingMap){
-        tint(255,10);
-        image(mapTexture,-width/2,-height/2,width,height);
-        tint(255,255);
+    for(let ff of flowFields){
+        if(ff.isActive){
+            ff.updateParticles();
+            ff.renderGL();
+        }
     }
+
+
+    // if(showingMap){
+    //     tint(255,10);
+    //     image(mapTexture,-width/2,-height/2,width,height);
+    //     tint(255,255);
+    // }
     if(showingTractOutlines){
         image(tractOutlines,-width/2,-height/2,width,height);
     }
-    if(showFlowMap){
-        tint(255,100);
-        flowField.renderFlowMap();
-        tint(255,255);
-    }
-    if(showParticles)
-        flowField.renderGL();
+    // if(showFlowMap){
+    //     tint(255,100);
+    //     image(flowField.flowFieldTexture,-width/2,-height/2,width/4,height/4);
+    //     // image(flowField2.flowFieldTexture,-width/2,-height/4,width/4,height/4);
+    //     tint(255,255);
+    // }
 
     if(showHOLCTracts){
         image(holcTexture,-width/2,-height/2,width,height);

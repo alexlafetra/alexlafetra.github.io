@@ -440,7 +440,7 @@ function checkForDone(){
   vertThreads = [];
 }
 
-function mousePressed(){
+function mouseReleased(){
   reset();
 }
 

@@ -64,7 +64,6 @@ let renderLayer;
 let ageTexture;
 let ageTextureBuffer;
 let normalMapTexture;
-let mapTexture;
 
 let randomShader;
 let updateVelShader;
@@ -82,7 +81,6 @@ function preload(){
     updateVelShader = loadShader('shaders/updateVel.vert','shaders/updateVel.frag');
     simplexShader = loadShader('shaders/updateVel.vert','shaders/simplex.frag');
     normalMap = loadImage('testGradient_4.png');
-    mapTexture = loadImage('download.png');
 }
 function initAge(){
     fillFBOwithRandom(ageTexture,particleAgeLimit,1.0);
@@ -131,7 +129,6 @@ function reset(){
 
 
 function setup(){
-
     initPositionShader = createShader(initPositionVert,initPositionFrag);
     updatePositionShader = createShader(updatePositionVert,updatePositionFrag);
     blurShader = createShader(ageVert,blurFrag);
@@ -224,8 +221,6 @@ function draw(){
     updateVel();
     updateAge();
 
-    image(normalMap,-width/2,-height/2,width,height);
-    // image(mapTexture,-width/2,-height/2,width,height);
 
     positionTexture.loadPixels();
     trailLayer.begin();
@@ -243,6 +238,9 @@ function draw(){
 
     tint(225,255-imageOpacity);
     image(trailLayer,-width/2,-height/2,width,height);
+
+    image(normalMap,-width/2,-height/2,width,height);
+
     // image(renderLayer,0,-height/2,width/2,height);
     // image(velTexture,-width/2,-height/2,velTexture.width,velTexture.height);
     // image(ageTexture,-width/2,-height/2,dataTextureDimension,dataTextureDimension);

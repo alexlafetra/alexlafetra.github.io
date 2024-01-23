@@ -527,7 +527,8 @@ function colorStyle_whiteComparison2020_2000(tract){
     let blackPplComparison = blackPopulation2020/blackPopulation2000;
     let asianPplComparison = asianPopulation2020/asianPopulation2000;
 
-    fill(whitePplComparison*125,0,blackPplComparison*125);
+    // fill(whitePplComparison*125,0,blackPplComparison*125);
+    fill(whitePplComparison*125,whitePplComparison*125,0);
 }
 function colorStyle_blackComparison2020_2000(tract){
     let whitePopulation2000 = tract.data2000.obj['White'];
@@ -543,7 +544,8 @@ function colorStyle_blackComparison2020_2000(tract){
     let blackPplComparison = blackPopulation2020/blackPopulation2000;
     let asianPplComparison = asianPopulation2020/asianPopulation2000;
 
-    fill(whitePplComparison*125,0,blackPplComparison*125);
+    // fill(whitePplComparison*125,0,blackPplComparison*125);
+    fill(0,blackPplComparison*125,blackPplComparison*125);
 }
 function colorStyle_asianComparison2020_2000(tract){
     let whitePopulation2000 = tract.data2000.obj['White'];
@@ -559,7 +561,8 @@ function colorStyle_asianComparison2020_2000(tract){
     let blackPplComparison = blackPopulation2020/blackPopulation2000;
     let asianPplComparison = asianPopulation2020/asianPopulation2000;
 
-    fill(asianPplComparison*125,0,255-asianPplComparison*125);
+    // fill(asianPplComparison*125,0,255-asianPplComparison*125);
+    fill(asianPplComparison*125,0,asianPplComparison*125);
 }
 
 function whiteProportion(tract){
@@ -736,28 +739,38 @@ function blackPeopleComparedTo2000(tract){
 function asianPeopleComparedTo2000(tract){
     return tract.data2020.obj.Asian/tract.data2000.obj.Asian;
 }
-
-function testFunction(a,b){
-    if(!a.hasData || !b.hasData)
+function getTopNTracts(n,func){
+    let vals = bayTracts.toSorted((a,b) => {
+        if(!a.hasData || !b.hasData)
         return 0;
 
-    let A = presets[activePreset].demographicFunction(a);
-    let B = presets[activePreset].demographicFunction(b);
+        let A = func(a);
+        let B = func(b);
 
-    if(A>B)
-        return -1;
-    else if(B>A)
-        return 1;
-    else
-        return 0;
-}
-
-function getTopNTracts(n){
-    let vals = bayTracts.toSorted(testFunction);
+        if(A>B)
+            return -1;
+        else if(B>A)
+            return 1;
+        else
+            return 0;
+    });
     return vals.slice(0,n);
 }
-function getBottomNTracts(n){
-    let vals = bayTracts.toSorted(testFunction);
+function getBottomNTracts(n,func){
+    let vals = bayTracts.toSorted((a,b) => {
+        if(!a.hasData || !b.hasData)
+        return 0;
+
+        let A = func(a);
+        let B = func(b);
+
+        if(A>B)
+            return -1;
+        else if(B>A)
+            return 1;
+        else
+            return 0;
+    });
     //be careful to skip the tracts that don't have data, which will be at the bottom
     for(let i = vals.length-1; i>=0; i--){
         if(vals[i].hasData){
@@ -766,27 +779,27 @@ function getBottomNTracts(n){
     }
 }
 
-function getSignificantPoints(n){
-    let tracts = getTopNTracts(n);
+function getSignificantPoints(n,func){
+    let tracts = getTopNTracts(n,func);
     let points = [];
     for(let i = 0; i<n; i++){
         let point = {
             x:((tracts[i].centroid.x+geoOffset.x)*scale.x+offset.x)/width+0.5,
             y:((tracts[i].centroid.y+geoOffset.y)*scale.y+offset.y)/height+0.5,
-            strength:presets[activePreset].demographicFunction(tracts[i])
+            strength:func(tracts[i])
         }
         points.push(point);
     }
     return points;
 }
-function getLeastSignificantPoints(n){
-    let tracts = getBottomNTracts(n);
+function getLeastSignificantPoints(n,func){
+    let tracts = getBottomNTracts(n,func);
     let points = [];
     for(let i = 0; i<n; i++){
         let point = {
             x:((tracts[i].centroid.x+geoOffset.x)*scale.x+offset.x)/width+0.5,
             y:((tracts[i].centroid.y+geoOffset.y)*scale.y+offset.y)/height+0.5,
-            strength:presets[activePreset].demographicFunction(tracts[i])
+            strength:func(tracts[i])
         }
         points.push(point);
     }

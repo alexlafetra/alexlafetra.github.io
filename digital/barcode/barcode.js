@@ -16,11 +16,6 @@ function drawBarcode(){
     temp/=2;
     i++;
   }
-  //fill(0);
-  //stroke(255);
-  //strokeWeight(4);
-  //rect(0,0,rWidth*Math.log2(max)+50,rHeight+50,4);
-  //noStroke();
   let txt = "";
   for(let i = 0; i<bits.length;i++){
     if(bits[i]){
@@ -35,8 +30,8 @@ function drawBarcode(){
     rect(i*rWidth-rWidth*bits.length/2,0,rWidth,rHeight);
   }
   textAlign(CENTER);
-  text(input,0,-rHeight-20);
-  text(txt,0,+rHeight+20);
+  // text(input,0,-rHeight-20);
+  // text(txt,0,+rHeight+20);
 }
 function mouseClicked(){
   drawBarcode();
@@ -46,18 +41,16 @@ function windowResized(){
   drawBarcode();
 }
 let font;
-function preload(){
-  font = loadFont('assets/Lostar.ttf');
-}
+
 function setup() {
-  createCanvas(windowWidth,windowHeight,WEBGL);
+  frameRate(1);
+  pixelDensity(1);
+  createCanvas(600,600,WEBGL);
   rectMode(CENTER);
   noStroke();
-  textFont(font);
-  textSize(50);
   drawBarcode();
 }
 
 function draw() {
-  //drawBarcode();
+  drawBarcode();
 }

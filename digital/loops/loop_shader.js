@@ -7,19 +7,19 @@ let paused = false;
 let graphicsBuffer;
 let graphics;
 let img;
-let smear = 4;
+let smear = 8;
 
 let shader;
 
 let sc = 2;
 
 function setup() {
-  canv = createCanvas(windowWidth,windowHeight);
+  canv = createCanvas(800,800);
   canv.style('margin','auto');
   canv.style('display','block');
   
-  graphicsBuffer = createGraphics(windowWidth,windowHeight,WEBGL);
-  graphics = createGraphics(windowWidth,windowHeight,WEBGL);
+  graphicsBuffer = createGraphics(width,height,WEBGL);
+  graphics = createGraphics(width,height,WEBGL);
   
   shader = graphicsBuffer.createShader(vert,frag);
   
@@ -40,18 +40,6 @@ function setup() {
   graphics.rotateZ(radians(30));
 }
 
-function windowResized(){
-  resizeCanvas(windowWidth,windowHeight);
-  graphicsBuffer = createGraphics(windowWidth,windowHeight,WEBGL);
-  graphics = createGraphics(windowWidth,windowHeight,WEBGL);
-  shader = graphicsBuffer.createShader(vert,frag);
-  graphics.scale(sc);
-  graphics.rotateX(-radians(30));
-  graphics.rotateY(-radians(30));
-  graphics.rotateZ(radians(30));
-}
-
-
 function draw() {
   graphics.clear();
   graphicsBuffer.clear();
@@ -59,6 +47,7 @@ function draw() {
     loop.render();
     loop.update();
   }
+  smear = 10*mouseX/width;
   //graphics.clear(0,0,0,0);
   updateShader();
   image(graphicsBuffer,0,0);
@@ -128,6 +117,7 @@ class Loop{
     const r = random(-this.jitterAmplitude,this.jitterAmplitude)/25;
     graphics.translate(r,r,r);
     graphics.beginShape();
+    // graphics.texture();
     graphics.curveVertex(this.radius*this.points[0].x,this.points[0].y,this.radius*this.points[0].z);
     for(let point of this.points){
       graphics.curveVertex(this.radius*point.x,point.y,this.radius*point.z);
@@ -143,6 +133,7 @@ class Loop{
     graphics.push();
     graphics.rotateY(this.angleY);
     graphics.rotateZ(this.angleZ);
+    graphics.texture();
     for(let i = 0; i<this.points.length; i++){
       graphics.point(this.radius*this.points[i].x,this.points[i].y,this.radius*this.points[i].z);
     }

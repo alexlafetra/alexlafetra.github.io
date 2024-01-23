@@ -83,8 +83,14 @@ let outputX = 0;
 
 let scanType = 0;
 
-function preload(){
+function mouseReleased(){
+    if(scanType == 0)
+        scanType = 1;
+    else if(scanType == 1){
+        scanType = 0;
+    }
 }
+
 function setup(){
     // canv = createCanvas(video.width*2,video.height*4,WEBGL);
     canv = createCanvas(800,800,WEBGL);
