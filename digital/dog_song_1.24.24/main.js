@@ -17,10 +17,10 @@ let img;
 let vid;
 let backgroundVideo;
 
-let stripes = false;
+let stripes = true;
 
 function preload(){
-    img = loadImage("Screen Shot 2021-11-07 at 12.08.38 PM.png");
+    // img = loadImage("Screen Shot 2021-11-07 at 12.08.38 PM.png");
     randomShader = loadShader('shaders/random.vert','shaders/random.frag');
     updatePositionShader = loadShader('shaders/updatePositions.vert','shaders/updatePositions.frag');
     renderPositionShader = loadShader('shaders/renderPositions.vert','shaders/renderPositions.frag');
@@ -45,7 +45,6 @@ function renderParticles(){
     renderPositionShader.setUniform('uParticlePos',positionTexture);
     renderPositionShader.setUniform('uVelTexture',stripes?velTexture:backgroundVideo);
     stroke(0,0);
-    texture(img);
     beginShape(TRIANGLE_STRIP);
     for(let i = 0; i<100; i++){
         vertex(random(0,1),random(0,1));
@@ -55,7 +54,7 @@ function renderParticles(){
     trailLayer.end();
 }
 let lastFrameCount = 0;
-let speed = 1;
+let speed = 6;
 
 function setup(){
     backgroundVideo = createVideo('IMG_4678.MOV')

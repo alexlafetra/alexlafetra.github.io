@@ -15,9 +15,9 @@ class ClothThread{
     this.maxLength = 10.8;
     this.age = 0;
     this.done = false;
-    this.thickness = 12;
+    this.thickness = 6;
     // this.thickness = threadDensity;
-    this.noiseAmplitude = 0.01;
+    this.noiseAmplitude = 1.01;
   }
   grow(){
     if(this.points[this.points.length-1].y>height/2 || this.points[this.points.length-1].x>width/2){
@@ -371,8 +371,8 @@ function reset(){
   // hStripeWidth = 20;
 
   // threadDensity = floor(random(4,8));
-  // threadDensity = 4;
-  threadDensity = 8;
+  threadDensity = 4;
+  // threadDensity = 8;
   NUMBER_OF_HORIZONTAL_THREADS = floor(width/threadDensity);
   NUMBER_OF_VERTICAL_THREADS = floor(height/threadDensity);
 
