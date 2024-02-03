@@ -21,6 +21,7 @@ let asianProportionComparisonPreset;
 let presets;
 
 const NUMBER_OF_ATTRACTORS = 20;
+const NUMBER_OF_FIELDS = 3;
 const forceScale = 100.0;
 
 let showingMap = false;
@@ -45,7 +46,7 @@ class DemographicVis{
         ff.chartTitle.html(this.title);
         ff.chartEquation.html(this.description);
         ff.presetIndex = index;
-        ff.renderMapTexture();
+        // ff.renderMapTexture();
         ff.calculateAttractors(NUMBER_OF_ATTRACTORS);
         ff.updateFlow();
     }
@@ -81,13 +82,13 @@ function calculateAttractors(n){
     for(let point of a){
         attractors.push(point.x);
         attractors.push(point.y);
-        attractors.push(map(point.strength,min,max,0,forceScale));
+        attractors.push(map(point.strength,min,max,0,10));
         // attractors.push(1.0);
     }
     for(let point of r){
         repulsors.push(point.x);
         repulsors.push(point.y);
-        repulsors.push(map(point.strength,max,min,0,forceScale));
+        repulsors.push(map(point.strength,max,min,0,10));
                 // repulsors.push(1.0);
     }
 }
@@ -125,24 +126,24 @@ function gatherDemographicMaxMins(n){
 let preset0;
 
 function randomColor(){
-    return {r:random(0,255),g:random(0,255),b:random(0,255)};
+    return color(random(0,255),random(0,255),random(0,255));
 }
 
 function setup_DevMode(){
 
     //Preset color/flows
     whiteComparisonPreset = new DemographicVis("Change in White Population",
-                                            "White Pop<sub>2000</sub> / White Pop<sub>2020</sub>",colorStyle_whiteComparison2020_2000,whitePeopleComparedTo2000);
+                                            "P<sub>White 2000</sub> / P<sub>White 2020</sub>",colorStyle_whiteComparison2020_2000,whitePeopleComparedTo2000);
     blackComparisonPreset = new DemographicVis("Change in Black Population",
-                                            "Population<sub>Black 2000</sub> / Population<sub>Black 2020</sub>",colorStyle_blackComparison2020_2000,blackPeopleComparedTo2000);
+                                            "P<sub>Black 2000</sub> / P<sub>Black 2020</sub>",colorStyle_blackComparison2020_2000,blackPeopleComparedTo2000);
     asianComparisonPreset = new DemographicVis("Change in Asian Population",
-                                            "Population<sub>Asian 2000</sub> / Population<sub>Asian 2020</sub>",colorStyle_asianComparison2020_2000,asianPeopleComparedTo2000);
+                                            "P<sub>Asian 2000</sub> / P<sub>Asian 2020</sub>",colorStyle_asianComparison2020_2000,asianPeopleComparedTo2000);
     whiteProportionComparisonPreset = new DemographicVis("Change In Proportion of White Population",
-                                            "(White2000)/(White2020)",colorStyle_whiteRatioComparison,mostWhiteChange);
+                                            "P<sub>White 2000</sub> / P<sub>Total 2000</sub> - P<sub>White 2020</sub> / P<sub>Total 2020</sub>",colorStyle_whiteRatioComparison,mostWhiteChange);
     blackProportionComparisonPreset = new DemographicVis("Change In Proportion of Black Population",
-                                            "(White2000)/(White2020)",colorStyle_blackRatioComparison,mostBlackChange);
+                                            "P<sub>Black 2000</sub> / P<sub>Total 2000</sub> - P<sub>Black 2020</sub> / P<sub>Total 2020</sub>",colorStyle_blackRatioComparison,mostBlackChange);
     asianProportionComparisonPreset = new DemographicVis("Change In Proportion of Asian Population",
-                                            "(White2000)/(White2020)",colorStyle_asianRatioComparison,mostAsianChange);
+                                            "P<sub>Asian 2000</sub> / P<sub>Total 2000</sub> - P<sub>Asian 2020</sub> / P<sub>Total 2020</sub>",colorStyle_asianRatioComparison,mostAsianChange);
     presets = [
         whiteComparisonPreset,
         blackComparisonPreset,
@@ -181,11 +182,11 @@ function setup_DevMode(){
 
     //creating map mask
     mask.begin();
-    background(0);
-    renderTracts(geoOffset,() => {fill(255)});
+    background(0,255);
+    renderTracts(geoOffset,() => {fill(255,255,255)});
     mask.end();
 
-    for(let i = 0; i<3; i++){
+    for(let i = 0; i<NUMBER_OF_FIELDS; i++){
         flowFields.push(new FlowField(mask,i,null,randomColor()));
         flowFields[i].calculateAttractors(NUMBER_OF_ATTRACTORS);
     }
@@ -209,9 +210,8 @@ function setup_Prerendered(){
     image(presetFlowMask,-mask.width/2,-mask.height/2,mask.width,mask.height);
     mask.end();
 
-    for(let i = 0; i<3; i++){
-        flowFields.push(new FlowField(mask,i,presetChoropleths[i]));
-        // flowFields[i].calculateAttractors(NUMBER_OF_ATTRACTORS);
+    for(let i = 0; i<NUMBER_OF_FIELDS; i++){
+        flowFields.push(new FlowField(mask,i,presetChoropleths[i],randomColor()));
     }
 }
 
@@ -237,10 +237,15 @@ function setup(){
     initGL();
 
     presets[0].setActive(0,flowFields[0]);
-    // presets[1].setActive(1,flowFields[1]);
-    // presets[2].setActive(2,flowFields[2]);
+    presets[1].setActive(1,flowFields[1]);
+    presets[2].setActive(2,flowFields[2]);
 }
 
+function renderFlowFields(){
+    for(let i = 0; i<flowFields.length; i++){
+        image(flowFields[i].flowFieldTexture,-width/2+i*width/4,height/2-height/4,width/4,height/4);
+    }
+}
 
 function draw(){
     for(let ff of flowFields){
@@ -256,5 +261,6 @@ function draw(){
     if(showHOLCTracts){
         image(holcTexture,-width/2,-height/2,width,height);
     }
-
+    // renderFlowFields();
+    // image(mask,-width/2,-height/2,width,height);
 }

@@ -347,12 +347,12 @@ void main(){
         //add a vector pointing toward the attractor from this pixel
         //scaled by the inverse square of the distance AND the scale factor
         float dA = distance(uAttractors[i].xy,vTexCoord);
-        c+=uAttractors[i].z*(uAttractors[i].xy-vTexCoord)/(dA*dA);
-        // c+=(uAttractors[i].xy-vTexCoord)/(dA*dA);
+        c+=0.01*uAttractors[i].z*(uAttractors[i].xy-vTexCoord)/(dA*dA);
+        // c+=uAttractors[i].z*(uAttractors[i].xy-vTexCoord)/(dA)-0.5;
 
         float dR = distance(uRepulsors[i].xy,vTexCoord);
-        c+=uRepulsors[i].z*(-uRepulsors[i].xy+vTexCoord)/(dR*dR);
-        // c+=(-uRepulsors[i].xy+vTexCoord)/(dR*dR);
+        c+=0.01*uRepulsors[i].z*(-uRepulsors[i].xy+vTexCoord)/(dR*dR);
+        // c+=uRepulsors[i].z*(-uRepulsors[i].xy+vTexCoord)/(dR)-0.5;
     }
     c = normalize(c);
 

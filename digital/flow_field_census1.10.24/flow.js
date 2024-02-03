@@ -45,7 +45,7 @@ class FlowField{
     constructor(mask,presetIndex,map,c){
         //Parameters
         this.particleCount = 40000;
-        this.trailDecayValue = 0.05;
+        this.trailDecayValue = 0.02;
         this.pointSize = 1.3;
         this.opacity = 200;
         this.particleAgeLimit = 150;
@@ -96,7 +96,7 @@ class FlowField{
         //if the ff isn't passed a map texture, make it's own
         this.mapTexture = createFramebuffer(width,height);
         if(map == null){
-            this.renderMapTexture();
+            // this.renderMapTexture();
         }
         else{
             this.mapTexture.begin();
@@ -126,10 +126,8 @@ class FlowField{
         this.chartEquation.addClass('chart_attractor_equation');
         this.chartEquation.parent(this.controlPanel);
 
-        this.colorBar = createDiv();
-        this.colorBar.addClass('ff_colorbar');
-        this.colorBar.style.backgroundImage = "linear-gradient(red, yellow)";
-        this.colorBar.parent(this.controlPanel);
+        this.colorPicker = createColorPicker(this.particleColor);
+        this.colorPicker.parent(this.controlPanel);
 
         this.dampValueSlider = new GuiSlider(0.001,0.02, this.velDampValue,0.001,"Damping",this.controlPanel);
         this.particleSlider = new GuiSlider(1,dataTextureDimension*dataTextureDimension,this.particleCount,1,"Particles",this.controlPanel);
@@ -142,6 +140,7 @@ class FlowField{
         this.controlPanel.parent(gui);
     }
     updateParametersFromGui(){
+        this.particleColor = color(this.colorPicker.value());
         this.velDampValue = this.dampValueSlider.value();
         this.particleCount = this.particleSlider.value();
         this.trailDecayValue = this.decaySlider.value();
@@ -253,7 +252,7 @@ class FlowField{
         this.pointShader.setUniform('uVelocityTexture',this.velTexture);
         this.pointShader.setUniform('uPositionTexture',this.uPositionTexture);
         this.pointShader.setUniform('uColorTexture',this.mapTexture);
-        this.pointShader.setUniform('uParticleColor',[this.particleColor.r,this.particleColor.g,this.particleColor.b,1.0]);
+        this.pointShader.setUniform('uParticleColor',[this.particleColor._array[0],this.particleColor._array[1],this.particleColor._array[2],1.0]);
         this.pointShader.setUniform('uTextureDimensions',[dataTextureDimension,dataTextureDimension]);
         this.pointShader.setUniform('uParticleSize',this.pointSize);
         gl.drawArrays(gl.POINTS,0,this.particleCount);
