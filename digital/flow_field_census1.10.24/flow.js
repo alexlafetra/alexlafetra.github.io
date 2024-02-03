@@ -42,7 +42,7 @@ function fillFBOwithRandom(fbo,scale,seed){
 }
 
 class FlowField{
-    constructor(mask,presetIndex,map){
+    constructor(mask,presetIndex,map,c){
         //Parameters
         this.particleCount = 40000;
         this.trailDecayValue = 0.05;
@@ -54,6 +54,7 @@ class FlowField{
         this.fieldStrength = 0.01;
         this.randomAmount = 0.5;
         this.friction = 0.0;
+        this.particleColor = c;
 
         this.backgroundColor = {r:0,g:0,b:0};
 
@@ -252,6 +253,7 @@ class FlowField{
         this.pointShader.setUniform('uVelocityTexture',this.velTexture);
         this.pointShader.setUniform('uPositionTexture',this.uPositionTexture);
         this.pointShader.setUniform('uColorTexture',this.mapTexture);
+        this.pointShader.setUniform('uParticleColor',[this.particleColor.r,this.particleColor.g,this.particleColor.b,1.0]);
         this.pointShader.setUniform('uTextureDimensions',[dataTextureDimension,dataTextureDimension]);
         this.pointShader.setUniform('uParticleSize',this.pointSize);
         gl.drawArrays(gl.POINTS,0,this.particleCount);

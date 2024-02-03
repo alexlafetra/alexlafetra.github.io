@@ -124,6 +124,10 @@ function gatherDemographicMaxMins(n){
 
 let preset0;
 
+function randomColor(){
+    return {r:random(0,255),g:random(0,255),b:random(0,255)};
+}
+
 function setup_DevMode(){
 
     //Preset color/flows
@@ -182,7 +186,7 @@ function setup_DevMode(){
     mask.end();
 
     for(let i = 0; i<3; i++){
-        flowFields.push(new FlowField(mask,i,null));
+        flowFields.push(new FlowField(mask,i,null,randomColor()));
         flowFields[i].calculateAttractors(NUMBER_OF_ATTRACTORS);
     }
 }
