@@ -322,8 +322,8 @@ varying vec4 vColor;
 void main() {
     // gl_FragColor = vec4(1.0);
     // gl_FragColor = vec4(1.0, 0.55, 0.0,1.0-vColor.x);
-    gl_FragColor = vec4(0.3)+vColor;
-    // gl_FragColor = vColor;
+    // gl_FragColor = vec4(0.3)+vColor;
+    gl_FragColor = vec4(vColor.xyz,1.0);
 }
 `;
 

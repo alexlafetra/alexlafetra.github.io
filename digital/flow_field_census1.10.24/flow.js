@@ -1,4 +1,4 @@
-let dataTextureDimension = 200;
+let dataTextureDimension = 150;
 let randomShader;
 let drawParticlesProgram;
 let drawParticlesProgLocs;
@@ -42,7 +42,7 @@ function fillFBOwithRandom(fbo,scale,seed){
 }
 
 class FlowField{
-    constructor(mask,presetIndex){
+    constructor(mask,presetIndex,map){
         //Parameters
         this.particleCount = 40000;
         this.trailDecayValue = 0.05;
@@ -85,16 +85,71 @@ class FlowField{
         this.flowFieldTexture = createFramebuffer({width:width,height:height});
         
         this.trailLayer = createFramebuffer({width:width,height:height,format:FLOAT});
+        this.trailLayer.begin();
+        background(0);
+        this.trailLayer.end();
         this.trailBuffer = createFramebuffer({width:width,height:height,format:FLOAT});
 
         this.particleMask = mask;
+
+        //if the ff isn't passed a map texture, make it's own
         this.mapTexture = createFramebuffer(width,height);
-        this.renderMapTexture();
+        if(map == null){
+            this.renderMapTexture();
+        }
+        else{
+            this.mapTexture.begin();
+            image(map,-this.mapTexture.width/2,-this.mapTexture.height/2,this.mapTexture.width,this.mapTexture.height);
+            this.mapTexture.end();
+        }
+
+        this.initGui();
 
         //set up the field
-        initGL();
-
         this.resetParticles();
+    }
+    initGui(){
+        let gui = document.getElementById("gui");
+        if(!gui){
+            gui = createDiv();
+            gui.id("gui");
+        }
+        this.controlPanel = createDiv();
+        this.controlPanel.addClass("flowfield_controls");
+
+        this.chartTitle = createDiv();
+        this.chartTitle.addClass('chart_title');
+        this.chartTitle.parent(this.controlPanel);
+
+        this.chartEquation = createDiv();
+        this.chartEquation.addClass('chart_attractor_equation');
+        this.chartEquation.parent(this.controlPanel);
+
+        this.colorBar = createDiv();
+        this.colorBar.addClass('ff_colorbar');
+        this.colorBar.style.backgroundImage = "linear-gradient(red, yellow)";
+        this.colorBar.parent(this.controlPanel);
+
+        this.dampValueSlider = new GuiSlider(0.001,0.02, this.velDampValue,0.001,"Damping",this.controlPanel);
+        this.particleSlider = new GuiSlider(1,dataTextureDimension*dataTextureDimension,this.particleCount,1,"Particles",this.controlPanel);
+        this.decaySlider = new GuiSlider(0.0001,0.2,0.01,0.0001,"decay",this.controlPanel);
+        this.particleSizeSlider = new GuiSlider(0,20.0,this.pointSize,0.1,"Size",this.controlPanel);
+        this.maskParticlesCheckbox = new GuiCheckbox("Mask Off Oceans",this.maskParticles,this.controlPanel);
+        this.activeCheckbox = new GuiCheckbox("Simulate",this.isActive,this.controlPanel);
+        this.flowFieldSelector = new FlowFieldSelector(presets,this.presetIndex,"Demographic Data",true,this.controlPanel);
+
+        this.controlPanel.parent(gui);
+    }
+    updateParametersFromGui(){
+        this.velDampValue = this.dampValueSlider.value();
+        this.particleCount = this.particleSlider.value();
+        this.trailDecayValue = this.decaySlider.value();
+        this.pointSize = this.particleSizeSlider.value();
+        this.maskParticles = this.maskParticlesCheckbox.value();
+        this.isActive = this.activeCheckbox.value();
+        if(this.presetIndex != this.flowFieldSelector.selected()){
+            presets[this.flowFieldSelector.selected()].setActive(this.flowFieldSelector.selected(),this);
+        }
     }
     renderMapTexture(){
         renderMap(this.mapTexture,color(0),presets[this.presetIndex].colorStyle);
@@ -170,6 +225,8 @@ class FlowField{
         this.trailLayer.begin();
         //fade the trails
         background(this.backgroundColor.r,this.backgroundColor.g,this.backgroundColor.b,this.trailDecayValue*255);
+        // background(0,this.trailDecayValue*255.0);
+
         //setting ID attributes (or trying to at least)
         gl.bindBuffer(gl.ARRAY_BUFFER, idBuffer);
         gl.enableVertexAttribArray(drawParticlesProgLocs.id);
@@ -200,34 +257,6 @@ class FlowField{
         gl.drawArrays(gl.POINTS,0,this.particleCount);
         this.trailLayer.end();
         image(this.trailLayer,-width/2,-height/2,width,height);
-    }
-    renderCPU(){
-        //swap buffers
-        [this.trailBuffer,this.trailLayer] = [this.trailLayer,this.trailBuffer];
-
-        this.trailLayer.begin();
-        //clear the buffer and draw the previous trails
-        clear();
-        image(this.trailBuffer,-this.trailLayer.width/2,-this.trailLayer.height/2,this.trailLayer.width,this.trailLayer.height);
-        //fade the trails
-        background(255,decayValue*255);
-
-        //draw points
-        this.uPositionTexture.loadPixels();
-        strokeWeight(this.pointSize);
-        stroke(0);
-        for(let i = 0; i<min(this.particleCount,10000); i++){
-            let x = this.uPositionTextureture.pixels[i*4];
-            let y = this.uPositionTextureture.pixels[i*4+1];
-            point(x*width-width/2,y*height-height/2);
-        }
-        this.trailLayer.end();
-
-        //draw the trail layer to the main canvas
-        fill(255);
-        noStroke();
-        rect(width/4,-height/2,width/4,height/4);
-        image(this.trailLayer,width/4,-height/2,width/4,height/4);
     }
     renderData(){
         image(this.velTexture,-width/2,-height/2,width/8,height/8);

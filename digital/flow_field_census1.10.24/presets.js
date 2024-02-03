@@ -6,7 +6,7 @@ let presetChoropleths;
 function loadPresetMaps(){
     presetChoropleths = [];
     presetChoropleths.push(loadImage('data/Prerendered/preset0.png'));
-    // presetChoropleths.push(loadImage('data/Prerendered/preset1.png'));
-    // presetChoropleths.push(loadImage('data/Prerendered/preset2.png'));
+    presetChoropleths.push(loadImage('data/Prerendered/preset1.png'));
+    presetChoropleths.push(loadImage('data/Prerendered/preset2.png'));
     presetFlowMask = loadImage("data/Prerendered/flowFieldMask.png");
 }

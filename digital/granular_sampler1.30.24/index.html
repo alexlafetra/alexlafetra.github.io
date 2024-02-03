@@ -9,7 +9,7 @@
   <style>
     html{
       height:100%;
-      /* overflow:hidden; */
+      overflow:hidden;
     }
     body {
       height:100%;
@@ -37,47 +37,29 @@
       display:block;
       width:auto;
     }
-    .chart_title{
+    #chart_title{
       font-family: Arial, Helvetica, sans-serif;
-      font-size:24px;
+      font-size:40px;
       font-weight:bolder;
     }
-    .chart_attractor_equation{
+    #chart_description{
       font-family:'Times New Roman', Times, serif;
       font-style:italic;
-      font-size:16px;
-      color:black;
-    }
-    .gui_button{
-      width:fit-content;
-    }
-    .gui_select{
-      width:fit-content;
-    }
-    .ff_colorbar{
-      /* width:50%; */
-      height:40px;
+      font-size:20px;
     }
   </style>
 </head>
 
 <body>
-  <div>
-
-  </div>
   <main>
   </main>
-  <div id = "gui">
-  </div>
+  <div id = "gui"></div>
 </body>
   <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
   <script language="javascript" type="text/javascript" src="libraries/p5.min.js"></script>
   <script language="javascript" type="text/javascript" src="webgl-utils.js"></script>
-  <script language="javascript" type="text/javascript" src="presets.js"></script>
   <script language="javascript" type="text/javascript" src="gui.js"></script>
-  <script language="javascript" type="text/javascript" src="mapping.js"></script>
-  <script language="javascript" type="text/javascript" src="flow.js"></script>
+  <script language="javascript" type="text/javascript" src="flock.js"></script>
   <script language="javascript" type="text/javascript" src="main.js"></script>
-  <script language="javascript" type="text/javascript" src="shaders.js"></script>
   <!-- <script language="javascript" type="text/javascript" src="webGL_test.js"></script> -->
 </html>

@@ -19,7 +19,6 @@ let blackProportionComparisonPreset;
 let asianProportionComparisonPreset;
 
 let presets;
-let activePreset = 0;
 
 const NUMBER_OF_ATTRACTORS = 20;
 const forceScale = 100.0;
@@ -33,6 +32,7 @@ let showFlowMap = false;
 //controls whether or not the sim will load with prerendered data/choropleths
 //or with the full dataset, allowing you to explore/experiment
 const devMode = true;
+// const devMode = false;
 
 class DemographicVis{
     constructor(title,description,color,data){
@@ -42,10 +42,9 @@ class DemographicVis{
         this.demographicFunction = data;
     }
     setActive(index,ff){
-        document.getElementById("chart_title").innerHTML = this.title;
-        document.getElementById("chart_attractor_equation").innerHTML = this.description;
-        activePreset = index;
-        ff.presetIndex = activePreset;
+        ff.chartTitle.html(this.title);
+        ff.chartEquation.html(this.description);
+        ff.presetIndex = index;
         ff.renderMapTexture();
         ff.calculateAttractors(NUMBER_OF_ATTRACTORS);
         ff.updateFlow();
@@ -61,11 +60,10 @@ class Preset{
         this.repulsors = rPoints;
     }
     setActive(index,ff){
-        document.getElementById("chart_title").innerHTML = this.title;
-        document.getElementById("chart_attractor_equation").innerHTML = this.description;
-        activePreset = index;
-        ff.presetIndex = activePreset;
-        ff.renderImageAsMapTexture(presetChoropleths[presets[activePreset].mapIndex]);
+        ff.chartTitle.html(this.title);
+        ff.chartEquation.html(this.description);
+        ff.presetIndex = index;
+        ff.renderImageAsMapTexture(presetChoropleths[presets[index].mapIndex]);
         ff.setPresetAttractors();
         ff.updateFlow();
     }
@@ -182,6 +180,11 @@ function setup_DevMode(){
     background(0);
     renderTracts(geoOffset,() => {fill(255)});
     mask.end();
+
+    for(let i = 0; i<3; i++){
+        flowFields.push(new FlowField(mask,i,null));
+        flowFields[i].calculateAttractors(NUMBER_OF_ATTRACTORS);
+    }
 }
 
 function setup_Prerendered(){
@@ -201,6 +204,11 @@ function setup_Prerendered(){
     mask.begin();
     image(presetFlowMask,-mask.width/2,-mask.height/2,mask.width,mask.height);
     mask.end();
+
+    for(let i = 0; i<3; i++){
+        flowFields.push(new FlowField(mask,i,presetChoropleths[i]));
+        // flowFields[i].calculateAttractors(NUMBER_OF_ATTRACTORS);
+    }
 }
 
 function setup(){
@@ -222,45 +230,25 @@ function setup(){
     else
         setup_Prerendered();
 
-    for(let i = 0; i<3; i++){
-        flowFields.push(new FlowField(mask,i));
-        flowFields[i].calculateAttractors(NUMBER_OF_ATTRACTORS);
-    }
+    initGL();
 
-
-    initGui();
     presets[0].setActive(0,flowFields[0]);
-    presets[1].setActive(1,flowFields[1]);
-    presets[2].setActive(2,flowFields[2]);
+    // presets[1].setActive(1,flowFields[1]);
+    // presets[2].setActive(2,flowFields[2]);
 }
 
 
 function draw(){
-    updateSliders();
-
     for(let ff of flowFields){
+        ff.updateParametersFromGui();
         if(ff.isActive){
             ff.updateParticles();
             ff.renderGL();
         }
     }
-
-
-    // if(showingMap){
-    //     tint(255,10);
-    //     image(mapTexture,-width/2,-height/2,width,height);
-    //     tint(255,255);
-    // }
     if(showingTractOutlines){
         image(tractOutlines,-width/2,-height/2,width,height);
     }
-    // if(showFlowMap){
-    //     tint(255,100);
-    //     image(flowField.flowFieldTexture,-width/2,-height/2,width/4,height/4);
-    //     // image(flowField2.flowFieldTexture,-width/2,-height/4,width/4,height/4);
-    //     tint(255,255);
-    // }
-
     if(showHOLCTracts){
         image(holcTexture,-width/2,-height/2,width,height);
     }

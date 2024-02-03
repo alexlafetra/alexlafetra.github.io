@@ -471,11 +471,12 @@ function colorStyle_blackRatioComparison(tract){
     let totalPopulation2000 = tract.data2000.obj['Total'];
     let totalPopulation2020 = tract.data2020.obj['Total'];
 
-    let val1 = whitePopulation2020/totalPopulation2020 - whitePopulation2000/totalPopulation2000;
     let val2 = blackPopulation2020/totalPopulation2020 - blackPopulation2000/totalPopulation2000;
-    let val3 = asianPopulation2020/totalPopulation2020 - asianPopulation2000/totalPopulation2000;
 
-    fill(map(val2,-0.1,0.6,0,255),map(val2,-0.1,0.3,0,255),0);
+    // fill(map(val2,-0.1,0.6,0,255),map(val2,-0.1,0.3,0,255),0);
+    let c1 = color(40, 250, 159);
+    let c2 = color(250, 103, 40);
+    fill(lerpColor(c1,c2,map(5*val2,-0.1,0.1,0,1)));
 }
 function colorStyle_asianRatioComparison(tract){
     let whitePopulation2000 = tract.data2000.obj['White'];
@@ -511,7 +512,7 @@ function colorStyle_whiteBlackComparison2020_2000(tract){
     let blackPplComparison = blackPopulation2020/blackPopulation2000;
     let asianPplComparison = asianPopulation2020/asianPopulation2000;
 
-    fill(whitePplComparison*125,0,blackPplComparison*125);
+    // fill(whitePplComparison*125,0,blackPplComparison*125);
 }
 function colorStyle_whiteComparison2020_2000(tract){
     let whitePopulation2000 = tract.data2000.obj['White'];
@@ -528,7 +529,11 @@ function colorStyle_whiteComparison2020_2000(tract){
     let asianPplComparison = asianPopulation2020/asianPopulation2000;
 
     // fill(whitePplComparison*125,0,blackPplComparison*125);
-    fill(whitePplComparison*125,whitePplComparison*125,0);
+    // fill(whitePplComparison*125,whitePplComparison*125,0);
+
+    let c1 = color(87, 84, 255);
+    let c2 = color(247, 2, 96);
+    fill(lerpColor(c1,c2,map(whitePplComparison,0,1,-1,1)));
 }
 function colorStyle_blackComparison2020_2000(tract){
     let whitePopulation2000 = tract.data2000.obj['White'];
@@ -545,7 +550,11 @@ function colorStyle_blackComparison2020_2000(tract){
     let asianPplComparison = asianPopulation2020/asianPopulation2000;
 
     // fill(whitePplComparison*125,0,blackPplComparison*125);
-    fill(0,blackPplComparison*125,blackPplComparison*125);
+    // fill(0,blackPplComparison*125,blackPplComparison*125);
+
+    let c1 = color(145, 255, 178);
+    let c2 = color(255, 109, 5);
+    fill(lerpColor(c1,c2,map(blackPplComparison,0,1,-1,1)));
 }
 function colorStyle_asianComparison2020_2000(tract){
     let whitePopulation2000 = tract.data2000.obj['White'];
@@ -562,7 +571,10 @@ function colorStyle_asianComparison2020_2000(tract){
     let asianPplComparison = asianPopulation2020/asianPopulation2000;
 
     // fill(asianPplComparison*125,0,255-asianPplComparison*125);
-    fill(asianPplComparison*125,0,asianPplComparison*125);
+    // fill(asianPplComparison*125,0,asianPplComparison*125);
+    let c1 = color(87, 84, 255);
+    let c2 = color(247, 2, 96);
+    fill(lerpColor(c1,c2,map(whitePplComparison,0,1,-1,1)));
 }
 
 function whiteProportion(tract){
