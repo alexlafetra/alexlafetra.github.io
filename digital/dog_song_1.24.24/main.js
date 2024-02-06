@@ -15,11 +15,13 @@ let renderPositionShader;
 
 let img;
 let vid;
+let song;
 let backgroundVideo;
 
 let stripes = true;
 
 function preload(){
+    song = loadSound('2.3.24.dog song.mp3');
     // img = loadImage("Screen Shot 2021-11-07 at 12.08.38 PM.png");
     randomShader = loadShader('shaders/random.vert','shaders/random.frag');
     updatePositionShader = loadShader('shaders/updatePositions.vert','shaders/updatePositions.frag');
@@ -56,11 +58,23 @@ function renderParticles(){
 let lastFrameCount = 0;
 let speed = 6;
 
+function bpmToFPS(bpm){
+    return bpm/60*8;
+}
+
+let nextVideo;
+let videoSources = ['IMG_4678.MOV','IMG_4673.MOV','IMG_4677.MOV']
+let currentVid = 0;
 function setup(){
-    backgroundVideo = createVideo('IMG_4678.MOV')
+    speed = bpmToFPS(81)/4;
+    backgroundVideo = createVideo(videoSources[currentVid]);
+    backgroundVideo.onended(nextVid);
     backgroundVideo.hide();
     backgroundVideo.volume(0);
     backgroundVideo.play();
+    nextVideo = createVideo(videoSources[currentVid+1]);
+    nextVideo.hide();
+    nextVideo.volume(0);
     // vid = createCapture(VIDEO);
     // vid.hide();
     mainCanvas = createCanvas(1000,1000,WEBGL);
@@ -68,6 +82,18 @@ function setup(){
     positionTexture = createFramebuffer({width:100,height:100,format:FLOAT});
     velTexture = createFramebuffer({width:100,height:100,format:FLOAT});
     initVelocities();//random velocities
+    song.play();
+}
+
+function nextVid(){
+    currentVid++;
+    currentVid%=videoSources.length;
+    backgroundVideo = nextVideo;
+    backgroundVideo.onended(nextVid);
+    backgroundVideo.play();
+    nextVideo = createVideo(videoSources[currentVid+1]);
+    nextVideo.hide();
+    nextVideo.volume(0);
 }
 function draw(){
     background(255);
@@ -76,6 +102,7 @@ function draw(){
         renderParticles();
         initPositions();
         lastFrameCount = frameCount;
+        stripes = !stripes;
     }
     image(backgroundVideo,-backgroundVideo.width/4,-backgroundVideo.height/4,backgroundVideo.width/2,backgroundVideo.height/2);
     image(backgroundVideo,-width/2,-height/2+positionTexture.height+velTexture.height,100,100);

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
+  <script language="javascript" type="text/javascript" src="libraries/p5.min.js"></script>
+  <script language="javascript" type="text/javascript" src="shader.js"></script>
+  <script language="javascript" type="text/javascript" src="waves_skye_album.js"></script>
+  <!-- OK, YOU CAN MAKE CHANGES BELOW THIS LINE AGAIN -->
+
+  <style>
+    html{
+      background-image:url("");
+    }
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    /*this div acts like a 'clone' of the width of the canvas*/
+    /*so the text can be positioned relative to the canvas*/
+    #mainDiv{
+      width:500px;
+      height:500px;
+      margin:auto;
+      margin-top:20vh;
+      z-index:-1;
+    }
+    #name{
+      display:inline-block;
+      color:red;
+      margin-left:-130px;
+      width:20px;
+      font-size:20pt;
+      width:120px;
+      text-align:right;
+    }
+    #title{
+      float:right;
+      color:red;
+      margin-right:-10px;
+      margin-top:300px;
+      font-size:20pt;
+      width:0px;
+    }    
+  </style>
+</head>
+
+<body>
+<main></main>
+<div id = "mainDiv">
+  <div id= "name">
+    <p>skye hawthorne</p>
+  </div>
+  <div id = "title">
+    <p>till the waters rise</p>
+  </div>
+</div>
+</body>
+</html>

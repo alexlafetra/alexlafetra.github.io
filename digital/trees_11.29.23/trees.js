@@ -190,6 +190,9 @@ class Branch{
       }
       //if it's not already moving to another branch, check and see if it should
       else{
+        if(t == null){
+          return newBranches;
+        }
         //search for nearby branches on the other tree
         let closestDist = neighborDetectionDistance;
         let closestPoint = this.p1;

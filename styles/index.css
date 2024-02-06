@@ -17,13 +17,9 @@ body {
     position:absolute;
     width: 250px;
     height:250px;
-    /* margin:auto; */
-    /* border:5px solid white; */
-
     /* centering it */
     top:50%;
     left: 50%;
-    /* -ms-transform: translateY(-50%) translateX(-50%); */
     transform: translateY(-50%) translateX(-50%);
 
     /* making sure it renders above the canvas */
@@ -48,15 +44,11 @@ body {
 }
 #center_index .link:hover{
     fill:rgb(255, 0, 238);
-    /* -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: rgb(0, 0, 0); */
     paint-order: stroke;
     stroke: #000000;
     stroke-width: 1px;
     stroke-linecap: butt;
     stroke-linejoin: miter;
-    /* font-weight: 800; */
-    /* font-weight: bolder; */
 }
 #text_svg{
     position: fixed;
@@ -69,7 +61,9 @@ canvas{
     z-index:0;
     left:0;
     top:0;
+    right:0;
     position:absolute;
+    display:block;
 }
 
 .main_menu_media{
@@ -82,6 +76,7 @@ canvas{
     object-fit: cover;
 }
 
-#collisionElement{
-    
+.side_list{
+    background:white;
+    transition:1s;
 }

@@ -5,7 +5,7 @@ let cohesionMultiplier = 1.3;
 let tiltMultiplier = 1.5;
 let separationMultiplier = 1.8;
 let alignmentMultiplier = 1;
-let avoidanceMultiplier = 1;
+let avoidanceMultiplier = 10;
 let maxBoids = 150;
 const pointSize = 32;
 let pallette;
@@ -77,6 +77,7 @@ function isWithinRect(p,rect,margin){
 class Boid {
   constructor(){
     this.position = createVector(random(width), random(height));
+    this.previousPosition = null;
     this.velocity = p5.Vector.random2D();
     this.velocity.setMag(random(2,4));
     this.acceleration = createVector();
@@ -280,6 +281,7 @@ class Boid {
   }
   
   update(){
+    this.previousPosition = this.position;
     this.position.add(this.velocity);
     this.velocity.add(this.acceleration);
     this.velocity.limit(this.maxSpeed);
@@ -287,6 +289,9 @@ class Boid {
   show(){
     strokeWeight(pointSize);
     stroke(this.color);
-    point(this.position.x,this.position.y);
+    if(this.previousPosition == null)
+      point(this.position.x,this.position.y);
+    else
+      line(this.position.x,this.position.y,this.previousPosition.x,this.previousPosition.y);
   }
 }
