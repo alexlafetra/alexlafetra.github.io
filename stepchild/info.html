@@ -17,45 +17,136 @@
 
         }
     </script>
+    <!-- <script language="javascript" type="text/javascript" src="stepchild_render.js"></script> -->
 </head>
-<body id = "info_body">
-    <!-- image div -->
-    <div style = "width:60%;min-width:500px;margin:auto;display:block;">
-        <!-- exploded diagram -->
-        <img id = "exploded_diagram" src = "images/Exploded View.svg" style = "display:block;position:fixed;width:100%;max-width:1000px;padding:20px;margin-left:-200px;">
-        <img id = "exploded_diagram" src = "images/stepchild_disassembled.jpg" style = "display:block;position:fixed;width:30%;max-width:300px;padding:20px;right:0;">
+<body>
+    <!-- Top Bar Stuff -->
+    <div style = "overflow:hidden;height:120px;width:100%;border-bottom:solid 5px;display:flex;align-items: center;">
+        <!-- Color squares matching the stepchild buttons -->
+        <div style = "position:absolute;width:100%;height:10px;text-align:center;border:none;z-index:-1;">
+            <div style = "width:12.5%;height:100%;background-color: rgb(0, 211, 0);float:left;"></div>
+            <div style = "width:12.5%;height:100%;background-color: white;float:left;"></div>
+            <div style = "width:12.5%;height:100%;background-color: yellow;float:left;"></div>
+            <div style = "width:12.5%;height:100%;background-color: red;float:left;"></div>
+            <div style = "width:12.5%;height:100%;background-color: blue;float:left;"></div>
+            <div style = "width:12.5%;height:100%;background-color: white;float:left;"></div>
+            <div style = "width:12.5%;height:100%;background-color: gray;float:left;"></div>
+            <div style = "width:12.5%;height:100%;background-color: black;float:left;"></div>
+        </div>
+        <img src = "images/logo_standalone.svg" style = "height:100px;width:500px;
+            filter: drop-shadow(10px 0px rgb(0, 211, 0)) drop-shadow(20px 0px white) drop-shadow(10px 0px yellow) drop-shadow(20px 0px red)
+                    drop-shadow(10px 0px blue) drop-shadow(20px 0px white) drop-shadow(10px 0px gray) drop-shadow(20px 0px black);">
     </div>
-    <!-- text -->
-    <div id = "details" class = "info_text" style = "padding:10px;border-radius:4px;border:solid;font-size:15px;position:fixed;top:300px;right:50px;background-color: white;height:fit-content;width:30%;max-width:300px;">
-        <p><b>Technical Details</b></p>
-
-        <b><i>I/O</i></b>
-        <li>5 Separate Hardware MIDI Out Ports (1 USB MIDI Out, 4 5-Pin-DIN Jacks <i>and</i> 4 TRS Jacks)</li>
-        <li>2 Separate Hardware MIDI In Ports (1 USB MIDI In, 1 5-Pin-DIN Jack <i>and</i> 1 TRS Jack)</li>
-        <li>3 CV Eurorack TRS Jacks</li>
-        <br>
-        <b><i>Hardware</i></b>
-        <li>2 Push Encoders, 16 Push Buttons, 8 LEDs, Analog Joystick</li>
-        <li>2.5" 128x64 monochrome OLED screen</li>
-        <li>5V USB power and/or 3 AA Batteries</li>
-        <li>3D printed hand painted housing</li>
-        <li>Onboard Raspberry Pi Pico</li>
-        <br>
-        <b><i>Software</i></b>
-        <li>Arpeggiator</li>
-        <li>X custom generative MIDI instruments</li>
-        <li>CC Data Autotracks (for sending arbitrary waveforms as CC data)</li>
-        <li>Program Change sequencer</li>
+    <div style = "width:100%;background-color: rgb(0,128,255);">
+    <!-- Donate to nal@nalgames.com on paypal if you end up using this!-->
+    <div class = "info_text" style = "
+        min-width:300px;
+        width:80%;
+        max-width:500px;
+        height:100%;
+        font-family:arcade;
+        position:relative;
+        padding:20px;
+        display:grid;
+        color:blue;
+        grid-template-columns: 250px auto;
+        grid-template-rows: 130px auto auto;
+        grid-template-areas: 'title instruments'
+                            'connectivity sequence' 
+                            'hardware power';
+        ">
+        <!-- color calculated using: https://codepen.io/sosuke/pen/Pjoqqp -->
+        <div style = "z-index:0;width:100%;position:absolute;bottom:0px;top:0;left:0;filter: invert(26%) sepia(83%) saturate(6890%) hue-rotate(243deg) brightness(280%) contrast(101%);">
+            <img src = "images/Exploded View.svg" style = "width:1000px;max-height:100%;">
+        </div>
+        <!-- <img src = "images/dof_1.png" style = "grid-area:image; height:400px;"> -->
+        <!-- <main style = "grid-area:image;"></main> -->
+        <span class = "info_header" style = "grid-area:title;line-height:100%;">Technical Specs</span>
+        <div style = "grid-area:connectivity;">
+            <span class = "info_subheader">Connectivity</span>
+            <span class = "spec_list">
+                <ul>
+                    <li>5 MIDI Out/Thru ports:</li>
+                    <ul>
+                        <li>4 hardware outputs</li>
+                        <li>1 MicroUSB output</li>
+                    </ul>
+                    <li>2 MIDI In ports:</li>
+                    <ul>
+                        <li>1 hardware INPUT</li>
+                        <li>1 MicroUSB INPUT</li>
+                    </ul>
+                    <li>3 CV 3.5mm TRS Outputs</li>
+                    <ul>
+                        <li>Supports sending Gate, Clock, and Sync signals</li>
+                        <li>CV ouput can comply with the 12V Eurorack standard, <i>but</i> the Stepchild must be connected to a Eurorack power supply</li>
+                    </ul>
+                </ul>
+            </span>
+        </div>
+        <div style = "grid-area:hardware;">
+            <span class = "info_subheader">Hardware</span>
+            <span class = "spec_list">
+                <ul>
+                    <li>2 Push Encoders, 8 Push Buttons, 8 LEDs, Analog Joystick</li>
+                    <li>Capacitive touch keyboard</li>
+                    <li>Monochrome OLED screen</li>
+                    <li>Exposed ADC from onboard Raspberry Pi Pico <3</li>
+                </ul>
+            </span>
+        </div>
+        <div style = "grid-area:power;">
+            <span class = "info_subheader">Power</span>
+            <span class = "spec_list">
+                <ul>
+                    <li>MicroUSB ~or~ 3xAAA batteries</li>
+                    (Battery life is around ~24hrs using Eneloop rechargeable AAA's)
+                    <li>Connectable to 12v Eurorack Hardware</li>
+                </ul>
+            </span>
+        </div>
+        <div style = "grid-area:sequence;">
+            <span class = "info_subheader">Sequence</span>
+            <span class = "spec_list">
+                <ul>
+                    <li>~20 minutes of canvas</li>
+                    <li>Live recording, looping, and playback</li>
+                    <li>Automation, midi curves, and motion sequencing</li>
+                    <li>127 tracks per sequence</li>
+                    <li>Loop chain for odd time signatures, polyrhythyms</li>
+                    <li>Flexible software clock</li>
+                    <ul>
+                        <li>Preset and modulated swing</li>
+                    </ul>
+                    <li>MIDI FX and editing tools</li>
+                </ul>
+            </span>
+        </div>
+        <div style = "grid-area:instruments;">
+            <span class = "info_subheader">Generative</span>
+            <span class = "spec_list">
+                <ul>
+                    <li>8 generative midi instruments</li>
+                </ul>
+            </span>
+        </div>
     </div>
-    <div id = "info" class = "info_text" style = "padding:10px;border-radius:4px;border:solid;position:absolute;top:80px;left:10%;background-color: white;height:fit-content;width:80%;max-width:500px;">
-        <p><b><i>hey</i></b></p>
-        <p>The Stepchild is a project I began while writing music with my SP404MKii my last winter in college. At the time, the MKii had
-             no actual sequencing capabilities aside from playing back a live-recorded pattern, which gave it a very 
-            unique set of limitations. These limitations were and still are really fun, they change the way you think about layers of audio in production,
-             but they also restricted a lot of the capabilities of the MKii without hooking it up to a laptop.</p>
-        <p>The official Github page for this project can be found <a href = "https://github.com/alexlafetra/stepchild" target = "top_">here</a>.</p>
-        <p>This project is open-source! Or at least, partially. For now, the software is available to download, modify, and contribute to (please contribute!) so long as you <i>don't sell it</i>.</p>
-        I haven't released the hardware designs for the Stepchild, but it's something I'm considering so drop me a line if you'd like some technical details.
+    </div>
+    <div class = "info_text" style = "
+                                     min-width:300px;
+                                     max-width:500px;
+                                     height:100%;
+                                     float:left;
+		                            overflow: scroll;
+                                     padding:20px;
+                                     font-family:'Times New Roman', Times, serif;">
+        <span class = "info_header">The Stepchild</span>
+        is a midi generator, editor, and sequencer designed to be a portable notebook for musicians working with 
+        music hardware. It's also your <span style = "font-family:chopin;font-size:36px;color:red;">baby</span>.
+        <!-- <img src = "images/stepchild_disassembled.jpg" style = "display:block;width:200px;padding:20px;right:0;"> -->
+        The Stepchild is released under the <span style = "font-family:roboto;">CC BY-NC-SA 4.0</span> license as an <b>open-source</b> project.
+        This means that the software and design schematics can be used freely, by anyone, to build or contribute to the Stepchild's design with the requirement
+        that <i><b>any published project also be released under the same creative commons license.</b></i> Additionally, please credit The Stepchild as a source
     </div>
 </body>
 </html>

@@ -38,6 +38,18 @@
         function updateURL(pageName) {
             window.parent.postMessage({newURL:pageName});
         }
+        function floatImage(id,min,max,timing){
+            let img = document.getElementById(id);
+            img.style.transition = timing/1000+"s";
+            if(img.style.bottom == min){
+                img.style.bottom = max;
+            }
+            else{
+                img.style.bottom = min;
+            }
+            console.log('hey');
+            setTimeout(floatImage,timing,id,min,max,timing);
+        }
     </script>
     <script language="javascript" type="text/javascript" src="../scripts/libraries/p5.min.js"></script>
     <script language="javascript" type="text/javascript" src="wireframe_pram.js"></script>
@@ -53,6 +65,8 @@
 /       //         /        _/   /-        //       //        _/       __/       --/         //         /        //         / 
 \_____// \___/____/\________/    \_______// \______/ \________/\______/  \________/\___/____/ \________/\________/\________/</p>
     </div>
+    <!-- Side image of the 'child -->
+    <img id = "side_image" src = "images/stepchild_side.png" style = "position:absolute;bottom:10px;width:1000px;left:70%;z-index:-1;"></img>
     <div id = "info_section">
         <p id = "preorder_blurb" class = "info_text">
             Preorder the Stepchild <a id = "preorder_link" href = "preorder.html">here</a> 🚼
@@ -64,13 +78,19 @@
         <p id = "about" class = "info_text">
             You can read more about the Stepchild <a href = "info.html">here</a> and find the online user manual  <a href = "manual/manual.html">here</a>.
         </p>
+        <iframe width="400px" src="https://www.youtube.com/embed/iEO_SwMWsE8?si=dtpM9BOxlLTS7zPt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
     <div id = "bottom_links" style = "position:absolute;bottom:20px;width:100%;text-align:center;color:black;">
         <a href = "home.html?page=home" style = "color:black;">Home</a>
-        <a href = "preorder.html?page=preorder" style = "color:black;">Preorder</a>
+        <a href = "preorder.html?page=preorder" style = "color:black;">Buy</a>
         <a href = "info.html?page=info" style = "color:black;">Info</a>
         <a href = "manual.html?page=manual" style = "color:black;">Manual</a>
         <a>Github</a>
+    </div>
+    <div class = "column" id="scroll_container">
+        <div id="scroll-text">
+            midi sequencer music computer silent instrument pocket composer compact beat machine quiet thing note book track editor music haiku live looper midi generator midi sequencer music computer silent instrument pocket composer compact beat machine quiet thing note book track editor music haiku live looper midi generator
+        </div>
     </div>
     <p class = "ascii_hidden">
  _________  ___  ___  _______           ________  _________  _______   ________  ________  ___  ___  ___  ___       ________     
@@ -110,12 +130,12 @@
   |  |  |  |  ||     |     \    |  |  |  |     ||  | \     ||  |  | |  | |     ||     |
   |__|  |__|__||_____|      \___|  |__|  |_____||__|  \____||__|__||____||_____||_____|
                                                                                         
- 
 </p>
     <script>
         cropContent();
         window.setInterval(swapAscii,4000);
         updateURL("home");
+        floatImage("side_image","-60px","10px",6000);
     </script>
 </body>
 </html>

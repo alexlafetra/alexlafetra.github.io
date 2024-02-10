@@ -13,16 +13,14 @@
     <div class = "header" id = "index_header" onclick = "toggleTOC()">Index</div>
     <div id = "index_column">
         <div id = "toc" class = "manual_markdown"></div>
-        <!-- <iframe src = "manual/TOC.html" name = "tableofcontents" id = "toc_iframe" style = "width:100%;height:100vh;border:none;padding:0;"></iframe> -->
     </div>
     <div id = "manual_column">
         <div id = "manual" class = "manual_markdown"></div>
-        <!-- <iframe src = "manual/manual_body.html" name = "manual" id = "manual_iframe" style = "width:100%;height:100vh;border:none;padding:0;"></iframe> -->
     </div>
 </body>
+<!-- downloading marked renderer to convert the markdown to html -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
-
     // Markdown renderer
     const renderer = {
         heading(text, level) {
@@ -137,7 +135,6 @@
             openTOC();
         }
     }
-
 
     function updateURL() {
         window.parent.postMessage({ newURL: "manual" }, '*');

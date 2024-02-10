@@ -15,7 +15,7 @@ function popIcon(){
             newIcon.src = "stepchild/images/star.svg";
         }
         newIcon.style.top = window.innerHeight*Math.random()+"px";
-        newIcon.style.left = window.innerWidth*Math.random()+"px";
+        newIcon.style.left = (window.innerWidth-40)*Math.random()+"px";//-40px so it doesn't run on top of the scroll text
         newIcon.style.width = 100*Math.random()+"px";
         newIcon.style.height = newIcon.style.width;
         newIcon.className = "random_icon";

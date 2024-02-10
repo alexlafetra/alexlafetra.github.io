@@ -1,3 +1,15 @@
+@font-face {
+    font-family: arcade;
+    src: url("images/Arcade.ttf") format("truetype");
+}
+@font-face {
+    font-family: chopin;
+    src: url("images/ChopinScript.ttf") format("truetype");
+}
+@font-face{
+    font-family: roboto;
+    src: url("images/RobotoCondensed-Bold.6b222561.woff2") format("woff2");
+}
 html{
     font-size       : 20px;
     font-family     :'Courier New', Courier, monospace;
@@ -11,6 +23,23 @@ body {
 
 .column{
     height: 100vh;
+}
+
+.info_header{
+    font-family:chopin;
+    font-size:60px;
+}
+.info_subheader{
+    font-family:arcade;
+    font-size:40px;
+    text-decoration: underline;
+}
+
+.spec_list{
+    color:white;
+    font-size:14px;
+    font-family:'Times New Roman', Times, serif;
+    z-index:2;
 }
 
 #options{
@@ -67,7 +96,6 @@ body {
 
 #menu .menuLink:hover{
     color:#0033ff;
-    /* color:black; */
     cursor: pointer;
     text-decoration:overline;
 }
@@ -81,15 +109,10 @@ body {
     padding:0;
     left:8.95;
     left:var(--menuColSize);
-    right:40px;
+    right:0px;
     overflow:hidden;
-    /* transition: 0.2s; */
     transition-timing-function:ease-in-out;
 }
-/* #mainColumn img{
-    position:absolute;
-    display:block;
-} */
 
 #boxHolder{
     position:absolute;
@@ -107,11 +130,8 @@ body {
     display:block;
     width:50%;
     height:33.33%;
-    /* margin:auto; */
-    /* margin:10px; */
     /* for some reason, this is necessary to make the canvas click-thru-able */
     z-index:-1;
-    /* background-color:#0033ff; */
     text-align:center;
 }
 .menuBox:hover{
@@ -122,8 +142,6 @@ body {
     display:block;
     width:100%;
     height:100%;
-    /* transition:0.1s; */
-    /* object-fit: contain; */
     object-fit: cover;
 }
 .menuBox p{
@@ -151,12 +169,12 @@ body {
     font-weight:900;
     white-space:nowrap;
     animation: scrollText 20s infinite linear;
-    /* transition: all 1s ease; */
 }
 #scroll_text{
     display:block;
     width:100%;
     margin:auto;
+    background:none;
 }
 
 /*div:hover {
@@ -168,9 +186,7 @@ to { transform: translateY(-200%); }
 }
 
 canvas {
-    /* position: absolute; */
     pointer-events: none;
-    /* top:0; */
 }
 
 #main_page_iframe{
@@ -183,15 +199,12 @@ canvas {
 }
 
 #info_section{
-    /* font-family: 'Varela Round', sans-serif; */
     font-family     : 'Arial', Arial, sans-serif;
     font-size:20px;
     font-weight:600;
-    /* background-color:white; */
     margin: auto;
     width:80%;
     max-width:500px;
-    /* transition:0.001s; */
 }
 #info_section img{
     display:block;
@@ -223,7 +236,6 @@ canvas {
 }
 
 #ascii_title{
-    /* font-size:10px; */
     font-size:1.2vw;
     position:absolute;
 }
@@ -231,7 +243,6 @@ canvas {
 .random_icon{
     position:fixed;
     z-index: -1;
-    /* filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4)); */
 }
 
 .ascii_hidden{
@@ -270,5 +281,5 @@ canvas {
 }
 
 #info{
-    overflow: scroll;
+    /* overflow: scroll; */
 }
