@@ -136,7 +136,7 @@ class FlowField{
         this.dampValueSlider = new GuiSlider(0.001,0.02, this.velDampValue,0.001,"Damping",this.controlPanel);
         this.randomValueSlider = new GuiSlider(0,10, this.randomAmount,0.01,"Drift",this.controlPanel);
         this.attractionStrengthSlider = new GuiSlider(0,10.0,5.0,0.001,"Attraction Strength",this.controlPanel);
-        this.repulsionStrengthSlider = new GuiSlider(0,10.0,0.4,0.001,"Repulsion Strength",this.controlPanel);
+        this.repulsionStrengthSlider = new GuiSlider(0,2.0,0.4,0.001,"Repulsion Strength",this.controlPanel);
         this.attractionStrengthSlider.slider.mouseClicked(() => {this.updateFlow();});
         this.repulsionStrengthSlider.slider.mouseClicked(() => {this.updateFlow();});
         this.particleSlider = new GuiSlider(1,dataTextureDimension*dataTextureDimension,this.particleCount,1,"Particles",this.controlPanel);
@@ -175,7 +175,10 @@ class FlowField{
         this.mapTexture.end();
     }
     updateFlow(){
+        //ANY drawing to this texture will affect the flow field data
+        //Flow field data is stored as attractors(x,y) => r,g; repulsors(x,y) => b,a;
         this.flowFieldTexture.begin();
+        //so you need to clear all the color data each frame
         background(0,0);
         shader(this.flowShader);
         //just a note: attractors and repulsors are FLAT arrays of x,y,strength values
@@ -285,17 +288,10 @@ class FlowField{
         gl.bindTexture(gl.TEXTURE_2D, this.uPositionTexture.colorTexture);
         gl.activeTexture(gl.TEXTURE1);
         gl.bindTexture(gl.TEXTURE_2D, this.flowFieldTexture.colorTexture);
-        // gl.bindTexture(gl.TEXTURE_2D, this.velTexture.colorTexture);
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.attractionTexture.colorTexture);
-        gl.activeTexture(gl.TEXTURE2);
-        gl.bindTexture(gl.TEXTURE_2D, this.repulsionTexture.colorTexture);
 
         shader(this.pointShader);
         this.pointShader.setUniform('uPositionTexture',this.uPositionTexture);
         this.pointShader.setUniform('uColorTexture',this.flowFieldTexture);
-        this.pointShader.setUniform('uRepulsionTexture',this.repulsionTexture);
-        this.pointShader.setUniform('uAttractionTexture',this.attractionTexture);
         this.pointShader.setUniform('uParticleColor',[this.particleColor._array[0],this.particleColor._array[1],this.particleColor._array[2],1.0]);
         this.pointShader.setUniform('uColorByTexture',!this.colorCheckbox.value());
         this.pointShader.setUniform('uTextureDimensions',[dataTextureDimension,dataTextureDimension]);
@@ -327,9 +323,16 @@ class FlowField{
         //And it messes up the relative scaling
         let a = getSignificantPoints(n,presets[this.presetIndex].demographicFunction);
         let r = getLeastSignificantPoints(n,presets[this.presetIndex].demographicFunction);
+        // console.log(JSON.stringify(a));
+        // console.log(JSON.stringify(r));
+        this.calcPoints(a,r);
+
+    }
+    logFlowFieldData(){
+        let a = getSignificantPoints(n,presets[this.presetIndex].demographicFunction);
+        let r = getLeastSignificantPoints(n,presets[this.presetIndex].demographicFunction);
         console.log(JSON.stringify(a));
         console.log(JSON.stringify(r));
-        this.calcPoints(a,r);
 
     }
     setPresetAttractors(){

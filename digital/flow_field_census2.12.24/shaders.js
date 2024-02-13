@@ -234,13 +234,8 @@ vec4 getValueFrom2DTextureAs1DArray(sampler2D tex, vec2 dimensions, float index)
 void main() {
     // pull the position from the texture
     vec4 position = getValueFrom2DTextureAs1DArray(uPositionTexture, uTextureDimensions, id);
-
-    // vec4 forceVal = texture2D(uColorTexture,position.xy);
-    // vColor.x = length(vec2(forceVal.x,forceVal.y));
-    // vColor.y = length(vec2(forceVal.z,forceVal.w));
+    //use the position to get the flow value
     vColor = texture2D(uColorTexture,position.xy);
-
-
     gl_Position = vec4(position.x,position.y,1.0,1.0)-vec4(0.5);
     gl_PointSize = uParticleSize;
 }
@@ -256,7 +251,7 @@ void main() {
         // gl_FragColor = vec4(vColor.x*vColor.x/10.0,0.1,vColor.y*vColor.y/10.0,1.0);
         // gl_FragColor = vColor;
         // gl_FragColor = vColor+0.5;
-        gl_FragColor = vec4(length(vec2(vColor.z,vColor.w))/4.0,0.1,length(vec2(vColor.y,vColor.x))/2.0,1.0);
+        gl_FragColor = vec4(length(vec2(vColor.x,vColor.y))/4.0,0.1,length(vec2(vColor.z,vColor.w))/2.0,1.0);
     }
     else{
         gl_FragColor = uParticleColor;

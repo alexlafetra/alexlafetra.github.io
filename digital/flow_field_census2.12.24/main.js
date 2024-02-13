@@ -36,8 +36,8 @@ let particleLayer;
 
 //controls whether or not the sim will load with prerendered data/choropleths
 //or with the full dataset, allowing you to explore/experiment
-// const devMode = true;
-const devMode = false;
+const devMode = true;
+// const devMode = false;
 
 class DemographicVis{
     constructor(title,description,color,data){
