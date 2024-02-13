@@ -102,7 +102,7 @@ void main(){
     //passing aTexCoord into the frag shader
     vTexCoord = aTexCoord;
     //always gotta end by setting gl_Position equal to something;
-    gl_Position = vec4(aPosition.xyz,1.0);
+    gl_Position = vec4(aPosition,1.0);
 }
 `;
 
@@ -248,50 +248,12 @@ uniform vec4 uParticleColor;
 uniform bool uColorByTexture;
 void main() {
     if(uColorByTexture){
-        // gl_FragColor = vec4(vColor.x*vColor.x/10.0,0.1,vColor.y*vColor.y/10.0,1.0);
-        // gl_FragColor = vColor;
-        // gl_FragColor = vColor+0.5;
-        gl_FragColor = vec4(length(vec2(vColor.x,vColor.y))/4.0,0.1,length(vec2(vColor.z,vColor.w))/2.0,1.0);
+        //recombine flowfield color channels into red/blue brightness
+        gl_FragColor = vec4(length(vec2(vColor.x,vColor.y))/4.0+0.2,0.0,length(vec2(vColor.z,vColor.w))/2.0+0.2,1.0);
     }
     else{
         gl_FragColor = uParticleColor;
     }
-}
-`;
-
-const attractionFrag = glsl`
-precision mediump float;
-
-varying vec2 vTexCoord;
-uniform vec3 uAttractors[`+NUMBER_OF_ATTRACTORS+glsl`];
-uniform float uAttractionStrength;
-
-void main(){
-    vec2 c = vec2(0.0);
-    for(int i = 0; i<`+NUMBER_OF_ATTRACTORS+glsl`; i++){
-        float dA = distance(uAttractors[i].xy,vTexCoord);
-        c+=uAttractionStrength*(uAttractors[i].z)*(uAttractors[i].xy-vTexCoord)/(dA*dA);
-    }
-    c/=`+NUMBER_OF_ATTRACTORS+glsl`.0;
-    gl_FragColor = vec4(c.x,c.y,length(c)+0.5,1.0);
-}
-`;
-
-const repulsionFrag = glsl`
-precision mediump float;
-
-varying vec2 vTexCoord;
-uniform vec3 uRepulsors[`+NUMBER_OF_ATTRACTORS+glsl`];
-uniform float uRepulsionStrength;
-
-void main(){
-    vec2 c = vec2(0.0);
-    for(int i = 0; i<`+NUMBER_OF_ATTRACTORS+glsl`; i++){
-        float dR = distance(uRepulsors[i].xy,vTexCoord);
-        c+=uRepulsionStrength*(uRepulsors[i].z)*(vTexCoord-uRepulsors[i].xy)/(dR*dR);
-    }
-    c/=`+NUMBER_OF_ATTRACTORS+glsl`.0;
-    gl_FragColor = vec4(c.x,c.y,2.0-length(c),1.0);
 }
 `;
 
@@ -317,11 +279,10 @@ void main(){
         float dA = distance(uAttractors[i].xy,vTexCoord);
         attraction+=uAttractionStrength*(uAttractors[i].z)*(uAttractors[i].xy-vTexCoord)/(dA*dA);
 
-        //Subtract the repulsion force
+        //the reuplsion force points AWAY from the repulsor point
         float dR = distance(uRepulsors[i].xy,vTexCoord);
         repulsion+=uRepulsionStrength*(uRepulsors[i].z)*(vTexCoord-uRepulsors[i].xy)/(dR*dR);
     }
-    // c = normalize(c);
     attraction/=`+NUMBER_OF_ATTRACTORS+glsl`.0;
     repulsion/=`+NUMBER_OF_ATTRACTORS+glsl`.0;
     //Storing both attraction and repulsion in the same texture
@@ -329,7 +290,6 @@ void main(){
 
     // gl_FragColor = vec4(attraction.x,attraction.y,repulsion.x,0.5*(repulsion.y+2.0));
     //^^ use this one if you want to render it to a texture! prevents alpha channnel from clipping
-
 }
 `;
 

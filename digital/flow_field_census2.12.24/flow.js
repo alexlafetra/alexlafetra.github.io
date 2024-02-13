@@ -57,6 +57,9 @@ class FlowField{
         this.randomAmount = 1.0;
         this.particleColor = c;
 
+        this.repulsionStrength = 2.0;
+        this.attractionStrength = 2.0;
+
         this.x = 0;
         this.size = height;
 
@@ -79,8 +82,6 @@ class FlowField{
         this.updateVelShader = createShader(updateVelVert,updateVelFrag);
         this.pointShader = createShader(drawParticlesVS,drawParticlesFS);
         this.flowShader = createShader(flowMapVert,flowMapFrag);
-        this.attractionShader = createShader(flowMapVert,attractionFrag);
-        this.repulsionShader = createShader(flowMapVert,repulsionFrag);
 
         //Texture Buffers
         this.ageTexture = createFramebuffer({width:dataTextureDimension,height:dataTextureDimension,format:FLOAT,textureFiltering:NEAREST});
@@ -92,8 +93,6 @@ class FlowField{
         this.flowFieldTexture = createFramebuffer({width:this.size,height:this.size,format:FLOAT,textureFiltering:NEAREST});
         this.trailLayer = createFramebuffer({width:this.size,height:this.size,format:FLOAT});
         this.trailBuffer = createFramebuffer({width:this.size,height:this.size,format:FLOAT});
-        this.attractionTexture = createFramebuffer({width:this.size,height:this.size,format:FLOAT,textureFiltering:NEAREST});
-        this.repulsionTexture = createFramebuffer({width:this.size,height:this.size,format:FLOAT,textureFiltering:NEAREST});
 
         this.particleMask = mask;
 
@@ -135,10 +134,8 @@ class FlowField{
 
         this.dampValueSlider = new GuiSlider(0.001,0.02, this.velDampValue,0.001,"Damping",this.controlPanel);
         this.randomValueSlider = new GuiSlider(0,10, this.randomAmount,0.01,"Drift",this.controlPanel);
-        this.attractionStrengthSlider = new GuiSlider(0,10.0,5.0,0.001,"Attraction Strength",this.controlPanel);
-        this.repulsionStrengthSlider = new GuiSlider(0,2.0,0.4,0.001,"Repulsion Strength",this.controlPanel);
-        this.attractionStrengthSlider.slider.mouseClicked(() => {this.updateFlow();});
-        this.repulsionStrengthSlider.slider.mouseClicked(() => {this.updateFlow();});
+        this.attractionStrengthSlider = new GuiSlider(0,10.0,this.attractionStrength,0.001,"Attraction Strength",this.controlPanel);
+        this.repulsionStrengthSlider = new GuiSlider(0,10.0,this.repulsionStrength,0.001,"Repulsion Strength",this.controlPanel);
         this.particleSlider = new GuiSlider(1,dataTextureDimension*dataTextureDimension,this.particleCount,1,"Particles",this.controlPanel);
         this.decaySlider = new GuiSlider(0.0001,0.2,this.trailDecayValue,0.0001,"decay",this.controlPanel);
         this.particleSizeSlider = new GuiSlider(0,20.0,this.pointSize,0.1,"Size",this.controlPanel);
@@ -146,6 +143,8 @@ class FlowField{
         this.showTractsCheckbox = new GuiCheckbox("Show Tract Boundaries",false,this.controlPanel);
         this.showFlowCheckbox = new GuiCheckbox("Show Flow Field",false,this.controlPanel);
         this.showMapCheckbox = new GuiCheckbox("Show Map",false,this.controlPanel);
+        this.showHOLCCheckbox = new GuiCheckbox("Show HOLC Tracts",false,this.controlPanel);
+
         this.colorCheckbox = new GuiCheckbox("Uniform Particle Color",false,this.controlPanel);
         this.activeCheckbox = new GuiCheckbox("Simulate",this.isActive,this.controlPanel);
         this.flowFieldSelector = new FlowFieldSelector(presets,this.presetIndex,"Demographic Data",true,this.controlPanel);
@@ -162,6 +161,20 @@ class FlowField{
         this.maskParticles = this.maskParticlesCheckbox.value();
         this.isActive = this.activeCheckbox.value();
         this.randomAmount = this.randomValueSlider.value();
+
+        let needToUpdateFF = false;
+        if(this.repulsionStrength != this.repulsionStrengthSlider.value() && !mouseIsPressed){
+            this.repulsionStrength = this.repulsionStrengthSlider.value();
+            needToUpdateFF = true;
+        }
+        if(this.attractionStrength != this.attractionStrengthSlider.value() && !mouseIsPressed){
+            this.attractionStrength = this.attractionStrengthSlider.value();
+            needToUpdateFF = true;
+        }
+        if(needToUpdateFF){
+            this.updateFlow();
+        }
+
         if(this.presetIndex != this.flowFieldSelector.selected()){
             presets[this.flowFieldSelector.selected()].setActive(this.flowFieldSelector.selected(),this);
         }
@@ -185,27 +198,10 @@ class FlowField{
         //Which means they're just a 1x(nx3) flat vector, not an nx3 multidimensional vector
         this.flowShader.setUniform('uAttractors',this.attractors);
         this.flowShader.setUniform('uRepulsors',this.repulsors);
-        this.flowShader.setUniform('uAttractionStrength',this.attractionStrengthSlider.value());
-        this.flowShader.setUniform('uRepulsionStrength',this.repulsionStrengthSlider.value());
+        this.flowShader.setUniform('uAttractionStrength',this.attractionStrength);
+        this.flowShader.setUniform('uRepulsionStrength',this.repulsionStrength);
         rect(-this.flowFieldTexture.width/2,-this.flowFieldTexture.height/2,this.flowFieldTexture.width,this.flowFieldTexture.height);
         this.flowFieldTexture.end();
-
-        //Soo you really only need this first one ^^ but to shade the points
-        //Based on the attraction/repulsion influence as separate values
-
-        this.attractionTexture.begin();
-        shader(this.attractionShader);
-        this.attractionShader.setUniform('uAttractors',this.attractors);
-        this.attractionShader.setUniform('uAttractionStrength',this.attractionStrengthSlider.value());
-        rect(-this.attractionTexture.width/2,-this.attractionTexture.height/2,this.attractionTexture.width,this.attractionTexture.height);
-        this.attractionTexture.end();
-
-        this.repulsionTexture.begin();
-        shader(this.repulsionShader);
-        this.repulsionShader.setUniform('uRepulsors',this.repulsors);
-        this.repulsionShader.setUniform('uRepulsionStrength',this.repulsionStrengthSlider.value());
-        rect(-this.repulsionTexture.width/2,-this.repulsionTexture.height/2,this.repulsionTexture.width,this.repulsionTexture.height);
-        this.repulsionTexture.end();
     }
     updatePos(){
         this.uPositionTextureBuffer.begin();
@@ -258,10 +254,15 @@ class FlowField{
     }
     renderGL(){
         if(this.showFlowCheckbox.value()){
+            fill(0);
+            rect(-height/2,-width/2,height,width);
             image(this.flowFieldTexture,-height/2,-height/2,width,height);
         }
         if(this.showTractsCheckbox.value()){
             image(tractOutlines,-width/2,-height/2,width,height);
+        }
+        if(this.showHOLCCheckbox.value()){
+            image(holcTexture,-width/2,-height/2,width,height);
         }
         this.trailLayer.begin();
         //fade the trails
@@ -295,7 +296,7 @@ class FlowField{
         gl.drawArrays(gl.POINTS,0,this.particleCount);
         this.trailLayer.end();
         if(this.showMapCheckbox.value())
-            image(this.mapTexture,-width/2,-height/2,width/2,height);
+            image(this.mapTexture,-width/2,-height/2,width ,height);
         image(this.trailLayer,-width/2,-height/2,width,height);
     }
     renderData(){
@@ -315,7 +316,6 @@ class FlowField{
         let a = getSignificantPoints(n,presets[this.presetIndex].demographicFunction);
         let r = getLeastSignificantPoints(n,presets[this.presetIndex].demographicFunction);
         this.calcPoints(a,r);
-
     }
     logFlowFieldData(){
         let a = getSignificantPoints(NUMBER_OF_ATTRACTORS,presets[this.presetIndex].demographicFunction);
@@ -337,22 +337,33 @@ class FlowField{
         let maxR = r[r.length-1].strength;
 
         let maxA = a[0].strength;
+        let i = 0;
+        while(maxA == Infinity){
+            maxA = a[i].strength;
+            i++;
+            if(i >= a.length)
+                maxA = this.forceStrength;
+        }
         let minA = a[a.length-1].strength;
 
         let overallMax = max([maxA,maxR,minA,minR]);
         let overallMin = min([maxA,maxR,minA,minR]);
 
         for(let point of a){
+            if(point.strength == Infinity)
+                point.strength = maxA;
             this.attractors.push(point.x);
             this.attractors.push(point.y);
             //normalize data, the biggest attractors/repulsors are = 1.0
-            let s = map(point.strength,overallMin,overallMax,0,1.0);
+            // let s = map(point.strength,overallMin,overallMax,0,1.0);
+            let s = map(point.strength,minA,maxA,0,1.0);
             this.attractors.push(s);
         }
         for(let point of r){
             this.repulsors.push(point.x);
             this.repulsors.push(point.y);
-            let s = map(point.strength,overallMax,overallMin,0,1.0);
+            // let s = map(point.strength,overallMax,overallMin,0,1.0);
+            let s = map(point.strength,minR,maxR,0,1.0);
             this.repulsors.push(s);
         }
     }

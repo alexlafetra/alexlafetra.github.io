@@ -436,29 +436,35 @@ function click(tract){
 //draws HOLC tracts as line drawings
 function renderHOLCTracts(geometryOffset,holcTracts){
     //rendering each tract
+    strokeWeight(1);
+    noFill();
     for(let tract of holcTracts.features){
         let polygons = tract.geometry.coordinates;
         let grade = tract.properties.grade;
         let color;
         switch(grade){
             case 'A':
+                continue;
                 color = {r:100,g:100,b:255};
                 break;
             case 'B':
+                continue;
                 color = {r:100,g:200,b:155};
                 break;
             case 'C':
+                continue;
                 color = {r:255,g:215,b:0};
                 break;
             case 'D':
                 color = {r:255,g:0,b:0};
                 break;
             case null:
-                color = {r:155,g:155,b:155};
-                break;
+                continue;
+                // color = {r:155,g:155,b:155};
+                // break;
         }
         stroke(color.r,color.g,color.b);
-        fill(color.r,color.g,color.b,20);
+        // fill(color.r,color.g,color.b,20);
 
         //these are multipolygons, so you need to iterate over each one
         for(let shape of polygons){

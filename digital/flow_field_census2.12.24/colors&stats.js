@@ -118,34 +118,63 @@ function colorStyle_asianComparison2020_2000(tract){
     fill(lerpColor(c1,c2,map(whitePplComparison,0,1,-1,1)));
 }
 
-function mostWhiteChange(tract){
-    return (tract.data2020.obj.White/tract.data2020.obj.Total)/(tract.data2000.obj.White/tract.data2000.obj.Total);
+function whitePeopleComparedTo2000(tract){
+    return tract.data2020.obj.White/tract.data2000.obj.White;
+}
+function blackPeopleComparedTo2000(tract){
+    if(tract.data2000 == undefined || tract.data2020 == undefined)
+        return 0;
+    return tract.data2020.obj.Black/tract.data2000.obj.Black;
+}
+function asianPeopleComparedTo2000(tract){
+    return tract.data2020.obj.Asian/tract.data2000.obj.Asian;
+}
+
+function whitePeopleChange(tract){
+    return tract.data2020.obj.White - tract.data2000.obj.White;
+}
+function blackPeopleChange(tract){
+    if(tract.data2000 == undefined || tract.data2020 == undefined)
+        return 0;
+    return tract.data2020.obj.Black - tract.data2000.obj.Black;
+}
+function asianPeopleChange(tract){
+    return tract.data2020.obj.Asian - tract.data2000.obj.Asian;
+}
+
+function proportionalWhiteChange(tract){
+    return (tract.data2020.obj.White/tract.data2020.obj.Total) - (tract.data2000.obj.White/tract.data2000.obj.Total);
  }
- function mostBlackChange(tract){
-    let val = (tract.data2020.obj.Black/tract.data2020.obj.Total)/(tract.data2000.obj.Black/tract.data2000.obj.Total);
-    if(val == Infinity)
-        return forceScale;
+ function proportionalBlackChange(tract){
+    if(tract.data2000 == undefined || tract.data2020 == undefined)
+        return 0;
+    let val = (tract.data2020.obj.Black/tract.data2020.obj.Total) - (tract.data2000.obj.Black/tract.data2000.obj.Total);
     return val;
  }
- function mostAsianChange(tract){
-     return (tract.data2020.obj.Asian/tract.data2020.obj.Total)/(tract.data2000.obj.Asian/tract.data2000.obj.Total);
+ function proportionalAsianChange(tract){
+     return (tract.data2020.obj.Asian/tract.data2020.obj.Total) - (tract.data2000.obj.Asian/tract.data2000.obj.Total);
  }
- function whitePeopleComparedTo2000(tract){
-     return tract.data2020.obj.White/tract.data2000.obj.White;
+ function ratioWhiteChange(tract){
+    return (tract.data2020.obj.White/tract.data2020.obj.Total) / (tract.data2000.obj.White/tract.data2000.obj.Total);
  }
- function blackPeopleComparedTo2000(tract){
-    if(!tract.data2000.obj.Black){
-        return forceScale;
-    }
-     return tract.data2020.obj.Black/tract.data2000.obj.Black;
+ function ratioBlackChange(tract){
+    if(tract.data2000 == undefined || tract.data2020 == undefined)
+        return 0;
+    let val = (tract.data2020.obj.Black/tract.data2020.obj.Total) / (tract.data2000.obj.Black/tract.data2000.obj.Total);
+    return val;
  }
- function asianPeopleComparedTo2000(tract){
-     return tract.data2020.obj.Asian/tract.data2000.obj.Asian;
+ function ratioAsianChange(tract){
+     return (tract.data2020.obj.Asian/tract.data2020.obj.Total) / (tract.data2000.obj.Asian/tract.data2000.obj.Total);
  }
+
  function getTopNTracts(n,func){
      let vals = bayTracts.toSorted((a,b) => {
-         if(!a.hasData || !b.hasData)
-         return 0;
+         if(!a.hasData || a.data2020 == undefined || a.data2000 == undefined){
+            return 0;
+         }
+         else if(!b.hasData || b.data2020 == undefined || b.data2000 == undefined){
+            return 0;
+         }
  
          let A = func(a);
          let B = func(b);
@@ -162,8 +191,12 @@ function mostWhiteChange(tract){
 
  function getBottomNTracts(n,func){
      let vals = bayTracts.toSorted((a,b) => {
-         if(!a.hasData || !b.hasData)
-         return 0;
+        if(!a.hasData || a.data2020 == undefined || a.data2000 == undefined){
+            return 0;
+         }
+         else if(!b.hasData || b.data2020 == undefined || b.data2000 == undefined){
+            return 0;
+         }
  
          let A = func(a);
          let B = func(b);

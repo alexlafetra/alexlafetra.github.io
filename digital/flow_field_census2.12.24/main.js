@@ -11,17 +11,23 @@ let tractOutlines;
 let idBuffer;
 let ids;
 
+
+//Presets
 let whiteComparisonPreset;
 let blackComparisonPreset;
 let asianComparisonPreset;
 let whiteProportionComparisonPreset;
 let blackProportionComparisonPreset;
 let asianProportionComparisonPreset;
+let whiteRatioPreset;
+let blackRatioPreset;
+let asianRatioPreset;
+
 
 let presets;
 
 //20 is a good base number
-const NUMBER_OF_ATTRACTORS = 200;
+let NUMBER_OF_ATTRACTORS = 300;
 
 const NUMBER_OF_FIELDS = 1;
 const forceScale = 100.0;
@@ -79,10 +85,6 @@ function saveFlowField(){
 function saveChoropleth(){
     saveCanvas(flowField.mapTexture, 'choropleth.png','png');
 }
-function logAttractors(){
-    console.log(JSON.stringify(flowField.attractors));
-    console.log(JSON.stringify(flowField.repulsors));
-}
 function saveMask(){
     saveCanvas(flowField.particleMask, 'flowFieldMask.png','png');
 }
@@ -100,6 +102,7 @@ function loadPresetMaps(){
     presetChoropleths.push(loadImage('data/Prerendered/preset2.png'));
     presetFlowMask = loadImage("data/Prerendered/flowFieldMask.png");
     tractOutlines = loadImage("data/Prerendered/tractOutlines.png");
+    holcTexture = loadImage("data/Prerendered/HOLC_Red.png");
 }
 
 function preload(){
@@ -125,25 +128,40 @@ function randomColor(){
 function setup_DevMode(){
 
     //Preset color/flows
+    // whiteComparisonPreset = new DemographicVis("Change in White Population",
+    //                                         "P<sub>White 2000</sub> / P<sub>White 2020</sub>",colorStyle_whiteComparison2020_2000,whitePeopleComparedTo2000);
+    // blackComparisonPreset = new DemographicVis("Change in Black Population",
+    //                                         "P<sub>Black 2000</sub> / P<sub>Black 2020</sub>",colorStyle_blackComparison2020_2000,blackPeopleComparedTo2000);
+    // asianComparisonPreset = new DemographicVis("Change in Asian Population",
+    //                                         "P<sub>Asian 2000</sub> / P<sub>Asian 2020</sub>",colorStyle_asianComparison2020_2000,asianPeopleComparedTo2000);
     whiteComparisonPreset = new DemographicVis("Change in White Population",
-                                            "P<sub>White 2000</sub> / P<sub>White 2020</sub>",colorStyle_whiteComparison2020_2000,whitePeopleComparedTo2000);
+                                            "P<sub>White 2020</sub> - P<sub>White 2000</sub>",colorStyle_whiteComparison2020_2000,whitePeopleChange);
     blackComparisonPreset = new DemographicVis("Change in Black Population",
-                                            "P<sub>Black 2000</sub> / P<sub>Black 2020</sub>",colorStyle_blackComparison2020_2000,blackPeopleComparedTo2000);
+                                                "P<sub>Black 2020</sub> - P<sub>Black 2000</sub>",colorStyle_blackComparison2020_2000,blackPeopleChange);
     asianComparisonPreset = new DemographicVis("Change in Asian Population",
-                                            "P<sub>Asian 2000</sub> / P<sub>Asian 2020</sub>",colorStyle_asianComparison2020_2000,asianPeopleComparedTo2000);
-    whiteProportionComparisonPreset = new DemographicVis("Change In Proportion of White Population",
-                                            "P<sub>White 2000</sub> / P<sub>Total 2000</sub> - P<sub>White 2020</sub> / P<sub>Total 2020</sub>",colorStyle_whiteRatioComparison,mostWhiteChange);
-    blackProportionComparisonPreset = new DemographicVis("Change In Proportion of Black Population",
-                                            "P<sub>Black 2000</sub> / P<sub>Total 2000</sub> - P<sub>Black 2020</sub> / P<sub>Total 2020</sub>",colorStyle_blackRatioComparison,mostBlackChange);
-    asianProportionComparisonPreset = new DemographicVis("Change In Proportion of Asian Population",
-                                            "P<sub>Asian 2000</sub> / P<sub>Total 2000</sub> - P<sub>Asian 2020</sub> / P<sub>Total 2020</sub>",colorStyle_asianRatioComparison,mostAsianChange);
+                                                "P<sub>Asian 2020</sub> - P<sub>Asian 2000</sub>",colorStyle_asianComparison2020_2000,asianPeopleChange);
+    whiteProportionComparisonPreset = new DemographicVis("Change In Proportion of Population Identifying as White",
+                                            "P<sub>White 2000</sub> / P<sub>Total 2000</sub> - P<sub>White 2020</sub> / P<sub>Total 2020</sub>",colorStyle_whiteRatioComparison,proportionalWhiteChange);
+    blackProportionComparisonPreset = new DemographicVis("Change In Proportion of Population Identifying as Black",
+                                            "P<sub>Black 2000</sub> / P<sub>Total 2000</sub> - P<sub>Black 2020</sub> / P<sub>Total 2020</sub>",colorStyle_blackRatioComparison,proportionalBlackChange);
+    asianProportionComparisonPreset = new DemographicVis("Change In Proportion of Population Identifying as Asian",
+                                            "P<sub>Asian 2000</sub> / P<sub>Total 2000</sub> - P<sub>Asian 2020</sub> / P<sub>Total 2020</sub>",colorStyle_asianRatioComparison,proportionalAsianChange);
+    whiteRatioPreset = new DemographicVis("Ratio of Proportions of Population Identifying as White",
+                                            "(P<sub>White 2000</sub> / P<sub>Total 2000</sub>) / (P<sub>White 2020</sub> / P<sub>Total 2020</sub>)",colorStyle_whiteRatioComparison,ratioWhiteChange);
+    blackRatioPreset = new DemographicVis("Ratio of Proportions of Population Identifying as Black",
+                                            "(P<sub>Black 2000</sub> / P<sub>Total 2000</sub>) / (P<sub>Black 2020</sub> / P<sub>Total 2020</sub>)",colorStyle_blackRatioComparison,ratioBlackChange);
+    asianRatioPreset = new DemographicVis("Ratio of Proportions of Population Identifying as Asian",
+                                            "(P<sub>Asian 2000</sub> / P<sub>Total 2000</sub>) / (P<sub>Asian 2020</sub> / P<sub>Total 2020</sub>)",colorStyle_asianRatioComparison,ratioAsianChange);
     presets = [
+        whiteProportionComparisonPreset,
+        blackProportionComparisonPreset,
+        asianProportionComparisonPreset,
         whiteComparisonPreset,
         blackComparisonPreset,
         asianComparisonPreset,
-        whiteProportionComparisonPreset,
-        blackProportionComparisonPreset,
-        asianProportionComparisonPreset
+        whiteRatioPreset,
+        blackRatioPreset,
+        asianRatioPreset
     ];
 
     //parsing data and attaching it to tract geometry
@@ -169,6 +187,8 @@ function setup_DevMode(){
     renderTractOutlines(geoOffset,color(255));
     tractOutlines.end();
 
+    holcTexture = createFramebuffer(width,height);
+
     holcTexture.begin();
     renderHOLCTracts(geoOffset,oakHolcTracts);
     renderHOLCTracts(geoOffset,sfHolcTracts);
@@ -180,31 +200,40 @@ function setup_DevMode(){
     background(0,255);
     renderTracts(geoOffset,() => {fill(255,255,255)});
     mask.end();
+
     flowField = new FlowField(mask,0,null,randomColor());
     flowField.calculateAttractors(NUMBER_OF_ATTRACTORS);
 }
 
 function setup_Prerendered(){
     whiteComparisonPreset = new Preset("Change in White Population",
-                                            "P<sub>White 2000</sub> / P<sub>White 2020</sub>",0,preset0Attractors,preset0Repulsors);
+                                            "P<sub>White 2000</sub> - P<sub>White 2020</sub>",0,preset0Attractors,preset0Repulsors);
     blackComparisonPreset = new Preset("Change in Black Population",
-                                            "P<sub>Black 2000</sub> / P<sub>Black 2020</sub>",1,preset1Attractors,preset1Repulsors);
+                                            "P<sub>Black 2000</sub> - P<sub>Black 2020</sub>",1,preset1Attractors,preset1Repulsors);
     asianComparisonPreset = new Preset("Change in Asian Population",
-                                            "P<sub>Asian 2000</sub> / P<sub>Asian 2020</sub>",2,preset2Attractors,preset2Repulsors);
-    whiteProportionComparisonPreset = new Preset("Change In Proportion of White Population",
+                                            "P<sub>Asian 2000</sub> - P<sub>Asian 2020</sub>",2,preset2Attractors,preset2Repulsors);
+    whiteProportionComparisonPreset = new Preset("Change In Proportion of Population Identifying as White",
                                             "P<sub>White 2000</sub> / P<sub>Total 2000</sub> - P<sub>White 2020</sub> / P<sub>Total 2020</sub>",3,preset3Attractors,preset3Repulsors);
-    blackProportionComparisonPreset = new Preset("Change In Proportion of Black Population",
+    blackProportionComparisonPreset = new Preset("Change In Proportion of Population Identifying as Black",
                                             "P<sub>Black 2000</sub> / P<sub>Total 2000</sub> - P<sub>Black 2020</sub> / P<sub>Total 2020</sub>",4,preset4Attractors,preset4Repulsors);
-    asianProportionComparisonPreset = new Preset("Change In Proportion of Asian Population",
+    asianProportionComparisonPreset = new Preset("Change In Proportion of Population Identifying as Asian",
                                             "P<sub>Asian 2000</sub> / P<sub>Total 2000</sub> - P<sub>Asian 2020</sub> / P<sub>Total 2020</sub>",5,preset5Attractors,preset5Repulsors);
-
+    whiteRatioPreset = new Preset("Ratio of Proportions of Population Identifying as White",
+                                            "(P<sub>White 2000</sub> / P<sub>Total 2000</sub>) / (P<sub>White 2020</sub> / P<sub>Total 2020</sub>)",preset6Attractors,preset6Repulsors);
+    blackRatioPreset = new Preset("Ratio of Proportions of Population Identifying as Black",
+                                            "(P<sub>Black 2000</sub> / P<sub>Total 2000</sub>) / (P<sub>Black 2020</sub> / P<sub>Total 2020</sub>)",preset7Attractors,preset7Repulsors);
+    asianRatioPreset = new Preset("Ratio of Proportions of Population Identifying as Asian",
+                                            "(P<sub>Asian 2000</sub> / P<sub>Total 2000</sub>) / (P<sub>Asian 2020</sub> / P<sub>Total 2020</sub>)",preset8Attractors,preset8Repulsors);
     presets = [
-        whiteComparisonPreset, 
-        blackComparisonPreset,
-        asianComparisonPreset,
         whiteProportionComparisonPreset,
         blackProportionComparisonPreset,
-        asianProportionComparisonPreset
+        asianProportionComparisonPreset,
+        whiteComparisonPreset,
+        blackComparisonPreset,
+        asianComparisonPreset,
+        whiteRatioPreset,
+        blackRatioPreset,
+        asianRatioPreset
     ];
 
     //creating map mask
@@ -214,8 +243,20 @@ function setup_Prerendered(){
     flowField = new FlowField(mask,0,presetChoropleths[0],randomColor());
 }
 
-function setup(){
+function logPresets(){
+    let i = 0;
+    let bigString;
+    for(let preset of presets){
+        let a = getSignificantPoints(NUMBER_OF_ATTRACTORS,preset.demographicFunction);
+        let r = getLeastSignificantPoints(NUMBER_OF_ATTRACTORS,preset.demographicFunction);
+        bigString += "\nconst preset"+i+"Attractors = "+JSON.stringify(a)+";";
+        bigString += "\nconst preset"+i+"Repulsors = "+JSON.stringify(r)+";";
+        i++;
+    }
+    console.log(bigString);
+}
 
+function setup(){
     //create canvas and grab webGL context
     // setAttributes('antialias',false);
     // pixelDensity(1);
@@ -225,7 +266,6 @@ function setup(){
     randomShader = createShader(defaultVert,randomFrag);
 
     // saveTable(data2000,'CONVERTED_Tracts_by_Race_2000.csv');
-    holcTexture = createFramebuffer(width,height);
     mask = createFramebuffer({width:width,height:height});
     particleLayer = createFramebuffer();
 
