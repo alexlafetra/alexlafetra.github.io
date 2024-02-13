@@ -794,7 +794,7 @@ function getBottomNTracts(n,func){
 function getSignificantPoints(n,func){
     let tracts = getTopNTracts(n,func);
     let points = [];
-    for(let i = 0; i<n; i++){
+    for(let i = 0; i<min(n,tracts.length); i++){
         let point = {
             x:((tracts[i].centroid.x+geoOffset.x)*scale.x+offset.x)/width+0.5,
             y:((tracts[i].centroid.y+geoOffset.y)*scale.y+offset.y)/height+0.5,

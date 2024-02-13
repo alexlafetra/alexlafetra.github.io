@@ -2,15 +2,17 @@
 
 /* eslint no-alert: 0 */
 
+glsl => ();
+
 function main() {
-  const updatePositionVS = `
+  const updatePositionVS = glsl`
   attribute vec4 position;
   void main() {
     gl_Position = position;
   }
   `;
 
-  const updatePositionFS = `
+  const updatePositionFS = glsl`
   precision highp float;
 
   uniform sampler2D positionTex;
@@ -44,7 +46,7 @@ function main() {
   }
   `;
 
-  const drawParticlesVS = `
+  const drawParticlesVS = glsl`
   attribute float id;
   uniform sampler2D positionTex;
   uniform vec2 texDimensions;
@@ -67,7 +69,7 @@ function main() {
   }
   `;
 
-  const drawParticlesFS = `
+  const drawParticlesFS = glsl`
   precision highp float;
   void main() {
     gl_FragColor = vec4(1, 0, 0, 1);

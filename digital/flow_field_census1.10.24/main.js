@@ -20,7 +20,9 @@ let asianProportionComparisonPreset;
 
 let presets;
 
-const NUMBER_OF_ATTRACTORS = 20;
+//20 is a good base number
+const NUMBER_OF_ATTRACTORS = 300;
+
 const NUMBER_OF_FIELDS = 3;
 const forceScale = 100.0;
 

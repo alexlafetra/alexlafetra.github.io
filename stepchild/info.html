@@ -50,17 +50,18 @@
         display:grid;
         color:blue;
         grid-template-columns: 250px auto;
-        grid-template-rows: 130px auto auto;
-        grid-template-areas: 'title instruments'
+        grid-template-rows: 130px 80px auto auto auto;
+        grid-template-areas: 'title image'
+                            'connectivity image'
                             'connectivity sequence' 
-                            'hardware power';
+                            'hardware power'
+                            'instruments test';
         ">
         <!-- color calculated using: https://codepen.io/sosuke/pen/Pjoqqp -->
-        <div style = "z-index:0;width:100%;position:absolute;bottom:0px;top:0;left:0;filter: invert(26%) sepia(83%) saturate(6890%) hue-rotate(243deg) brightness(280%) contrast(101%);">
-            <img src = "images/Exploded View.svg" style = "width:1000px;max-height:100%;">
+        <div style = "z-index:0;width:100%;position:absolute;bottom:0px;top:0;left:0;">
+            <!-- <img src = "images/exploded_view_front.svg" style = "width:200px;grid-area:image;"> -->
         </div>
-        <!-- <img src = "images/dof_1.png" style = "grid-area:image; height:400px;"> -->
-        <!-- <main style = "grid-area:image;"></main> -->
+        <img src = "images/explode1.png" style = "height:200px;grid-area:image">
         <span class = "info_header" style = "grid-area:title;line-height:100%;">Technical Specs</span>
         <div style = "grid-area:connectivity;">
             <span class = "info_subheader">Connectivity</span>
