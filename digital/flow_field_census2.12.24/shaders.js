@@ -326,6 +326,10 @@ void main(){
     repulsion/=`+NUMBER_OF_ATTRACTORS+glsl`.0;
     //Storing both attraction and repulsion in the same texture
     gl_FragColor = vec4(attraction.x,attraction.y,repulsion.x,repulsion.y);
+
+    // gl_FragColor = vec4(attraction.x,attraction.y,repulsion.x,0.5*(repulsion.y+2.0));
+    //^^ use this one if you want to render it to a texture! prevents alpha channnel from clipping
+
 }
 `;
 

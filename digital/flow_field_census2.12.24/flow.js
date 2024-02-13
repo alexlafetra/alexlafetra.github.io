@@ -144,7 +144,7 @@ class FlowField{
         this.particleSizeSlider = new GuiSlider(0,20.0,this.pointSize,0.1,"Size",this.controlPanel);
         this.maskParticlesCheckbox = new GuiCheckbox("Mask Off Oceans",this.maskParticles,this.controlPanel);
         this.showTractsCheckbox = new GuiCheckbox("Show Tract Boundaries",false,this.controlPanel);
-        this.showFlowCheckbox = new GuiCheckbox("Show Flow field",true,this.controlPanel);
+        this.showFlowCheckbox = new GuiCheckbox("Show Flow Field",false,this.controlPanel);
         this.showMapCheckbox = new GuiCheckbox("Show Map",false,this.controlPanel);
         this.colorCheckbox = new GuiCheckbox("Uniform Particle Color",false,this.controlPanel);
         this.activeCheckbox = new GuiCheckbox("Simulate",this.isActive,this.controlPanel);
@@ -258,18 +258,14 @@ class FlowField{
     }
     renderGL(){
         if(this.showFlowCheckbox.value()){
-            image(this.flowFieldTexture,0,-height/2,this.size,this.size);
-            // image(this.attractionTexture,0,-height/2,this.size/2,this.size/2);
-            // image(this.repulsionTexture,this.size/2,-height/2,this.size/2,this.size/2);
+            image(this.flowFieldTexture,-height/2,-height/2,width,height);
         }
         if(this.showTractsCheckbox.value()){
-            this.renderTractBoundaries(-width/2);
+            image(tractOutlines,-width/2,-height/2,width,height);
         }
         this.trailLayer.begin();
-        // image(this.trailBuffer,-this.trailBuffer.width/2,-this.trailBuffer.height/2,this.trailBuffer.width,this.trailBuffer.height);
         //fade the trails
         background(0,this.trailDecayValue*255.0);
-        // background(255,0);
 
         //setting ID attributes (or trying to at least)
         gl.bindBuffer(gl.ARRAY_BUFFER, idBuffer);
@@ -300,15 +296,12 @@ class FlowField{
         this.trailLayer.end();
         if(this.showMapCheckbox.value())
             image(this.mapTexture,-width/2,-height/2,width/2,height);
-        image(this.trailLayer,-width/2,-height/2,width/2,height);
+        image(this.trailLayer,-width/2,-height/2,width,height);
     }
     renderData(){
         image(this.velTexture,-width/2,-height/2,width/8,height/8);
         image(this.uPositionTexture,-3*width/8,-height/2,width/8,height/8);
         image(this.flowFieldTexture,-width/4,-height/2,width/8,height/8);
-    }
-    renderTractBoundaries(x){
-        image(tractOutlines,x,-height/2,this.size,this.size);
     }
     updateParticles(){
         this.updateAge();
@@ -316,29 +309,30 @@ class FlowField{
         this.updateVel();
     }
     calculateAttractors(n){
-        this.attractors = [];
-        this.repulsors = [];
         //you need to make sure these don't return any points with infinite strength!
         //This can happen where there are '0' people in a tract and you're dividing by that pop number
         //And it messes up the relative scaling
         let a = getSignificantPoints(n,presets[this.presetIndex].demographicFunction);
         let r = getLeastSignificantPoints(n,presets[this.presetIndex].demographicFunction);
-        // console.log(JSON.stringify(a));
-        // console.log(JSON.stringify(r));
         this.calcPoints(a,r);
 
     }
     logFlowFieldData(){
-        let a = getSignificantPoints(n,presets[this.presetIndex].demographicFunction);
-        let r = getLeastSignificantPoints(n,presets[this.presetIndex].demographicFunction);
+        let a = getSignificantPoints(NUMBER_OF_ATTRACTORS,presets[this.presetIndex].demographicFunction);
+        let r = getLeastSignificantPoints(NUMBER_OF_ATTRACTORS,presets[this.presetIndex].demographicFunction);
         console.log(JSON.stringify(a));
         console.log(JSON.stringify(r));
-
+    }
+    saveFFImage(){
+        saveCanvas(this.flowFieldTexture,"flowField.png","png");
     }
     setPresetAttractors(){
         this.calcPoints(presets[this.presetIndex].attractors,presets[this.presetIndex].repulsors);
     }
     calcPoints(a,r){
+        this.attractors = [];
+        this.repulsors = [];
+
         let minR = r[0].strength;
         let maxR = r[r.length-1].strength;
 

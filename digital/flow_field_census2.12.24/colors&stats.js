@@ -122,10 +122,9 @@ function mostWhiteChange(tract){
     return (tract.data2020.obj.White/tract.data2020.obj.Total)/(tract.data2000.obj.White/tract.data2000.obj.Total);
  }
  function mostBlackChange(tract){
-    if(!tract.data2020.obj.Total || !tract.data2000.obj.Black || !tract.data2000.obj.Total){
-        return forceScale;
-    }
     let val = (tract.data2020.obj.Black/tract.data2020.obj.Total)/(tract.data2000.obj.Black/tract.data2000.obj.Total);
+    if(val == Infinity)
+        return forceScale;
     return val;
  }
  function mostAsianChange(tract){
@@ -135,7 +134,7 @@ function mostWhiteChange(tract){
      return tract.data2020.obj.White/tract.data2000.obj.White;
  }
  function blackPeopleComparedTo2000(tract){
-    if(tract.data2000.obj.Black == 0){
+    if(!tract.data2000.obj.Black){
         return forceScale;
     }
      return tract.data2020.obj.Black/tract.data2000.obj.Black;
