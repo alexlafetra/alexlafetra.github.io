@@ -14,10 +14,10 @@
     body {
       height:100%;
       padding: 0;
-      margin: 0;
-      display:flex;
-      justify-content: center;
-      align-items: center;
+      /* margin: 0; */
+      /* display:flex; */
+      /* justify-content: center; */
+      /* align-items: center; */
     }
     #gui{
       /* width:fit-content; */
@@ -54,17 +54,31 @@
     .gui_select{
       width:fit-content;
     }
+    .title{
+      font-family: Arial, Helvetica, sans-serif;
+      font-size:34px;
+      font-weight:bolder;
+      color:rgb(50,50,50);
+    }
   </style>
 </head>
 
 <body>
-  <div>
+  <div style = "width:80%; max-width:1000px;margin:auto">
+    <!-- <div class = "title">
+      Visualizing Gentrification with Flow Fields
+    </div>
+    <div class = "body_text">
+      <p>This project started </p>
+    </div> -->
+    <div id = "app" style = "display:flex;">
+      <main></main>
+      <div id = "gui">
+        <!-- <img src = "data/Prerendered/render_animated.gif" width = "300px;" height = "300px;"> -->
+      </div>
+    </div>
+  </div>
 
-  </div>
-  <main>
-  </main>
-  <div id = "gui">
-  </div>
 </body>
   <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
   <script language="javascript" type="text/javascript" src="libraries/p5.min.js"></script>
