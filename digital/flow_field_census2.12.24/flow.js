@@ -55,8 +55,6 @@ class FlowField{
         this.velDampValue = 0.001;
         this.forceStrength = 0.05;
         this.randomAmount = 1.0;
-        this.particleColor = c;
-
         this.repulsionStrength = 2.0;
         this.attractionStrength = 2.0;
 
@@ -92,9 +90,10 @@ class FlowField{
         this.velTextureBuffer = createFramebuffer({width:dataTextureDimension,height:dataTextureDimension,format:FLOAT,textureFiltering:NEAREST});
         this.flowFieldTexture = createFramebuffer({width:this.size,height:this.size,format:FLOAT,textureFiltering:NEAREST});
         this.trailLayer = createFramebuffer({width:this.size,height:this.size,format:FLOAT});
-        this.trailBuffer = createFramebuffer({width:this.size,height:this.size,format:FLOAT});
 
         this.particleMask = mask;
+        this.repulsionColor = color(20,0,180);
+        this.attractionColor = color(255,0,120);
 
         //if the ff isn't passed a map texture, make it's own
         this.mapTexture = createFramebuffer(this.size,this.size);
@@ -129,8 +128,10 @@ class FlowField{
         this.chartEquation.addClass('chart_attractor_equation');
         this.chartEquation.parent(this.controlPanel);
 
-        this.colorPicker = createColorPicker(this.particleColor);
-        this.colorPicker.parent(this.controlPanel);
+        this.repulsionColorPicker = createColorPicker(this.repulsionColor);
+        this.repulsionColorPicker.parent(this.controlPanel);
+        this.attractionColorPicker = createColorPicker(this.attractionColor);
+        this.attractionColorPicker.parent(this.controlPanel);
 
         this.dampValueSlider = new GuiSlider(0.001,0.02, this.velDampValue,0.001,"Damping",this.controlPanel);
         this.randomValueSlider = new GuiSlider(0,10, this.randomAmount,0.01,"Drift",this.controlPanel);
@@ -144,8 +145,6 @@ class FlowField{
         this.showFlowCheckbox = new GuiCheckbox("Show Flow Field",false,this.controlPanel);
         this.showMapCheckbox = new GuiCheckbox("Show Map",false,this.controlPanel);
         this.showHOLCCheckbox = new GuiCheckbox("Show HOLC Tracts",false,this.controlPanel);
-
-        this.colorCheckbox = new GuiCheckbox("Uniform Particle Color",false,this.controlPanel);
         this.activeCheckbox = new GuiCheckbox("Simulate",this.isActive,this.controlPanel);
         this.flowFieldSelector = new FlowFieldSelector(presets,this.presetIndex,"Demographic Data",true,this.controlPanel);
 
@@ -153,7 +152,8 @@ class FlowField{
         this.controlPanel.parent(gui);
     }
     updateParametersFromGui(){
-        this.particleColor = color(this.colorPicker.value());
+        this.repulsionColor = color(this.repulsionColorPicker.value());
+        this.attractionColor = color(this.attractionColorPicker.value());
         this.velDampValue = this.dampValueSlider.value();
         this.particleCount = this.particleSlider.value();
         this.trailDecayValue = this.decaySlider.value();
@@ -257,6 +257,7 @@ class FlowField{
             fill(0);
             rect(-height/2,-width/2,height,width);
             image(this.flowFieldTexture,-height/2,-height/2,width,height);
+            return;
         }
         if(this.showTractsCheckbox.value()){
             image(tractOutlines,-width/2,-height/2,width,height);
@@ -289,8 +290,8 @@ class FlowField{
         shader(this.pointShader);
         this.pointShader.setUniform('uPositionTexture',this.uPositionTexture);
         this.pointShader.setUniform('uColorTexture',this.flowFieldTexture);
-        this.pointShader.setUniform('uParticleColor',[this.particleColor._array[0],this.particleColor._array[1],this.particleColor._array[2],1.0]);
-        this.pointShader.setUniform('uColorByTexture',!this.colorCheckbox.value());
+        this.pointShader.setUniform('uRepulsionColor',[this.repulsionColor._array[0],this.repulsionColor._array[1],this.repulsionColor._array[2],1.0]);
+        this.pointShader.setUniform('uAttractionColor',[this.attractionColor._array[0],this.attractionColor._array[1],this.attractionColor._array[2],1.0]);
         this.pointShader.setUniform('uTextureDimensions',[dataTextureDimension,dataTextureDimension]);
         this.pointShader.setUniform('uParticleSize',this.pointSize);
         gl.drawArrays(gl.POINTS,0,this.particleCount);

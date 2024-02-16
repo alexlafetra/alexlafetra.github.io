@@ -154,6 +154,7 @@ uniform sampler2D uParticleVelTexture;
 uniform sampler2D uParticlePosTexture;
 uniform sampler2D uParticleAgeTexture;
 uniform sampler2D uParticleMask;
+uniform sampler2D uParticleBirthLocations;
 
 uniform float uDamp;
 uniform float uRandomScale;
@@ -176,10 +177,12 @@ void main(){
 
     //checking the age of the particle
     vec4 textureAge = texture2D(uParticleAgeTexture,vParticleCoord);
+    bool died = false;
     //if it's too old, put it somewhere random (within the mask) and return
     if(textureAge.x > uAgeLimit){
         texturePosition.x = random(texturePosition.xy);
         texturePosition.y = random(texturePosition.xy);
+        died = true;
     }
 
     //getting the velocity
@@ -198,6 +201,7 @@ void main(){
             //try to place the particle 100 times
             for(int i = 0; i<100; i++){
                 vec2 replacementPos = vec2(random(vParticleCoord*uTime),random(vParticleCoord/uTime));
+                // val = texture2D(uParticleMask,replacementPos).x;
                 val = texture2D(uParticleMask,replacementPos).x;
                 if(val>0.5){
                     gl_FragColor = vec4(replacementPos.xy,1.0,1.0);
@@ -244,16 +248,45 @@ void main() {
 const drawParticlesFS = glsl`
 precision highp float;
 varying vec4 vColor;
-uniform vec4 uParticleColor;
-uniform bool uColorByTexture;
+
+uniform vec4 uRepulsionColor;
+uniform vec4 uAttractionColor;
 void main() {
-    if(uColorByTexture){
-        //recombine flowfield color channels into red/blue brightness
-        gl_FragColor = vec4(length(vec2(vColor.x,vColor.y))/4.0+0.2,0.0,length(vec2(vColor.z,vColor.w))/2.0+0.2,1.0);
+    float valA = length(vec2(vColor.x,vColor.y));
+    float valR = length(vec2(vColor.z,vColor.w));
+    // float val = (valA/valR)/2.0;
+    float val = (valA-valR)+valR/2.0;
+    gl_FragColor = mix(uRepulsionColor,uAttractionColor,val);
+
+    //recombine flowfield color channels into red/blue brightness
+    // gl_FragColor = vec4(length(vec2(vColor.x,vColor.y))/4.0+0.2,0.0,length(vec2(vColor.z,vColor.w))/2.0+0.2,1.0);
+}
+`;
+
+//Creating the flow field from a series of points
+const repulsorDistanceFrag = glsl`
+precision mediump float;
+
+varying vec2 vTexCoord;
+
+uniform vec3 uRepulsors[`+NUMBER_OF_ATTRACTORS+glsl`];
+
+// uniform float uThreshold;
+
+void main(){
+    float repulsion = 0.0;
+    float threshold = 80.0;
+    //calculate attractors/repulsors
+    for(int i = 0; i<`+NUMBER_OF_ATTRACTORS+glsl`; i++){
+        float dR = distance(uRepulsors[i].xy,vTexCoord);
+        // repulsion+=uRepulsors[i].z/(dR*dR);
+        repulsion+=1.0/(dR*dR);
     }
-    else{
-        gl_FragColor = uParticleColor;
-    }
+    repulsion/=`+NUMBER_OF_ATTRACTORS+glsl`.0;
+    if(repulsion > threshold)
+        gl_FragColor = vec4(1.0);
+    else
+        gl_FragColor = vec4(0.0,0.0,0.0,1.0);
 }
 `;
 
