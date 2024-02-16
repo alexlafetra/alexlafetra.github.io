@@ -23,23 +23,12 @@ let whiteRatioPreset;
 let blackRatioPreset;
 let asianRatioPreset;
 
-
 let presets;
 
 //20 is a good base number
 let NUMBER_OF_ATTRACTORS = 300;
 
 const NUMBER_OF_FIELDS = 1;
-const forceScale = 100.0;
-
-let showingMap = false;
-let showingTractOutlines = false;
-let showHOLCTracts = false;
-let showParticles = true;
-let showFlowMap = false;
-
-let particleLayer;
-
 //controls whether or not the sim will load with prerendered data/choropleths
 //or with the full dataset, allowing you to explore/experiment
 // const devMode = true;
@@ -260,14 +249,13 @@ function setup(){
     //create canvas and grab webGL context
     // setAttributes('antialias',false);
     // pixelDensity(1);
-    mainCanvas = createCanvas(800,800,WEBGL);
+    mainCanvas = createCanvas(500,500,WEBGL);
     gl = mainCanvas.GL;
 
     randomShader = createShader(defaultVert,randomFrag);
 
     // saveTable(data2000,'CONVERTED_Tracts_by_Race_2000.csv');
     mask = createFramebuffer({width:width,height:height});
-    particleLayer = createFramebuffer();
 
     if(devMode)
         setup_DevMode();
@@ -286,19 +274,9 @@ function renderFlowFields(){
 }
 
 function draw(){
-    // noStroke();
-    // background(0,0);
-    // image(flowField.flowFieldTexture,-width/2,-height/2,width,height);
     flowField.updateParametersFromGui();
     if(flowField.isActive){
         flowField.updateParticles();
         flowField.renderGL();
     }
-    else{
-        background(0,0);
-        image(tractOutlines,-width/2,-height/2,width,height);
-    }
-    // if(showHOLCTracts){
-    //     image(holcTexture,-width/2,-height/2,width,height);
-    // }
 }

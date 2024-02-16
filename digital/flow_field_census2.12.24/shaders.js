@@ -154,14 +154,12 @@ uniform sampler2D uParticleVelTexture;
 uniform sampler2D uParticlePosTexture;
 uniform sampler2D uParticleAgeTexture;
 uniform sampler2D uParticleMask;
-uniform sampler2D uParticleBirthLocations;
 
 uniform float uDamp;
 uniform float uRandomScale;
 uniform float uTime;
 uniform float uAgeLimit;
 uniform bool uUseMaskTexture;
-uniform bool uNormalizeVelocity;
 
 varying vec2 vParticleCoord;
 
@@ -254,12 +252,8 @@ uniform vec4 uAttractionColor;
 void main() {
     float valA = length(vec2(vColor.x,vColor.y));
     float valR = length(vec2(vColor.z,vColor.w));
-    // float val = (valA/valR)/2.0;
     float val = (valA-valR)+valR/2.0;
     gl_FragColor = mix(uRepulsionColor,uAttractionColor,val);
-
-    //recombine flowfield color channels into red/blue brightness
-    // gl_FragColor = vec4(length(vec2(vColor.x,vColor.y))/4.0+0.2,0.0,length(vec2(vColor.z,vColor.w))/2.0+0.2,1.0);
 }
 `;
 

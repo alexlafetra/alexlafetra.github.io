@@ -3,20 +3,6 @@ let randomShader;
 let drawParticlesProgram;
 let drawParticlesProgLocs;
 
-/* PRESERVING MY CONFUSION FOR POSTERITY:
-//I think my GL context is getting weirdly changed by the other shader draw calls
-//I should try doing this in an isolated gl context, but i might have to specifically set it
-//For 1 frame it draws the correct data... but then it's all messed up
-//it seems to be drawing velocity and age data, depending on which is updated most recently
-//The points are also colored correctly according to their ~incorrect~ positions, ie they're colored accurate
-//to how they're displayed onscreen.
-//This makes me think somehow the call to the position texture is what's getting messed up
-//Maybe it's because you're using two different glsl languages? ES 100 and ES 300?
-//okay, even weirder: the frag shader seems to be getting the right texture data (when coloring the pixels by texture)
-
---> basically, yeah. I needed to explicitly bind the new texture to the webGL renderer.
-*/
-
 function initGL(){
     drawParticlesProgram = webglUtils.createProgramFromSources(
         gl, [drawParticlesVS, drawParticlesFS]);
@@ -48,25 +34,22 @@ class FlowField{
     constructor(mask,presetIndex,map,c){
         //Parameters
         this.particleCount = 40000;
-        this.trailDecayValue = 0.08;
-        this.pointSize = 2.0;
+        this.trailDecayValue = 0.04;
+        this.pointSize = 1.0;
         this.opacity = 200;
         this.particleAgeLimit = 150;
         this.velDampValue = 0.001;
         this.forceStrength = 0.05;
         this.randomAmount = 1.0;
-        this.repulsionStrength = 2.0;
-        this.attractionStrength = 2.0;
+        this.repulsionStrength = 3.0;
+        this.attractionStrength = 3.0;
 
         this.x = 0;
         this.size = height;
 
-        this.backgroundColor = {r:0,g:0,b:0};
-
         this.presetIndex = presetIndex;
 
         this.maskParticles = true;
-        this.normalizeVelocity = false;
 
         this.isActive = true;
 
@@ -139,7 +122,7 @@ class FlowField{
         this.repulsionStrengthSlider = new GuiSlider(0,10.0,this.repulsionStrength,0.001,"Repulsion Strength",this.controlPanel);
         this.particleSlider = new GuiSlider(1,dataTextureDimension*dataTextureDimension,this.particleCount,1,"Particles",this.controlPanel);
         this.decaySlider = new GuiSlider(0.0001,0.2,this.trailDecayValue,0.0001,"decay",this.controlPanel);
-        this.particleSizeSlider = new GuiSlider(0,20.0,this.pointSize,0.1,"Size",this.controlPanel);
+        this.particleSizeSlider = new GuiSlider(0,10.0,this.pointSize,0.1,"Size",this.controlPanel);
         this.maskParticlesCheckbox = new GuiCheckbox("Mask Off Oceans",this.maskParticles,this.controlPanel);
         this.showTractsCheckbox = new GuiCheckbox("Show Tract Boundaries",false,this.controlPanel);
         this.showFlowCheckbox = new GuiCheckbox("Show Flow Field",false,this.controlPanel);
@@ -147,8 +130,6 @@ class FlowField{
         this.showHOLCCheckbox = new GuiCheckbox("Show HOLC Tracts",false,this.controlPanel);
         this.activeCheckbox = new GuiCheckbox("Simulate",this.isActive,this.controlPanel);
         this.flowFieldSelector = new FlowFieldSelector(presets,this.presetIndex,"Demographic Data",true,this.controlPanel);
-
-        this.reRenderFlowFieldButton = new GuiButton("Remake Flowfield",() => {this.updateFlow();},this.controlPanel);
         this.controlPanel.parent(gui);
     }
     updateParametersFromGui(){
@@ -200,6 +181,7 @@ class FlowField{
         this.flowShader.setUniform('uRepulsors',this.repulsors);
         this.flowShader.setUniform('uAttractionStrength',this.attractionStrength);
         this.flowShader.setUniform('uRepulsionStrength',this.repulsionStrength);
+        // quad(-1,-1,1,-1,1,1,-1,1);//upside down bc the textures get flipped
         rect(-this.flowFieldTexture.width/2,-this.flowFieldTexture.height/2,this.flowFieldTexture.width,this.flowFieldTexture.height);
         this.flowFieldTexture.end();
     }
@@ -216,7 +198,6 @@ class FlowField{
         this.updatePositionShader.setUniform('uParticleTrailTexture',this.trailLayer);
         this.updatePositionShader.setUniform('uParticleMask',this.particleMask);
         this.updatePositionShader.setUniform('uUseMaskTexture',this.maskParticles);
-        this.updatePositionShader.setUniform('uNormalizeVelocity',this.normalizeVelocity);
         quad(-1,-1,1,-1,1,1,-1,1);//upside down bc the textures get flipped
         this.uPositionTextureBuffer.end();
         [this.uPositionTexture,this.uPositionTextureBuffer] = [this.uPositionTextureBuffer,this.uPositionTexture];
@@ -253,12 +234,6 @@ class FlowField{
         fillFBOwithRandom(this.velTextureBuffer,1.0,r2);
     }
     renderGL(){
-        if(this.showFlowCheckbox.value()){
-            fill(0);
-            rect(-height/2,-width/2,height,width);
-            image(this.flowFieldTexture,-height/2,-height/2,width,height);
-            return;
-        }
         if(this.showTractsCheckbox.value()){
             image(tractOutlines,-width/2,-height/2,width,height);
         }
@@ -298,6 +273,11 @@ class FlowField{
         this.trailLayer.end();
         if(this.showMapCheckbox.value())
             image(this.mapTexture,-width/2,-height/2,width ,height);
+        if(this.showFlowCheckbox.value()){
+            fill(0);
+            rect(-height/2,-width/2,height,width);
+            image(this.flowFieldTexture,-height/2,-height/2,width,height);
+        }
         image(this.trailLayer,-width/2,-height/2,width,height);
     }
     renderData(){
@@ -333,6 +313,9 @@ class FlowField{
     calcPoints(a,r){
         this.attractors = [];
         this.repulsors = [];
+
+        console.log(a);
+        console.log(r);
 
         let minR = r[0].strength;
         let maxR = r[r.length-1].strength;
