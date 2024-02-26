@@ -40,6 +40,8 @@ let tractGeometry;
 //Data from my census work (make a way for this to be raw from the US census site)
 let data2000;
 let data2020;
+let rent2000;
+let rent2020;
 
 //conversion forms
 let substantiallyChanged2000;
@@ -61,13 +63,21 @@ function cleanCensusData(){
     //parsing tract/county codes into 'Tract' and 'County' columns respectively
     getTractAndCountyCodes(data2000);
     getTractAndCountyCodes(data2020);
+    getTractAndCountyCodes(rent2000);
+    getTractAndCountyCodes(rent2020);
+
     //filtering data so it's faster to process
     data2000 = filterNonBayAreaCounties(data2000);
     data2020 = filterNonBayAreaCounties(data2020);
+    rent2000 = filterNonBayAreaCounties(rent2000);
+    rent2020 = filterNonBayAreaCounties(rent2020);
 
     //Converting 2000's data into 2020 data
     // data2000 = convertTracts(data2000,conversions2000to2010,substantiallyChanged2000,'GEOID00','GEOID10','2000',false);//GEOID's are stored under this name
     // data2000 = convertTracts(data2000,conversions2010to2020,substantiallyChanged2010,'GEOID_TRACT_10','GEOID_TRACT_20','Converted 2010',true);//GEOID's are stored in column 8, here (0 indexed)
+
+    rent2000 = convertTracts(rent2000,conversions2000to2010,substantiallyChanged2000,'GEOID00','GEOID10','2000',true);//GEOID's are stored under this name
+    rent2000 = convertTracts(rent2000,conversions2010to2020,substantiallyChanged2010,'GEOID_TRACT_10','GEOID_TRACT_20','Converted 2010',true);//GEOID's are stored under this name
 }
 
 function filterNonBayAreaCounties(data){
@@ -110,7 +120,6 @@ function search(tractID,column){
     console.log("2020:");
     console.log(tract2020);
 }
-
 
 /*
 This is an okay way of doing tract conversions for preliminary exploration, but eventually you should make this a lot better.
@@ -191,6 +200,7 @@ function convertTracts(dataIn,conversionSheet,substantiallyChangedTracts,oldGeoI
             newTract.set('Label for GEO_ID',"Census Tract "+newGeoID.slice(-6));
             newTract.set('County',newGeoID.slice(-9,-6));
             newTract.set('Tract',newGeoID.slice(-6));
+
             newTract.convertedFrom = whichYear;
             //make sure to put the newly added-to tract back into the array
             convertedData.addRow(newTract);
@@ -279,7 +289,18 @@ function alignGeoAndData(features){
             }
             let row2020 = data2020.findRow(tractID,'Tract');
             if(!row2020){
+                tract.hasData2020 = false;
                 missingTracts.push(tractID+" -- 2020");
+            }
+            let rentRow2000 = rent2000.findRow(tractID,'Tract');
+            if(!rentRow2000){
+                tract.hasRentData2000 = false;
+                missingTracts.push(tractID+" -- 2000 (RENT)");
+            }
+            let rentRow2020 = rent2020.findRow(tractID,'Tract');
+            if(!rentRow2000){
+                tract.hasRentData2020 = false;
+                missingTracts.push(tractID+" -- 2000 (RENT)");
             }
             //add that data to the tract object, if you found some data
             if(row2000 && row2020){
@@ -287,6 +308,8 @@ function alignGeoAndData(features){
                 if(row2000.get('Total') > 0 && row2020.get('Total') > 0){
                     tract.data2000 = row2000;
                     tract.data2020 = row2020;
+                    tract.rentData2000 = rentRow2000;
+                    tract.rentData2020 = rentRow2020;
                     tract.hasData = true;
                 }
             }
@@ -514,14 +537,17 @@ function loadData(){
 
     data2000 = loadTable('data/Census/CONVERTED_Tracts_by_Race_2000.csv','csv','header');
     data2020 = loadTable('data/Census/Tracts_by_Race_2020.csv','csv','header');
+    rent2000 = loadTable('data/Census/Tracts_by_Rent_2000.csv','csv','header');
+    rent2020 = loadTable('data/Census/Tracts_by_Rent_2020.csv','csv','header');
+
 
     //Only need these for converting
     // data2000 = loadTable('data/Census/Tracts_by_Race_2000.csv','csv','header');
 
-    // substantiallyChanged2000 = loadTable('data/Census/Substantially_Changed_2000.csv');
-    // substantiallyChanged2010 = loadTable('data/Census/Substantially_Changed_2010.csv');
-    // conversions2000to2010 = loadTable('data/Census/2010_to_2000.csv','csv','header');
-    // conversions2010to2020 = loadTable('data/Census/2020_to_2010.csv','csv','header');
+    substantiallyChanged2000 = loadTable('data/Census/Substantially_Changed_2000.csv');
+    substantiallyChanged2010 = loadTable('data/Census/Substantially_Changed_2010.csv');
+    conversions2000to2010 = loadTable('data/Census/2010_to_2000.csv','csv','header');
+    conversions2010to2020 = loadTable('data/Census/2020_to_2010.csv','csv','header');
 }
 
 function setupMapData(){

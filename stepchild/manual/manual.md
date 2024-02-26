@@ -106,6 +106,11 @@
     1. Creating a Scale
     2. Yes/No Box
     3. Text Input
+15. Appendix
+    1. Version History
+    2. Quickstart
+    3. FAQ
+16. CV
 
 
 <!-- END OF TABLE OF CONTENTS -->
@@ -114,138 +119,71 @@
 <!-- ###### V1.0 10.15.23 -->
 
 <!-- ![Render of the Stepchild](images/gifs/stepchild_optimized.gif) -->
-![Cover Image](images/explode7.png)
+![Image of the Stepchild Exploding](images/explode1.png)
 
 # 0. Introduction
 
-Hello! Welcome to the user manual for the Stepchild. I started this project a little over a year ago with the goal of creating a sequencer that I could use to experiment with my SP404MKII, but since then the Stepchild has become a fully-fledged instrument. 
+Hello! Congratulations on your new child and welcome to the user manual. This document is intended to provide detailed information on using the Stepchild to create music. For a quick introduction to the Stepchild, please check out the [quickstart guide](#152-quickstart).
 
-## 0.1 Overview
+The Stepchild is a multipurpose MIDI instrument, utility, and sequencer designed to utilize the full functionality of the MIDI protocol to control external hardware instruments in fluid and unexpected ways. It's also your baby. The software is currently on version [1.0](#151-version-history) (see [Updating](#) for instructions on how to check and update the Stepchild's firmware). 
 
-So, what is the Stepchild? In short, the Stepchild is a hardware sequencer and generative MIDI instrument.
+For instructions on how to build the Stepchild from a kit (or from scratch!), please see the [build guide](../buildguide.html).
 
-*what is the stepchild*
+![Buttons](images/Buttons.png)
+![Knobs](images/Knobs.png)
 
-## 0.2 Hardware
 
-### a. Buttons
+### a. Control Overview
 
-There are 8 buttons on the face of the Stepchild, two push encoders A and B, and one Joystick. The icons below are ~roughly~ shown in the same layout, with the literal name for each button next to the icon that this manual will use to reference it.
+The top of the Stepchild has 8 main buttons labelled ![New](images/buttons/new.svg)**New**,![Shift](images/buttons/shift.svg)**Shift**, ![Select](images/buttons/select.svg)**Select**,![Delete](images/buttons/delete.svg)**Delete**, ![Loop](images/buttons/loop.svg)**Loop**,![Play](images/buttons/play.svg)**Play**,![Copy](images/buttons/copy.svg)**Copy**, and ![Menu](images/buttons/menu.svg)**Menu**. The labels on each button indicate the action each triggers when in the [Main Sequencer](#1-main-sequence), but perform different actions depending on the active  menu or instrument.
 
-**New** ---- ![**New**](images/buttons/new.svg)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![**A**](images/buttons/A.svg) -- **A**<br>
-**Shift** ---- ![**Shift**](images/buttons/shift.svg)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![**B**](images/buttons/B.svg) -- **B**<br>
-**Select** -- ![**Select**](images/buttons/select.svg)<br>
-**Delete** -- ![**Delete**](images/buttons/delete.svg)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![**Joystick**](images/buttons/joystick.svg) -- **Joystick**<br>
+Also on the top of the Stepchild are the joystick and the two rotary encoders, ![A](images/buttons/A.svg)**A** and ![B](images/buttons/B.svg)**B** which can be pressed (as buttons) or turned (as knobs).
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![**Loop**](images/buttons/loop.svg) ![**Play**](images/buttons/play.svg) ![**Copy**](images/buttons/copy.svg) ![**Menu**](images/buttons/menu.svg)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp; **Menu** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Copy** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp; **Play** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Loop** <br>
+The lower board of the Stepchild has a touch keyboard and 8 LEDs. These keys are used as both MIDI inputs and as auxillary controls for menus and instruments.
 
-[ADD IMAGE OF STEPCHILD FACEPLATE!]
+### b. Input/Output
 
-Alongside the 8 face buttons and two encoders, there are 8 stepbuttons along the lower board of the Stepchild. The 8 stepbuttons are used to toggle steps directly, like you would be able to with a more traditional hardware step sequencer. Occaisionally, the stepbuttons and LEDs have some auxilary functions within different applications. 
+The stepchild has **5** separate MIDI outputs and **2** separate inputs. The MIDI DIN jacks on the back of the board are hardwired to the corresponding TRS jacks on the front of the board to allow the Stepchild to connect to devices using both MIDI TRS and MIDI DIN cables. This means that ***the Stepchild sends the same data on TRS jack 1 and MIDI DIN jack 1***. The TRS and DIN jack pairs are collectively referred to as a Port in this manual, although it is possible to route different data to different instruments connected to the same jack pair using channel filters on the receiving instrument.
 
-[ADD IMAGE OF STEPCHILD W/ BOTTOM BOARD EXTENDED]
-
-### b. MIDI Layout
-
-The Stepchild has 4 unique hardware MIDI out ports, 1 unique hardware MIDI in port, and 1 In/Out port using the Stepchild's MicroUSB port. Every hardware port has both a **TRS Type-A** 3.5mm headphone jack (like you'd use with an aux cable) *and* the traditional 5-Pin-DIN MIDI connector, both hardwired together. The Stepchild has duplicates of ports in both the TRS and DIN standards to make it useful as an interface between the two.The Stepchild can act as a bridge between TRS MIDI, DIN MIDI, and USB MIDI platforms and can be used to sequence hardware instruments from a software program via USB MIDI.
+The Stepchild supports USB MIDI Input/output for communicating with a DAW or independently powered USB MIDI device through its MicroUSB port.
 
 ![MIDI Layout Diagram](images/MIDI%20Layout.svg)
 
-EX: "Output 1" on the back of the Stepchild will send the same signals that "Output 1" on the front of the Stepchild will.
+**Port 1** and the **USB Port** are both MIDI Inputs. The remaining ports are all output-only, so don't connect any cables sending data into the Stepchild to anything but the USB Port and Port 1!
 
-The Stepchild will expose itself as a MIDI device when it's connected to a computer, and MIDI messages can be routed to it from a DAW or other virtual MIDI program. 
+The Stepchild has 3 CV Ports for sending CV data. The Stepchild must be plugged into a power supply using a 16 Pin IDC connector (Eurorack connector) in order to send CV data over the CV Ports. See [CV](#16-cv) for more information on using the Stepchild to control a Eurorack system.
 
-### c. Power & Batteries
+### c. Power
 
-The Stepchild will run on as little as [IDK GOTTA TEST IT/LOOK IT UP]V and consumes very little current [ALSO TEST THIS USING OSC].
-There are two main ways to power the Stepchild:
-
-#### 1. Batteries
-
-The Stepchild can be powered by 3AA batteries. Rechargeable 1.2V AA's, like NiMH batteries, are totally fine and recommended! The Stepchild draws about [X]mA of current, and with Eneloop AA 1850mA batteries can run for [X] hours.
-
-The best way to insert or replace the batteries is to unscrew the bottom shell so you can access the battery clip on the bottom side of the board.
-
-#### 2. USB
-Plugging in the Stepchild to a USB power source will automatically switch the Stepchild to using USB power (the Stepchild will always be 'on' when powered from its USB port). A reverse current protection diode makes it safe to have the Stepchild plugged into both USB and battery power simultaneously; only USB power will be drawn from if available.
-
-## 0.3 Software
-![ChildOS Bootscreen](images/childOS.png)
-
-The Stepchild comes preloaded with ChildOS firmware, which contains MIDI editing tools, live MIDI generative applications, and a sequencer that uses the Stepchild's hardware to exchange MIDI messages with other instruments.
-
-###### (ChildOS isn't really an operating system, it just uses the 'OS' suffix because it looks cool)
-
-This manual is written about using ChildOS with the Stepchild, the software that I created to use it as a MIDI instrument, but it's possible to use the Stepchild with other firmware. Going into flashing your own firmware for the Stepchild is a little outside the scope of this user manual, so see the **Stepchild Documentation** for a tutorial.
-
-This section of the manual gives a brief introduction to MIDI and then goes over the two basic elements of songs in ChildOS; notes and tracks. There are a few other important concepts in ChildOS, such as [Loops](#6-loops) and [Instruments](#9-instruments), but those get their own sections later on!
-
-### a. A Brief Intro to MIDI
-
-In case this is your first time encountering it, "MIDI" stands for ***Musical Instrument Digital Interface*** and is like a language that electronic instruments are able to speak to one another. There are a *lot* of different things that can be done with MIDI, but the primary MIDI concept that the Stepchild works with is MIDI Notes.
-
-MIDI note messages are transmitted as "Note On" and "Note Off" messages, typically telling synthesizers and other instruments to start and stop playing a specific note. Note messages are sent as three bytes:
-
-```
-{'Pitch' | 'Velocity' | 'Channel'}
-``` 
-
-MIDI channels are numbered 1-16, with '0' sometimes denoting a global channel. Instruments will only respond to notes they receive that are sent on their channel, like an address that lets you send different messages to up to 16 instruments on the same MIDI cable.
-
-The 'Pitch' value of a note is somewhere between 0 and 127 and corresponds to a pitch in the 12-tone western scale (although not all instruments implement this the same way). A lookup table of common pitch-note pairs can be found [here](https://computermusicresource.com/midikeys.html). Samplers and drum machines might respond to pitch information differently than a keyboard synethesizer would!
-
-Finally, the 'Velocity' value sent with a note represents how loud or hard a note is played. How this is interpreted by a specific instrument, though, is up to that instrument. Samples can play different samples based on velocity data, and keyboards can modulate the waveform or envelope of a sound based on the velocity of the keypress.
-
+The Stepchild uses 3xAA 1.2 or 1.5V batteries, and/or USB power to run. The power switch will disconnect battery power, but will not disconnect USB power. The Stepchild can't power USB devices, like unpowered MIDI keyboards, through its USB port.
 
 ### b. Notes
 
-Because the Stepchild is designed with a focus on interchangeably writing rhythm and melody, ChildOS's concept of Notes is a little different than the way traditional MIDI software and written music treats them. Instead of containing information about their pitch and channel, the Stepchild just stores Notes as a start, a stop, and data about velocity and probability.
+The Stepchild is designed with a focus on interchangeably writing rhythm and melody. The Stepchild's stores notes as velocity and probability data at specific timesteps in a sequence. MIDI Pitch and Channel data are determined by the [Track](#c-tracks) a note is written to, allowing you to flexibly edit how notes are routed and played without changing the note data stored in the sequence.
 
- By keeping the pitch/channel data stored on a Note's respective [Track](#c-tracks) instead of the Note itself, you can flexibly play around with what channel the Note is routed to and what it sounds like without changing the sequence.
-
-```
-           + ------------------------------ +
-Start -->  | / / Velocity / Probability / / | <-- End
-           + ------------------------------ +
-```
-
-Alongside storing velocity, Notes also store a value for their probability. When the sequence is playing and the playhead reaches the start position of a Note, a random number is generated determine if the note should play based on its probability.
-
-If the Note does play, a MIDI 'Note On' message is sent at the note's velocity, with the pitch and channel of the respective track. If the playhead reaches the end of the note, and that note was successfully played, a MIDI 'Note Off' message is sent.
-
-By default, notes are shaded by their velocity, with quieter notes being more opaque. Note sprites can also be [configured](#42-settings) to be shaded by their probability.
+By default, notes are shaded by their velocity, with louder notes being more opaque. Note sprites can be switched to display their probability in the [settings menu](#42-settings).
 
 ###### An animation showing the different shade levels for different velocities and probabilities:
 
 ![Note Velocities](images/gifs/note_velocity.gif)
 
-Notes can be created and deleted in the [Main Sequence](#13-creating-notes), and can be more extensively edited by pressing ![B](images/buttons/B.svg) to bring up the [Note Editor](#3-note-editor) or by using an [FX Application](#8-fx).
+Notes are mostly created and deleted in the [Main Sequence](#13-creating-notes), and can be edited by pressing ![B](images/buttons/B.svg) to bring up the [Note Editor](#3-note-editor) or by using an [FX Application](#8-fx).
 
 ### c. Tracks
 
-Tracks hold the pitch and channel information that is usually associated with individual notes. This lets the pitch and routing of different notes change fluidly by changing the pitch of each track (if it's helpful, you can think about it like changing instruments in a DAW without changing the MIDI notes).
-
-[ADD IN SECTION ABOUT MUTING, ARMING TRACKS]
+Tracks hold the pitch and channel information that controls the MIDI Pitch and Channel data sent with each note. This lets the pitch and routing of different notes change fluidly by changing the pitch of each track (you can think about it like changing instruments in a DAW without changing the MIDI notes).
 
 Track pitch can be edited directly in the [Main Sequence](#1-main-sequence) by holding ![Shift](images/buttons/shift.svg) and turning ![B](images/buttons/B.svg). Tracks can be more deeply edited in the [Track Editor](#2-track-editor) which can be accessed by pressing ![B](images/buttons/B.svg) in the Main Sequence.
 
 ### d. Timesteps
 
-The sequences you can write using the Stepchild are broken into ***timesteps***, the smallest subdivision the Stepchild processes. A timestep is 1/24th of a beat, or a 1/96th note, which makes the Stepchild's clock 1:1 compatible with MIDI clock messages.
+Notes written to the Stepchild's sequencer are broken into ***timesteps***, the smallest subdivision the Stepchild processes. A timestep is 1/24th of a beat, or a 1/96th note, which is the smallest subdivision that MIDI clock signals are sent on. Despite the rigidity of timesteps, the Stepchild's clock is extremely flexible. See [this section](#b-swing) for ways to use swing patterns to alter the groove of a sequence.
 
 ##### Because the BPM and timing of sequences is flexible, the actual duration value of a timestep in seconds or milliseconds varies, but it is *always* equivalent to 1/24th of a quarter note.
 
-#### The length of an unswung timestep, in milliseconds, is equal to the BPM * 400.
-
-All note data is stored in terms of timesteps: a note begins on one timestep, and ends on another. Using the Stepchild's [swing](#b-swing) or [internal CC](#53-internal-cc-messages), timesteps can have different values depending on where they are in the sequence and what the Stepchild's clock is doing.
-
 # 1. Main Sequence
-The first thing you see after the Stepchild boots up will be the Main Sequence screen. This is the “homepage” of the Stepchild where you can directly edit a sequence and access applications and menus. The Main Sequence screen *always* displays a baby carriage in the top left corner that bounces to the BPM of the sequence.
+
+This is the main sequencer of the Stepchild and the screen where you can directly edit a sequence and access applications and menus. The Main Sequence screen displays a baby carriage in the top left corner that bounces to the BPM of the sequence.
 
 ![The Main Sequence homepage](images/gifs/mainsequence.gif)
 

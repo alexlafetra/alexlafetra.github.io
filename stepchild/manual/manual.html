@@ -42,15 +42,23 @@
         },
         image(href, title, text) {
             //check if it's a button svg
-            const isButtonImage = /buttons/i.test(href);
+            const isButtonImage = /buttons\//i.test(href);
             const isGif = /\.gif$/i.test(href);
+            const isButtonTopImage = /Buttons/g.test(text);
+            const isKnobTopImage = /Knobs/g.test(text);
             let imageClass = '';
+            let imageId = '';
             if(isButtonImage)
                 imageClass = 'button-svg';
             else if(isGif)
                 imageClass = 'center-gif';
+            else if(isButtonTopImage)
+                imageId = 'button-image'
+            else if(isKnobTopImage)
+                imageId= 'knob-image';
+
             // Render the image with the appropriate class for centering
-            return `<img src="${href}" title="${text}" alt="${text}" class="${imageClass}">`;
+            return `<img src="${href}" title="${text}" alt="${text}" class="${imageClass}" id = "${imageId}">`;
         }
     }
 

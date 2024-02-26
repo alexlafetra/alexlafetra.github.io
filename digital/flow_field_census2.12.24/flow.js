@@ -181,7 +181,6 @@ class FlowField{
         this.flowShader.setUniform('uRepulsors',this.repulsors);
         this.flowShader.setUniform('uAttractionStrength',this.attractionStrength);
         this.flowShader.setUniform('uRepulsionStrength',this.repulsionStrength);
-        // quad(-1,-1,1,-1,1,1,-1,1);//upside down bc the textures get flipped
         rect(-this.flowFieldTexture.width/2,-this.flowFieldTexture.height/2,this.flowFieldTexture.width,this.flowFieldTexture.height);
         this.flowFieldTexture.end();
     }
@@ -255,7 +254,6 @@ class FlowField{
             0,         // stride (0 = auto)
             0,         // offset
         );
-
         //setting the texture samples (this was what was fucked up! you need to set the active texture, then bind it)
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.uPositionTexture.colorTexture);
@@ -308,14 +306,17 @@ class FlowField{
         saveCanvas(this.flowFieldTexture,"flowField.png","png");
     }
     setPresetAttractors(){
+        console.log(presets);
         this.calcPoints(presets[this.presetIndex].attractors,presets[this.presetIndex].repulsors);
     }
     calcPoints(a,r){
         this.attractors = [];
         this.repulsors = [];
 
-        console.log(a);
-        console.log(r);
+        // console.log("A:");
+        // console.log(a);
+        // console.log("R:");
+        // console.log(r);
 
         let minR = r[0].strength;
         let maxR = r[r.length-1].strength;
@@ -351,5 +352,4 @@ class FlowField{
             this.repulsors.push(s);
         }
     }
-
 }

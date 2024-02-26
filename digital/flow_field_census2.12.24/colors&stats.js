@@ -167,6 +167,10 @@ function proportionalWhiteChange(tract){
      return (tract.data2020.obj.Asian/tract.data2020.obj.Total) / (tract.data2000.obj.Asian/tract.data2000.obj.Total);
  }
 
+ function highRentBurden(tract){
+    return tract.rentData2000.obj['50 percent or more']-tract.rentData2020.obj['50 percent or more'];
+ }
+
  function getTopNTracts(n,func){
      let vals = bayTracts.toSorted((a,b) => {
          if(!a.hasData || a.data2020 == undefined || a.data2000 == undefined){

@@ -141,6 +141,7 @@ function setup_DevMode(){
                                             "(P<sub>Black 2000</sub> / P<sub>Total 2000</sub>) / (P<sub>Black 2020</sub> / P<sub>Total 2020</sub>)",colorStyle_blackRatioComparison,ratioBlackChange);
     asianRatioPreset = new DemographicVis("Ratio of Proportions of Population Identifying as Asian",
                                             "(P<sub>Asian 2000</sub> / P<sub>Total 2000</sub>) / (P<sub>Asian 2020</sub> / P<sub>Total 2020</sub>)",colorStyle_asianRatioComparison,ratioAsianChange);
+    let rentBurdenPreset = new DemographicVis("Renters spending more than 50% of monthly income on rent in 2000","",colorStyle_asianRatioComparison,highRentBurden);
     presets = [
         whiteProportionComparisonPreset,
         blackProportionComparisonPreset,
@@ -150,7 +151,8 @@ function setup_DevMode(){
         asianComparisonPreset,
         whiteRatioPreset,
         blackRatioPreset,
-        asianRatioPreset
+        asianRatioPreset,
+        rentBurdenPreset
     ];
 
     //parsing data and attaching it to tract geometry
@@ -207,12 +209,13 @@ function setup_Prerendered(){
                                             "P<sub>Black 2000</sub> / P<sub>Total 2000</sub> - P<sub>Black 2020</sub> / P<sub>Total 2020</sub>",4,preset4Attractors,preset4Repulsors);
     asianProportionComparisonPreset = new Preset("Change In Proportion of Population Identifying as Asian",
                                             "P<sub>Asian 2000</sub> / P<sub>Total 2000</sub> - P<sub>Asian 2020</sub> / P<sub>Total 2020</sub>",5,preset5Attractors,preset5Repulsors);
+
     whiteRatioPreset = new Preset("Ratio of Proportions of Population Identifying as White",
-                                            "(P<sub>White 2000</sub> / P<sub>Total 2000</sub>) / (P<sub>White 2020</sub> / P<sub>Total 2020</sub>)",preset6Attractors,preset6Repulsors);
+                                            "(P<sub>White 2000</sub> / P<sub>Total 2000</sub>) / (P<sub>White 2020</sub> / P<sub>Total 2020</sub>)",6,preset6Attractors,preset6Repulsors);
     blackRatioPreset = new Preset("Ratio of Proportions of Population Identifying as Black",
-                                            "(P<sub>Black 2000</sub> / P<sub>Total 2000</sub>) / (P<sub>Black 2020</sub> / P<sub>Total 2020</sub>)",preset7Attractors,preset7Repulsors);
+                                            "(P<sub>Black 2000</sub> / P<sub>Total 2000</sub>) / (P<sub>Black 2020</sub> / P<sub>Total 2020</sub>)",7,preset7Attractors,preset7Repulsors);
     asianRatioPreset = new Preset("Ratio of Proportions of Population Identifying as Asian",
-                                            "(P<sub>Asian 2000</sub> / P<sub>Total 2000</sub>) / (P<sub>Asian 2020</sub> / P<sub>Total 2020</sub>)",preset8Attractors,preset8Repulsors);
+                                            "(P<sub>Asian 2000</sub> / P<sub>Total 2000</sub>) / (P<sub>Asian 2020</sub> / P<sub>Total 2020</sub>)",8,preset8Attractors,preset8Repulsors);
     presets = [
         whiteProportionComparisonPreset,
         blackProportionComparisonPreset,

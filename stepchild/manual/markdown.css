@@ -26,6 +26,7 @@ body {
   color: #333;
   overflow-x:hidden;
   transition:1s;
+  min-block-size: 500px;
 }
 
 body > *:first-child {
@@ -421,6 +422,19 @@ pre code, pre tt {
 .button-svg {
   display: inline-block;
   vertical-align: middle;
+}
+
+#knob-image{
+  display:block;
+  float:left;
+  /* margin-right:30%; */
+  height:400px;
+}
+#button-image{
+  display:block;
+  float:right;
+  /* margin-left:30%; */
+  height:400px;
 }
 
 /* Prettying up the index */
