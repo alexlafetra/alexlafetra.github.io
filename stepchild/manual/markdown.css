@@ -102,12 +102,16 @@ h6 tt, h6 code {
 h1 {
   font-size: 28px;
   color: blue;
+  border-bottom: 5px solid blue;
+  z-index:-1; /*so the underscore gets hidden behind images*/
 }
 
 h2 {
   font-size: 24px;
+  display:block;
   border-bottom: 1px solid #cccccc;
   color: black;
+  z-index:-1; /*so the underscore gets hidden behind images*/
 }
 
 h3 {
@@ -416,25 +420,43 @@ pre code, pre tt {
 .center-gif {
   display: block;
   margin: 0 auto;
+  max-height:300px;
+}
+
+.gif-holder{
+  background-color: black;
+  width:100%;
 }
 
 /* For centering button icons */
 .button-svg {
   display: inline-block;
   vertical-align: middle;
+  /* scale:1.2; */
 }
 
-#knob-image{
+.midi-routing-diagram{
+  width:500px;
+  float:left;
+  padding:10px;
+}
+
+.button-graphic-L{
   display:block;
   float:left;
-  /* margin-right:30%; */
   height:400px;
+  /* z-index:5; */
 }
-#button-image{
+.button-graphic-R{
   display:block;
   float:right;
-  /* margin-left:30%; */
   height:400px;
+  /* z-index:5; */
+}
+
+.medium-image-R{
+  float:right;
+  height:300px;
 }
 
 /* Prettying up the index */

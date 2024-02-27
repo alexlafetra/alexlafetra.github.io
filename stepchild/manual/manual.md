@@ -115,71 +115,80 @@
 
 <!-- END OF TABLE OF CONTENTS -->
 
-# Stepchild V1.0 - *User Manual*
+<!-- # Stepchild V1.0 - *User Manual* -->
 <!-- ###### V1.0 10.15.23 -->
 
 <!-- ![Render of the Stepchild](images/gifs/stepchild_optimized.gif) -->
-![Image of the Stepchild Exploding](images/explode1.png)
+![medium-image-R](images/explode1.png)
 
 # 0. Introduction
 
-Hello! Congratulations on your new child and welcome to the user manual. This document is intended to provide detailed information on using the Stepchild to create music. For a quick introduction to the Stepchild, please check out the [quickstart guide](#152-quickstart).
+Hello! Welcome to the user manual. This document is intended to provide detailed information on using the Stepchild to create music. For a quick introduction to the Stepchild, please check out the [quickstart guide](#152-quickstart).
 
 The Stepchild is a multipurpose MIDI instrument, utility, and sequencer designed to utilize the full functionality of the MIDI protocol to control external hardware instruments in fluid and unexpected ways. It's also your baby. The software is currently on version [1.0](#151-version-history) (see [Updating](#) for instructions on how to check and update the Stepchild's firmware). 
 
 For instructions on how to build the Stepchild from a kit (or from scratch!), please see the [build guide](../buildguide.html).
 
-![Buttons](images/Buttons.png)
-![Knobs](images/Knobs.png)
+![button-graphic-R](images/Buttons.png)
+![button-graphic-L](images/Knobs.png)
 
 
-### a. Control Overview
+## 0.1 Control Overview
 
-The top of the Stepchild has 8 main buttons labelled ![New](images/buttons/new.svg)**New**,![Shift](images/buttons/shift.svg)**Shift**, ![Select](images/buttons/select.svg)**Select**,![Delete](images/buttons/delete.svg)**Delete**, ![Loop](images/buttons/loop.svg)**Loop**,![Play](images/buttons/play.svg)**Play**,![Copy](images/buttons/copy.svg)**Copy**, and ![Menu](images/buttons/menu.svg)**Menu**. The labels on each button indicate the action each triggers when in the [Main Sequencer](#1-main-sequence), but perform different actions depending on the active  menu or instrument.
+The top of the Stepchild has 8 main buttons labelled ![New](images/buttons/new.svg), ![Shift](images/buttons/shift.svg), ![Select](images/buttons/select.svg), ![Delete](images/buttons/delete.svg), ![Loop](images/buttons/loop.svg), ![Play](images/buttons/play.svg), ![Copy](images/buttons/copy.svg), and ![Menu](images/buttons/menu.svg). The labels on each button indicate the action each triggers when in the [Main Sequencer](#1-main-sequence), but perform different actions depending on the active  menu or instrument.
 
-Also on the top of the Stepchild are the joystick and the two rotary encoders, ![A](images/buttons/A.svg)**A** and ![B](images/buttons/B.svg)**B** which can be pressed (as buttons) or turned (as knobs).
+Also on the top of the Stepchild are the ![Joystick](images/buttons/joystick.svg), which can be moved in all directions, and the two rotary encoders, ![A](images/buttons/A.svg) and ![B](images/buttons/B.svg) which can be pressed (as buttons) or turned (as knobs).
 
 The lower board of the Stepchild has a touch keyboard and 8 LEDs. These keys are used as both MIDI inputs and as auxillary controls for menus and instruments.
 
-### b. Input/Output
+## 0.2 Input/Output
 
 The stepchild has **5** separate MIDI outputs and **2** separate inputs. The MIDI DIN jacks on the back of the board are hardwired to the corresponding TRS jacks on the front of the board to allow the Stepchild to connect to devices using both MIDI TRS and MIDI DIN cables. This means that ***the Stepchild sends the same data on TRS jack 1 and MIDI DIN jack 1***. The TRS and DIN jack pairs are collectively referred to as a Port in this manual, although it is possible to route different data to different instruments connected to the same jack pair using channel filters on the receiving instrument.
 
 The Stepchild supports USB MIDI Input/output for communicating with a DAW or independently powered USB MIDI device through its MicroUSB port.
 
-![MIDI Layout Diagram](images/MIDI%20Layout.svg)
+![midi-routing-diagram](images/MIDI_routing_diagram.png)
 
 **Port 1** and the **USB Port** are both MIDI Inputs. The remaining ports are all output-only, so don't connect any cables sending data into the Stepchild to anything but the USB Port and Port 1!
 
-The Stepchild has 3 CV Ports for sending CV data. The Stepchild must be plugged into a power supply using a 16 Pin IDC connector (Eurorack connector) in order to send CV data over the CV Ports. See [CV](#16-cv) for more information on using the Stepchild to control a Eurorack system.
+The Stepchild has 3 CV Ports for sending CV data. The Stepchild must be plugged into a power supply using a 16 Pin IDC connector (Eurorack connector) in order to send CV data over the CV Ports. See the [CV section](#16-cv) for more information on using the Stepchild to control a Eurorack system.
 
-### c. Power
+## 0.3 Power
 
 The Stepchild uses 3xAA 1.2 or 1.5V batteries, and/or USB power to run. The power switch will disconnect battery power, but will not disconnect USB power. The Stepchild can't power USB devices, like unpowered MIDI keyboards, through its USB port.
 
-### b. Notes
+![medium-image-R](images/tracks_with_notes.png)
 
-The Stepchild is designed with a focus on interchangeably writing rhythm and melody. The Stepchild's stores notes as velocity and probability data at specific timesteps in a sequence. MIDI Pitch and Channel data are determined by the [Track](#c-tracks) a note is written to, allowing you to flexibly edit how notes are routed and played without changing the note data stored in the sequence.
+## 0.4 Tracks
 
-By default, notes are shaded by their velocity, with louder notes being more opaque. Note sprites can be switched to display their probability in the [settings menu](#42-settings).
+Tracks hold pitch and channel information controlling the MIDI pitch/channel data the notes on them are sent with. This lets you change the pitch and channel routing of notes by changing the pitch of a track, rather than editing each note individually.
 
-###### An animation showing the different shade levels for different velocities and probabilities:
+Track pitch can be changed directly in the [Main Sequence](#1-main-sequence) by holding ![Shift](images/buttons/shift.svg) and turning ![B](images/buttons/B.svg). For in-depth controls, tracks can be edited in the [Track Editor](#2-track-editor) which can be accessed by pressing ![B](images/buttons/B.svg) in the Main Sequence.
+
+## 0.5 Notes
+
+ The Stepchild stores notes as velocity and probability data at specific timesteps in a sequence. Notes can be [selected](#) to edit multiple notes at once. Notes can also be [muted](#) to silence their MIDI messages.
+ 
+ By default, notes are shaded by their velocity, with louder notes being more opaque. Note sprites can be switched to display their probability in the [settings menu](#42-settings).
 
 ![Note Velocities](images/gifs/note_velocity.gif)
+ ###### Note color variations for velocities 1-127^^
+
+ Like tracks, Notes can be edited directly in the [main sequencer](), but can be more extensively edited in the [note editor]() and by using different [Sequence FX]().
 
 Notes are mostly created and deleted in the [Main Sequence](#13-creating-notes), and can be edited by pressing ![B](images/buttons/B.svg) to bring up the [Note Editor](#3-note-editor) or by using an [FX Application](#8-fx).
 
-### c. Tracks
+## 0.6 Timesteps
 
-Tracks hold the pitch and channel information that controls the MIDI Pitch and Channel data sent with each note. This lets the pitch and routing of different notes change fluidly by changing the pitch of each track (you can think about it like changing instruments in a DAW without changing the MIDI notes).
+The Stepchild's sequencer is broken into ***timesteps***, the smallest rhythm subdivision notes are stored in. A timestep is 1/24th of a beat, or a 1/96th note, which is the timing resolution of MIDI clock signals following the MIDI Protocol. The Stepchild doesn't send/receive any MIDI RTS
 
-Track pitch can be edited directly in the [Main Sequence](#1-main-sequence) by holding ![Shift](images/buttons/shift.svg) and turning ![B](images/buttons/B.svg). Tracks can be more deeply edited in the [Track Editor](#2-track-editor) which can be accessed by pressing ![B](images/buttons/B.svg) in the Main Sequence.
+Although the Stepchild stores note sequence data to the nearest Timestep, the actual millisecond length of each timestep is unfixed and highly flexible depending on the Stepchild's BPM and swing setting. The Stepchilds [clock]() supports preset and [custom swing]() functions to flexibly alter the groove of a sequence. The Stepchild supports BPMs from 1-999, but timing inconsistencies are get common at higher BPMs.
 
-### d. Timesteps
+## 0.7 Loops
 
-Notes written to the Stepchild's sequencer are broken into ***timesteps***, the smallest subdivision the Stepchild processes. A timestep is 1/24th of a beat, or a 1/96th note, which is the smallest subdivision that MIDI clock signals are sent on. Despite the rigidity of timesteps, the Stepchild's clock is extremely flexible. See [this section](#b-swing) for ways to use swing patterns to alter the groove of a sequence.
+The Stepchild's sequence is like a big canvas, sections of which can be highlighted inside **Loops**. A Loop contains a start point, an end point, a value determing how many times it repeats, and a setting controlling what happens when the it ends. The default behavior for loops is to jump to the ***next loop in the loop sequence*** as soon as a Loop has finished playing through, allowing Loops to be chained together to build up songs of repeated phrases. In some cases, you could write your song out in full using the [copy/paste]() functionality to duplicate sections of MIDI data. Using Loops to do this instead saves sequence space, lets you edit duplicate phrases as one set of data, and allows you to experiment with varying which phrases are played.
 
-##### Because the BPM and timing of sequences is flexible, the actual duration value of a timestep in seconds or milliseconds varies, but it is *always* equivalent to 1/24th of a quarter note.
+Like Notes and Tracks, Loop points can be edited in the [Main Sequencer](). Loops can be edited much more deeply in the [Loop Editor](). By default, the Stepchild's main sequence will start playing at the start point of the currently active Loop. Loop behavior can be disabled altogether in the [Loop Editor](), making the Stepchild's sequence play out from start-finish in full.
 
 # 1. Main Sequence
 
@@ -195,7 +204,7 @@ The current [**loop points**](#15-moving-loops) and [**status icons**](#18-statu
 
 The **cursor** is positioned at a specific timestep (its horizontal location) and track (its vertical location). You can change which track the cursor is on by moving the [**Joystick**](#hardware) ![up-and-down](images/buttons/up_down.svg), which will automatically send a MIDI note at the new active track’s pitch to the Stepchild’s MIDI ports.
 
-The cursor can be moved through time by moving the Joystick ![side-to-side](images/buttons/left_right.svg), which will move the cursor to the left or right to the next closest subdivision. Holding shift will move the cursor exactly 1 timestep in that direction.
+The cursor can be moved through time by moving the Jostick ![side-to-side](images/buttons/left_right.svg), which will move the cursor to the left or right to the next closest subdivision. Holding shift will move the cursor exactly 1 timestep in that direction.
 
 ## 1.2 Changing the View & Subdivision
 
@@ -321,7 +330,7 @@ Pressing ![Select](images/buttons/select.svg) on the Utils option brings up the 
 
 ## a. Editing Multiple Tracks
 
-The **Multitrack Editor** allows you to bulk edit track parameters. You can move between rows and columns using the joystick ![Joystick](images/buttons/joystick.svg), and change parameters by turning ![A](images/buttons/A.svg) or by holding ![Shift](images/buttons/shift.svg) and moving ![side to side](images/buttons/left_right.svg).
+The **Multitrack Editor** allows you to bulk edit track parameters. You can move between rows and columns using  ![Joystick](images/buttons/joystick.svg), and change parameters by turning ![A](images/buttons/A.svg) or by holding ![Shift](images/buttons/shift.svg) and moving ![side to side](images/buttons/left_right.svg).
 
 Any changes to track parameters while in the **Multitrack Editor** will affect all selected tracks as well as the track currently targeted. Pressing ![Select](images/buttons/select.svg) while in the 'TRACK' column selects a track, and holding ![Shift](images/buttons/shift.svg) while pressing ![Select](images/buttons/select.svg) will de/select all tracks in the sequence.
 
@@ -475,17 +484,17 @@ Opening up the [Autotrack Menu](#42-autotrack-menu) will take you directly to th
 
 |Button|Function|
 |:---:|:---|
-|![New](images/buttons/new.svg)| Creates a new **Autotrack**|
-|![Delete](images/buttons/delete.svg)| Deletes the targeted **Autotrack**|
-|![Shift](images/buttons/shift.svg)+![Delete](images/buttons/delete.svg)| Un/mutes the targeted **Autotrack**|
+|![New](images/buttons/new.svg)| Creates a new Autotrack|
+|![Delete](images/buttons/delete.svg)| Deletes the targeted Autotrack|
+|![Shift](images/buttons/shift.svg)+![Delete](images/buttons/delete.svg)| Un/mutes the targeted Autotrack|
 |![Play](images/buttons/play.svg)| Start or stop [playing](#a-playing) the sequence.|
-|![Shift](images/buttons/shift.svg)+![Play](images/buttons/play.svg)| Prime/unprime the targeted **Autotrack**|
-|![Select](images/buttons/select.svg)| [Edit](#52-autotrack-editor) the curve data of the targeted **Autotrack**|
-|![Loop](images/buttons/loop.svg)| Set a [Trigger](#a-triggering-autotracks) for the targeted **Autotrack**|
-|![Shift](images/buttons/shift.svg)| Send a stream of [CC Messages](#a-a-brief-intro-to-midi) from the targeted **Autotrack**|
-|**Turning** ![A](images/buttons/A.svg)| Change the [CC Value](#a-a-brief-intro-to-midi) of the targeted **Autotrack**|
-|**Pressing** ![B](images/buttons/B.svg)| Enter the [CC Selection](#52-cc-list) screen.|
-|**Turning** ![B](images/buttons/B.svg)| Change the **Channel** of the targeted **Autotrack**|
+|![Shift](images/buttons/shift.svg)+![Play](images/buttons/play.svg)| Prime/unprime the targeted Autotrack|
+|![Select](images/buttons/select.svg)| [Edit](#52-autotrack-editor) the curve data of the targeted Autotrack|
+|![Loop](images/buttons/loop.svg)| Set a [Trigger](#a-triggering-autotracks) for the targeted Autotrack|
+|![Shift](images/buttons/shift.svg)| Send a stream of [CC Messages](#a-a-brief-intro-to-midi) from the targeted Autotrack|
+|Turning ![A](images/buttons/A.svg)| Change the [CC Value](#a-a-brief-intro-to-midi) of the targeted Autotrack|
+|Pressing ![B](images/buttons/B.svg)| Enter the [CC Selection](#52-cc-list) screen.|
+|Turning ![B](images/buttons/B.svg)| Change the Channel of the targeted Autotrack|
 
 ![Gif of the Autotrack Viewer](images/gifs/autotrack_viewer.gif)
 

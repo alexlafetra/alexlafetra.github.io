@@ -9,7 +9,9 @@
 </head>
 <body>
     <div class = "header" id = "manual_header">
-        <img src = "images/stepchild.gif" id = "title_image"><span id = "title_text">Stepchild User Manual</span></div>
+        <!-- <img src = "images/stepchild.gif" id = "title_image"> -->
+        <span id = "title_text">Stepchild User Manual</span>
+    </div>
     <div class = "header" id = "index_header" onclick = "toggleTOC()">Index</div>
     <div id = "index_column">
         <div id = "toc" class = "manual_markdown"></div>
@@ -44,21 +46,17 @@
             //check if it's a button svg
             const isButtonImage = /buttons\//i.test(href);
             const isGif = /\.gif$/i.test(href);
-            const isButtonTopImage = /Buttons/g.test(text);
-            const isKnobTopImage = /Knobs/g.test(text);
-            let imageClass = '';
+
+            let imageClass = text;
             let imageId = '';
+
             if(isButtonImage)
                 imageClass = 'button-svg';
-            else if(isGif)
-                imageClass = 'center-gif';
-            else if(isButtonTopImage)
-                imageId = 'button-image'
-            else if(isKnobTopImage)
-                imageId= 'knob-image';
-
+            else if(isGif){
+                return `<div class = "gif-holder"><img src="${href}" title="${text}" alt="${text}" class="center-gif"`+((imageId=='')?``:`id = "${imageId}"`)+`></div>`;
+            }
             // Render the image with the appropriate class for centering
-            return `<img src="${href}" title="${text}" alt="${text}" class="${imageClass}" id = "${imageId}">`;
+            return `<img src="${href}" title="${text}" alt="${text}" class="${imageClass}"`+((imageId=='')?`>`:`id = "${imageId}">`);
         }
     }
 
