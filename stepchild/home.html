@@ -51,12 +51,13 @@
             setTimeout(floatImage,timing,id,min,max,timing);
         }
     </script>
-    <script language="javascript" type="text/javascript" src="../scripts/libraries/p5.min.js"></script>
-    <script language="javascript" type="text/javascript" src="wireframe_pram.js"></script>
+    <!-- <script language="javascript" type="text/javascript" src="../scripts/libraries/p5.min.js"></script> -->
+    <!-- <script language="javascript" type="text/javascript" src="wireframe_pram.js"></script> -->
 
 </head>
 <body id = "about_body">
-    <main style = "width:100%;position:absolute;bottom:15px;"></main>
+    <!-- <main style = "width:100%;position:absolute;bottom:15px;"></main> -->
+    <img src = "images/logo_standalone.svg" style = "height:100px;width:200px;position:absolute;top:0px;left:20px;">
     <div class = "single_centered_div" id = "title">
         <img id = "img1" src = "images/stepchild_slow.gif" onclick = "popIcon()">
         <p id = "ascii_title" class = "ascii" onclick = "swapAscii()">   ________  ________  ________      ________  ________  ________  ________  ________  ________   ________  _______    _______ 
@@ -66,13 +67,12 @@
 \_____// \___/____/\________/    \_______// \______/ \________/\______/  \________/\___/____/ \________/\________/\________/</p>
     </div>
     <!-- Side image of the 'child -->
-    <img id = "side_image" src = "images/stepchild_side.png" style = "position:absolute;bottom:10px;width:1000px;left:70%;z-index:-1;"></img>
     <div id = "info_section">
         <p id = "preorder_blurb" class = "info_text">
-            Preorder the Stepchild <a id = "preorder_link" href = "preorder.html">here</a> 🚼
+            Preorder <span class = "info_header">the Stepchild</span> <a id = "preorder_link" href = "preorder.html">here</a>
         </p>
         <p id = "introduction" class = "info_text">
-            The <span class = "blue" >Stepchild</span> is a portable step-sequencer,
+            <span class = "info_header" >The Stepchild</span> is a portable step-sequencer,
             MIDI utility, and generative MIDI instrument.
         </p>
         <p id = "about" class = "info_text">
@@ -135,7 +135,6 @@
         cropContent();
         window.setInterval(swapAscii,4000);
         updateURL("home");
-        floatImage("side_image","-60px","10px",6000);
     </script>
 </body>
 </html>

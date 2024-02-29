@@ -28,6 +28,7 @@ body {
 .info_header{
     font-family:chopin;
     font-size:60px;
+    font-weight:normal;
 }
 .info_subheader{
     font-family:arcade;
@@ -238,6 +239,8 @@ canvas {
 #ascii_title{
     font-size:1.2vw;
     position:absolute;
+    /* max-width:500px; */
+    /* margin-top:100px; */
 }
 
 .random_icon{
@@ -274,7 +277,7 @@ canvas {
     margin-bottom:0;
 }
 #preorder_link{
-    font-size: 60px;
+    font-size: 50px;
     color:blue;
     text-decoration:underline;
     font-style:italic;

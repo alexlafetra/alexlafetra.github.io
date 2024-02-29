@@ -244,6 +244,8 @@ blockquote > :last-child {
 
 table {
   padding: 0;
+  width:50%;
+  max-width: 50%;
 }
 table tr {
   border-top: 1px solid #cccccc;
@@ -251,10 +253,9 @@ table tr {
   margin: 0;
   padding: 0;
 }
-
-table tr:nth-child(2n) {
+/* table tr:nth-child(2n) {
   background-color: #f8f8f8;
-}
+} */
 
 table tr th {
   font-weight: bold;
@@ -459,6 +460,10 @@ pre code, pre tt {
   height:300px;
 }
 
+#toc{
+  font-size:14px;
+}
+
 /* Prettying up the index */
 #index_body{
   padding-left:10px;
@@ -543,4 +548,134 @@ pre code, pre tt {
   right:46vh;
   height:7vh;
   bottom:0;
+}
+
+.new-button-row{
+  background-color: rgb(77, 255, 77);
+  border-radius:10px;
+  border-style: hidden;
+}
+.shift-new-button-row{
+  background-color: rgb(162, 249, 162);
+  margin-left:30px;
+  display:block;
+  border-radius:10px;
+  border-style: hidden;
+}
+.select-button-row{
+  background-color: rgb(249, 255, 77);
+  border-radius:10px;
+  border-style: hidden;
+}
+.shift-select-button-row{
+  background-color: rgb(252, 255, 167);
+  margin-left:30px;
+  display:block;
+  border-radius:10px;
+  border-style: hidden;
+}
+.delete-button-row{
+  background-color: rgb(255, 86, 86);
+  border-radius:10px;
+  border-style: hidden;
+}
+.shift-delete-button-row{
+  background-color: rgb(255, 172, 172);
+  margin-left:30px;
+  display:block;
+  border-radius:10px;
+  border-style: hidden;
+}
+.loop-button-row{
+  background-color: rgb(43, 121, 255);
+  border-radius:10px;
+  border-style: hidden;
+}
+.shift-loop-button-row{
+  background-color: rgb(136, 180, 255);
+  margin-left:30px;
+  display:block;
+  border-radius:10px;
+  border-style: hidden;
+}
+.play-button-row{
+  background-color: white;
+  border-radius:10px;
+  border-style: hidden;
+}
+.shift-play-button-row{
+  background-color: rgb(225, 225, 225);
+  margin-left:30px;
+  display:block;
+  border-radius:10px;
+  border-style: hidden;
+}
+.copy-button-row{
+  background-color: rgb(178, 178, 178);
+  border-radius:10px;
+  border-style: hidden;
+}
+.shift-copy-button-row{
+  background-color: rgb(224, 224, 224);
+  margin-left:30px;
+  display:block;
+  border-radius:10px;
+  border-style: hidden;
+}
+.menu-button-row{
+  background-color: rgb(131, 131, 131);
+  border-radius:10px;
+  border-style: hidden;
+}
+.joystick-any-control-row{
+  background-color: rgb(178, 178, 178);
+  border-radius:10px;
+  border-style: hidden;
+}
+.shift-joystick-any-control-row{
+  background-color: rgb(135, 135, 135);
+  margin-left:30px;
+  display:block;
+  border-radius:10px;
+  border-style: hidden;
+}
+
+.a-control-row{
+  background-color: rgb(255, 76, 76);
+  color:black;
+  border-radius:10px;
+  border-style: hidden;
+}
+.a-press-control-row{
+  background-color: rgb(255, 145, 145);
+  color:black;
+  border-radius:10px;
+  border-style: hidden;
+}
+.shift-a-control-row{
+  background-color: rgb(255, 199, 199);
+  margin-left:30px;
+  display:block;
+  border-radius:10px;
+  border-style: hidden;
+}
+
+.b-control-row{
+  background-color: rgb(112, 112, 255);
+  color:black;
+  border-radius:10px;
+  border-style: hidden;
+}
+.b-press-control-row{
+  background-color: rgb(180, 180, 255);
+  color:black;
+  border-radius:10px;
+  border-style: hidden;
+}
+.shift-b-control-row{
+  background-color: rgb(218, 218, 255);
+  margin-left:30px;
+  display:block;
+  border-radius:10px;
+  border-style: hidden;
 }

@@ -22,6 +22,12 @@
 </body>
 <!-- downloading marked renderer to convert the markdown to html -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<!-- 
+<tr>
+<td align="center"><img src="images/buttons/new.svg" title="New" alt="New" class="button-svg"></td>
+<td align="left">Create a new <a href="" title="null" onclick="closeTOCFromLink()">Note</a></td>
+</tr>
+ -->
 <script>
     // Markdown renderer
     const renderer = {
@@ -41,6 +47,93 @@
         //adds the close TOC function to menu links
         link(href,title,text){
             return `<a href="${href}" title="${title}" onclick="closeTOCFromLink()">${text}</a>`;
+        },
+        tablecell(content){
+            let colorClass = null;
+            if(/new.svg/g.test(content)){
+                if(/shift.svg/g.test(content)){
+                    colorClass = 'shift-new-button-row';
+                    content = content.slice(content.indexOf('+'));
+                }
+                else
+                    colorClass = 'new-button-row';
+            }
+            else if(/select.svg/g.test(content)){
+                if(/shift.svg/g.test(content)){
+                    colorClass = 'shift-select-button-row';
+                    content = content.slice(content.indexOf('+'));
+                }
+                else
+                    colorClass = 'select-button-row';
+            }
+            else if(/delete.svg/g.test(content)){
+                if(/shift.svg/g.test(content)){
+                    colorClass = 'shift-delete-button-row';
+                    content = content.slice(content.indexOf('+'));
+                }
+                else
+                    colorClass = 'delete-button-row';
+            }
+            else if(/loop.svg/g.test(content)){
+                if(/shift.svg/g.test(content)){
+                    colorClass = 'shift-loop-button-row';
+                    content = content.slice(content.indexOf('+'));
+                }
+                else
+                    colorClass = 'loop-button-row';
+            }
+            else if(/play.svg/g.test(content)){
+                if(/shift.svg/g.test(content)){
+                    colorClass = 'shift-play-button-row';
+                    content = content.slice(content.indexOf('+'));
+                }
+                else
+                colorClass = 'play-button-row';
+            }
+            else if(/copy.svg/g.test(content)){
+                if(/shift.svg/g.test(content)){
+                    colorClass = 'shift-copy-button-row';
+                    content = content.slice(content.indexOf('+'));
+                }
+                else
+                colorClass = 'copy-button-row';
+            }
+            else if(/joystick.svg/g.test(content)){
+                if(/shift.svg/g.test(content)){
+                    colorClass = 'shift-joystick-any-control-row';
+                    content = content.slice(content.indexOf('+'));
+                }
+                else
+                    colorClass = 'joystick-any-control-row';
+            }
+            else if(/A.svg/g.test(content)){
+                if(/pressing/g.test(content)){
+                    colorClass = 'a-press-control-row';
+                }
+                else if(/shift.svg/g.test(content)){
+                    colorClass = 'shift-a-control-row';
+                    content = content.slice(content.indexOf('+'));
+                }
+                else
+                    colorClass = 'a-control-row';
+            }
+            else if(/B.svg/g.test(content)){
+                if(/pressing/g.test(content)){
+                    colorClass = 'b-press-control-row';
+                }
+                else if(/shift.svg/g.test(content)){
+                    colorClass = 'shift-b-control-row';
+                    content = content.slice(content.indexOf('+'));
+                }
+                else
+                    colorClass = 'b-control-row';
+            }
+            else if(/menu.svg/g.test(content))
+                colorClass = 'menu-button-row';
+            if(colorClass)
+                return '<td class="' + colorClass + '">' + content + '</td>';
+            else
+                return '<td>'+content+'</td>';
         },
         image(href, title, text) {
             //check if it's a button svg
