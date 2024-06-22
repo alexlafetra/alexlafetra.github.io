@@ -17,7 +17,7 @@ const lengthVar = 5;
 const colorVar = 30;
 
 //slow, but pretty
-const renderWithCurves = true;
+const renderWithCurves = false;
 
 //25 is a pretty good sweet spot
 let growthReps = 25;

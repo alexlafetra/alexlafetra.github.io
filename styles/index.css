@@ -27,21 +27,30 @@ body {
     /* background-image: url('https://alexlafetra.github.io/images/backgrounds/background2.jpg'); */
     /* background-image: "images/backgrounds/background2.jpg"; */
 }
-#background{
+#center_description_container{
     position:absolute;
     width:250px;
     height: 250px; 
-    overflow: hidden;
-    object-fit: cover;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background:white;
+}
+.center_description{
+    width:100%;
+    height:250px;
+    display:block;
 }
 /* links */
 #center_index a{
     fill:rgb(255, 255, 255);
     font-size: 29.55px;
-    /* font-size: 31.5px; */
-    /* font-size: 5vw; */
     transition: 0.2s;
 }
+
+#center_index .link{
+    pointer-events: auto;
+}
+
 #center_index .link:hover{
     fill:rgb(255, 0, 238);
     paint-order: stroke;
@@ -49,12 +58,14 @@ body {
     stroke-width: 1px;
     stroke-linecap: butt;
     stroke-linejoin: miter;
+    cursor: pointer;
 }
 #text_svg{
     position: fixed;
     display: block;
     margin: auto;
     transition: 0.3s;
+    pointer-events: none; 
 }
 
 canvas{

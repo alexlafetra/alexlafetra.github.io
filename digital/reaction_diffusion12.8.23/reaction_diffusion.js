@@ -101,8 +101,8 @@ let embossed = false;
 let font;
 let img;
 
-const defaultParams = {stepSize:1.0,dA:1,dB:0.2,k:0.06,f:0.04,dT:1,computePasses:4};
-
+// const defaultParams = {stepSize:1.0,dA:1,dB:0.2,k:0.06,f:0.04,dT:1,computePasses:4};
+const defaultParams = {stepSize:2.72,dA:0.45,dB:0.4,k:0.0431,f:0.12,dT:1,computePasses:4};
 //preload your shader files
 function preload(){
   reactionDiffusionShader = loadShader('rxn.vert','rxn.frag');
@@ -123,8 +123,8 @@ function clearScreen(){
   computeLayer.end();
 }
 
-const MAXWIDTH = 600;
-const MAXHEIGHT = 600;
+const MAXWIDTH = 1000;
+const MAXHEIGHT = 1000;
 function windowResized(){
   resizeCanvas(min(windowWidth,MAXWIDTH),min(windowHeight,MAXHEIGHT));
   //recreate framebuffers

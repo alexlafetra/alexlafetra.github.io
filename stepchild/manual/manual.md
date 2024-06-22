@@ -24,10 +24,9 @@ Shouldn't refer to MIDI unless MIDI messages are being sent
     5. [Selecting notes](#15-selecting-notes)
     6. [Moving loops](#16-modifying-loop-points)
     7. [Copy/paste](#17-copy-paste)
-    8. [Playback](#18-playback)
-        1. Playing
-        2. [Recording](#b-recording)
-    9. Status Icons
+    8. [Playing](#18-playing)
+    9. [Recording](#19-recording)
+    10. [Status Icons](#110-status-icons)
 2. [Track Editor](#2-track-editor)
     1. [Changing Track Pitch](#21-changing-track-pitch)
     2. [Changing Track Octave](#22-changing-track-octave)
@@ -129,15 +128,29 @@ Shouldn't refer to MIDI unless MIDI messages are being sent
 
 # 0. Introduction
 
-Hello! Welcome to the user manual. This document is intended to provide detailed information on using the Stepchild to create music. For a quick introduction to the Stepchild, please check out the [quickstart guide](#152-quickstart).
+Hello! Welcome to the user manual for the Stepchild MIDI instrument. This document is intended to provide detailed information on using the Stepchild to create music. For a brief guide to getting started with the Stepchild, please check out the [quickstart doc](#152-quickstart).
 
-The Stepchild is a multipurpose MIDI instrument, utility, and sequencer designed to utilize the full functionality of the MIDI protocol to control external hardware instruments in fluid and unexpected ways. It's also your baby. The software is currently on version [1.0](#151-version-history) (see [Updating](#) for instructions on how to check and update the Stepchild's firmware). 
+The Stepchild is a multipurpose MIDI instrument, utility, and sequencer designed to utilize the full functionality of the MIDI protocol to control external hardware instruments in fluid and unexpected ways. It's also your baby. The software is currently on version [1.0](#151-version-history) (see [Updating](#) for instructions on how to check and update the Stepchild's firmware). For instructions on how to build the Stepchild from a kit, please see the [build guide](../buildguide.html).
 
-For instructions on how to build the Stepchild from a kit (or from scratch!), please see the [build guide](../buildguide.html).
 
-![button-graphic-R](images/buttons.png)
-![button-graphic-L](images/Knobs.png)
+***Main Features of the Stepchild***
 
+**Utility**
+- 4 TRS/DIN outputs, 1 USB output
+- 1 TRS/DIN input, 1 USB input
+- Seamless routing between USB, TRS, and DIN MIDI ports
+- Channel filtering, MIDI Throughpass, and MIDI monitoring
+- Clock output for synchronizing MIDI, CV gear; clock input for synching to an external sequencer
+- Onboard filesystem, able to send/receive files to external storage over USB
+- Export sequences as MIDI files, .stpchld files
+
+**Musicality**
+- Step Sequencer
+- Flexible Arpeggiator
+- 6 MIDI Effects
+- Autotracks for sending automated CC messages
+- Program Change Sequencer
+- 6 MIDI generative instruments
 
 ## 0.1 Controls
 
@@ -153,7 +166,6 @@ The Stepchild has **5** separate MIDI outputs and **2** separate inputs. The MID
 
 The Stepchild supports USB MIDI Input/output for communicating with a DAW or independently powered USB MIDI device through its MicroUSB port.
 
-![midi-routing-diagram](images/MIDI_routing_diagram.png)
 
 **Port 1** and the **USB Port** are both MIDI Inputs. The remaining ports are all output-only, so don't connect any cables sending data into the Stepchild to anything but the USB Port and Port 1!
 
@@ -168,10 +180,9 @@ The Stepchild will take power from any 5V microUSB power supply. The Stepchild i
 <!-- 50mA for OLED, 50mA for pi pico on average -->
 **[SECTION ABOUT POWER CONSUMPTION -- NEED 2 TEST!]**
 
-
-![medium-image-R](images/tracks_with_notes.png)
-
 ## 0.4 Tracks
+
+![Tracks](images/tracks_with_notes.png)
 
 Tracks hold pitch and channel information controlling the MIDI pitch/channel data the notes on them are sent with. This lets you change the pitch and channel routing of notes by changing the pitch of a track, rather than editing each note individually.
 
@@ -186,9 +197,9 @@ Track pitch can be changed directly in the [Main Sequence](#1-main-sequence) by 
 ![Note Velocities](images/gifs/note_velocity.gif)
  ###### Note shade variations for velocities 1-127^^
 
- Like tracks, Notes can be edited directly in the [main sequencer](), but can be more extensively edited in the [note editor]() and by using different [Sequence FX]().
+ Like tracks, Notes can be edited directly in the [Main Sequencer](#1-main-sequence), but can be more extensively edited in the [Note Editor]() and by using different [Sequence FX]().
 
-Notes are mostly created and deleted in the [Main Sequence](#13-creating-notes), and can be edited by pressing ![B](buttons/B.svg) to bring up the [Note Editor](#3-note-editor) or by using an [FX Application](#8-fx).
+Notes are mostly created and deleted in the [Main Sequencer](#13-creating-notes), and can be edited by pressing ![B](buttons/B.svg) to bring up the [Note Editor](#3-note-editor) or by using an [FX Application](#8-fx).
 
 ## 0.6 Timesteps
 
@@ -198,7 +209,7 @@ Although the Stepchild stores note sequence data to the nearest Timestep, the ac
 
 ## 0.7 Loops
 
-The Stepchild's sequence is like a big canvas, sections of which can be highlighted inside **Loops**. A Loop contains a start point, an end point, a value determing how many times it repeats, and a setting controlling what happens when the it ends. The default behavior for loops is to jump to the ***next loop in the loop sequence*** as soon as a Loop has finished playing through, allowing Loops to be chained together to build up songs of repeated phrases. In some cases, you could write your song out in full using the [copy/paste]() functionality to duplicate sections of MIDI data. Using Loops to do this instead saves sequence space, lets you edit duplicate phrases as one set of data, and allows you to experiment with varying which phrases are played.
+A Loop contains a start point, an end point, a value determing how many times it repeats, and a setting controlling what happens when the it ends. The default behavior for loops is to jump to the ***next loop in the loop sequence*** as soon as a Loop has finished playing through, allowing Loops to be chained together to build up songs of repeated phrases. In some cases, you could write your song out in full using the [copy/paste]() functionality to duplicate sections of MIDI data. Using Loops to do this instead saves sequence space, lets you edit duplicate phrases as one set of data, and allows you to experiment with varying which phrases are played.
 
 Like Notes and Tracks, Loop points can be edited in the [Main Sequencer](). Loops can be edited much more deeply in the [Loop Editor](). By default, the Stepchild's main sequence will start playing at the start point of the currently active Loop. If Loop behavior is disabled altogether in the [Loop Editor]() or [Main Sequencer]() and the sequence is played the Stepchild will play through the currently active Loop once and then stop playing.
 
@@ -217,7 +228,7 @@ The Stepchild's [Instruments]() are Applications that use the Stepchild to send 
 
 # 1. Main Sequence
 
-The main sequence is displayed like a piano roll editor found in traditional DAWs, with time shown along the X axis and separate [tracks](#c-tracks) on the Y axis. Track pitches are shown on the left as either MIDI note numbers or western chromatic pitches. The current [**loop points**](#15-moving-loops) and [**status icons**](#18-status-icons), like battery life,  are shown at the top of the Main Sequnce screen, as well as a tooltip for the most recent action performed.
+The homescreen of the Stepchild is the Main Sequence. This is the area of the Stepchild where you can write, record, and delete Notes, create new Tracks, and access the Main Menus. The Main Sequence is displayed like a piano roll editor found in traditional DAWs, with time shown along the X axis and separate [tracks](#c-tracks) on the Y axis. Track pitches are shown on the left as either MIDI note numbers or western chromatic pitches. The current [**loop points**](#15-moving-loops) and [**status icons**](#18-status-icons), like battery life,  are shown at the top of the Main Sequnce screen, as well as a tooltip for the most recent action performed.
 
 ![The Main Sequence homepage](images/gifs/mainsequence.gif)
 
@@ -253,9 +264,9 @@ Here's a quick overview of how to use the Main Sequencer. More detail on each fu
 |![B](buttons/pressingB.svg)| Enter the [Track Editor]()|
 
 ### 1.1 Changing the View & Subdivision
-The sequence display will automatically adjust depending on where the cursor is and how zoomed in the view is. Turning ![**A**](buttons/A.svg) will multiply or divide the view subdivision by 2, and holding shift while turning ![**A**](buttons/A.svg) will switch between triplet and base-2 subdivisions. Turning ![**B**](buttons/B.svg) will zoom the sequence in or out by 2x and also increase or decrease the subdivision, allowing for smoothly zooming in and out to place notes with more precision.
+The sequence display will automatically adjust depending on where the cursor is and how zoomed in the view is. Turning ![**A**](buttons/A.svg) will multiply or divide the view subdivision by 2, and holding shift while turning ![**A**](buttons/A.svg) will switch between triplet and base-2 subdivisions. Turning ![**B**](buttons/B.svg) will zoom the sequence in or out and increase or decrease the subdivision accordingly.
 
-At a certain level, when the sequence is zoomed out far enough, notes won't be able to render individually due to the low resolution of the Stepchild's screen. Instead, adjacent notes will render as a solid block and you'll need to zoom in to see individual notes again.
+If the sequence is zoomed out far enough, Notes will render as a solid block due to the limited resolution of the Stepchild's screen.
 
 ### 1.2 Moving the Cursor
 You can change which track the cursor is on, the Active Track, by moving the joystick ![up-and-down](buttons/up_down.svg).
@@ -298,34 +309,28 @@ Pressing ![Copy](buttons/copy.svg) will copy all selected Notes to the clipboard
 To paste the Notes on your clipboard to the sequence, hold ![Shift](buttons/shift.svg) and press ![Copy](buttons/copy.svg). Pasted Notes will be automatically selected, allowing you to easily delete or edit them after pasting.
 
 
-### 1.8 Playback
+### 1.8 Playing
 
-Pressing ![play](buttons/play.svg)
+Pressing ![play](buttons/play.svg) will start or stop the Main Sequence. While playing, the Stepchild's Playhead will move Timestep-by-Timestep until it reaches the end of the current loop. The playhead will read out Notes in the Main Sequence, [Program Change]() messages from the PC sequencer, and CC Data from any active [Autotracks](). Notes are first sent to the [Arpeggiator]() if the Arpeggiator is set to arpeggiate notes from the Main Sequence.
 
-When playing or recording, the **playhead** and **writehead** will scan across the sequence, moving 1 [timestep](#d-timesteps) at a time according to the internal or external clock. 
+### 1.9 Recording
 
-### a. Playing
+Holding ![shift](buttons/shift.svg) and pressing ![play](buttons/play.svg) will put the Stepchild into Recording Mode.
 
-### b. Recording
+By default the Stepchild will **wait** to receive a MIDI message before it starts recording, at which point it will begin recording MIDI Notes as they're received. This can be changed in the [Settings]() menu so that the Stepchild begins recording as soon as it enters Recording Mode. 
 
-Alongside notes that are [written](#13-creating-notes) to the sequence by the user, the Stepchild can record notes as they're performed live. You can start **recording** by pressing ![Play](buttons/play.svg) and ![Shift](buttons/shift.svg) simultaneously. While recording, MIDI messages will create notes and CC data at the position of the **writehead**. By default, if a note already exists when a track is attempted to be written to, that note will be **overwritten**.
+Notes will be recorded to an existing Track with the same Pitch and Channel the Note was sent on, or will create a new Track if none are compatible. A Track must also be [Armed]() in order to be written to, and Tracks that are Disarmed are protected from being overwritten. If the Stepchild is set to [Overwrite]() existing Notes, old Notes will be overwritten with newer Notes or blank spaces if no Note is recorded. Currently, incoming Program Change Data and CC data are not recorded.
 
-By default the Stepchild will **wait** to receive a MIDI message before it starts recording, at which point it will begin recording in real time in **1-shot** recording mode. In 1-shot rec mode the Stepchild will continue recording until the **writehead** reaches the end of the current loop and then **stop**.
-
-Whether or not the Stepchild waits for a note can be changed in the [settings](#b-playback) menu by toggling the **wait for note** parameter. 
-The Stepchild can also switch between **overwriting** notes and **making new tracks** for conflicting notes by toggling the **overwrite** parameter. You can also swap between **1-shot** recording mode and **continuous** recording mode by toggling the **recmode** parameter. 
+In [1-Shot Recording Mode]() (default) the Stepchild will record to the Active Loop and then stop. In [Continuous Recording Mode]() the Stepchild will continue recording to each Loop as the Loop Sequence is played.
 
 Only [tracks](#c-tracks) and [autotracks](#5-autotracks) that are [armed](#24-arming-tracks) will be written to. Additionally, when the Stepchild is set to use an [external clock](#c-clock-source), the recording head will only advance when a MIDI clock signal is received.
 
-## 1.9 Status Icons
-
-The top of the **Main Sequence** displays the [loop points](#6-loops), the current **Status Icons**, and a **tooltip** for the last action the user did (hopefully, the tooltip makes it easier to learn the control scheme).
-
-Different status icons signify that a time-based event is taking place. This is done so some less visually obvious functions, like Autotracks, have a visual cue. Below is a list of each **status icon** and its meaning:
+### 1.10 Status Icons
+The top of the Main Sequencer displays the Loop Points and other icons signifying that a time-based event is taking place. This is done so some less visually obvious functions, like Autotracks, have a visual cue signifying when they're in use and affecting the Sequence. Below is a list of each status icon and its meaning:
 
 |Icon|Description|
 |:---:|:---|
-|![Power Icon](images/top_icons/battery.gif)|[Battery/USB](#c-power--batteries) indicator.|
+|![Power Icon](images/top_icons/battery.gif)|[Battery Level /USB](#03-power) indicator.|
 |![Power Icon](images/top_icons/battery.gif)|The sequence is [playing](#a-playing).|
 |![Power Icon](images/top_icons/battery.gif)|The sequence is [recording](#b-recording).|
 |![Power Icon](images/top_icons/battery.gif)| Writehead is in [overwrite](#b-recording) mode.|
@@ -338,11 +343,41 @@ Different status icons signify that a time-based event is taking place. This is 
 
 # 2. Track Editor
 
-Pressing ![B](buttons/B.svg) while in the [Main Sequence](#1-main-sequence) will slide the <b>Track Editor</b> in. This editor lets you view and edit the data of the active track and access some functions for editing multiple tracks at once.
+The Track Editor is a side menu that gives you access to editing individual Track parameters and a few tools to make editing Tracks more intuintive. Pressing ![B](buttons/B.svg) while in the [Main Sequence](#1-main-sequence) opens up the Track Editor, which displays the data for the current Active Track.
 
 ![Track Editor](images/gifs/trackedit.gif)
 
 The options in the Track Editor can be navigated by moving the <b>Joystick</b> ![Up and Down](buttons/up_down.svg). To change which track you're editing, move ![Up and Down](buttons/up_down.svg) while holding ![Shift](buttons/shift.svg).
+
+An overview of what can be done in the Track Editor:
+
+|**Buttons**|*Function*|
+|:---:|:---|
+|![New](buttons/new.svg)| Create a new [Track]()|
+|![Select](buttons/select.svg)| [Select]() a note |
+|![Select](buttons/select.svg) + ![Shift](buttons/shift.svg) | [Deselect]() all notes |
+|![Delete](buttons/delete.svg)| Delete a note|
+|![Delete](buttons/delete.svg) + ![Shift](buttons/shift.svg) | [Mute]() a note|
+|![Loop](buttons/loop.svg)| Grab a [Loop Point]() to move it|
+|![Loop](buttons/loop.svg) + ![Shift](buttons/shift.svg)| Deactivate [Looping]()|
+|![Play](buttons/play.svg)| [Play]() or pause the sequence (or stop recording)|
+|![Play](buttons/play.svg) + ![Shift](buttons/shift.svg)| Start or stop [recording]()|
+|![Copy](buttons/copy.svg)| [Copy]() notes|
+|![Copy](buttons/copy.svg) + ![Shift](buttons/shift.svg)| [Paste]() copied notes|
+|![Menu](buttons/menu.svg)| Bring up the [Main Menu]()|
+
+<br>
+
+|**Other Controls**|*Function*|
+|:---:|:---|
+|![Joystick](buttons/joystick.svg)| [Move]() the Cursor by subdivision/set Active Track|
+|![Joystick](buttons/joystick.svg) + ![Shift](buttons/shift.svg)| [Move]() the Cursor by timestep/[Change Note Velocity](#13-creating-notes)|
+|![A](buttons/turningA.svg)| Change the [grid subdivision](#11-changing-the-view--subdivision)|
+|![A](buttons/turningA.svg) + ![Shift](buttons/shift.svg)| Toggle between triplet/quarter subdivisions|
+|![A](buttons/pressingA.svg)| Enter the [Note Editor]()|
+|![B](buttons/turningB.svg) | [Zoom](#11-changing-the-view--subdivision) the view in or out|
+|![B](buttons/turningB.svg) + ![Shift](buttons/shift.svg)| Change the pitch of the Active Track|
+|![B](buttons/pressingB.svg)| Enter the [Track Editor]()|
 
 You can create new tracks by pressing ![New](buttons/new.svg) and delete tracks by pressing ![Delete](buttons/delete.svg). Holding ![Shift](buttons/shift.svg) while pressing ![Delete](buttons/delete.svg) will [mute](#27-muting-tracks) the current track.
 

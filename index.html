@@ -11,10 +11,26 @@
     <!-- this is the code linking the boids background-->
     <script language="javascript" type="text/javascript" src="scripts/libraries/p5.min.js"></script>
     <script language="javascript" type="text/javascript" src="scripts/boids_background.js"></script>
-    <script language="javascript" type="text/javascript" src="scripts/rotate_center_menu.js"></script>
-
     <!-- this is the code loading each center image -->
     <script>  
+        function faceMouse(){
+            let xAngle = map((mouseY-height/2),-height/2,height/2,-90,90)*(0.6)+360;
+            let yAngle = map((mouseX-width/2),-width/2,width/2,-90,90)*(-0.6)+360;
+            let dist = p5.Vector.dist(createVector(mouseX,mouseY),createVector(windowWidth/2,windowHeight/2));
+            let scale = 250;
+            if(windowWidth<250*2.5){
+                scale = windowWidth/2.5
+            }
+            let txt;
+            //so it doesn't rotate when you're within the text
+            if(dist>300){
+                zAngle+=0.5;
+            }
+            txt = "rotateX("+xAngle+"deg) rotateY("+yAngle+"deg) rotateZ("+zAngle+"deg) scale("+scale+"%)";
+        
+            let element = document.getElementById("text_svg");
+            element.style.transform = txt;
+        }
         //clears all center images
         function clearImages(){
             let list = document.getElementsByClassName("main_menu_media");
@@ -51,7 +67,7 @@
 </head>
 <body>
     <div id = "whiteScreen" style = "position:absolute;transition:1s;width:0;height:100%;background-color:white;z-index:3;"></div>
-    <div id = "placeholder_list" class = "collisionElement side_list" style="position:absolute;right:200px;top:200px;width:200px;z-index: 1;">
+    <!-- <div id = "placeholder_list" class = "collisionElement side_list" style="position:absolute;right:200px;top:200px;width:200px;z-index: 1;">
         <p>hey hey hye hey hye</p>
         <p>hey hey hye hey hye</p>
         <p>hey hey hye hey hye</p>
@@ -64,29 +80,31 @@
         <p>hey hey hye hey hye</p>
         <p>hey hey hye hey hye</p>
         <p>hey hey hye hey hye</p>
-    </div>
+    </div> -->
     <div id = "center_index" class = "collisionElement">
-        <img id = "background" src = "images/backgrounds/babyface.jpg">
+        <div id = "center_description_container">
+            <img class = "center_description" src = "images/backgrounds/babyface.jpg">
+            <p>My name is Alex, I'm an Artist and Designer from California. </p>
+        </div>
         <!-- center media -->
         <img id = "0" class = "main_menu_media" src = "main_menu_media/art.jpeg">
         <img id = "1" class = "main_menu_media" src = "main_menu_media/transformer.jpeg">
         <img id = "2" class = "main_menu_media" src = "projects/thumbnails/stepchild.png">
         <img id = "3" class = "main_menu_media" src = "images/about/about_img.png">
         <img id = "4" class = "main_menu_media" src = "images/installation/IMG_9980.jpeg">
-
         <!-- circular menu -->
+        <!-- note to self: i made this path using http://complexdan.com/svg-circleellipse-to-path-converter/ -->
         <svg id = "text_svg" width="250" height="250" onmouseleave = "clearImages()">
-            <!-- note to self: i made this path using http://complexdan.com/svg-circleellipse-to-path-converter/ -->
             <path id = "curve" fill = "none" d="M25,125a100,100 0 1,0 200,0a100,100 0 1,0 -200,0"/>
             <text>
                 <textPath alignment-baseline = "top" xlink:href="#curve" startOffset = "0" id = "circleText" color = "rgb(255,255,255)">
-                    <a class = "link" onclick = "whiteOutAndLoad('art.html');" onmouseover = "loadCenterImage(0)" onmouseleave = "clearImages()">Visual Art</a>
+                    <a class = "link" onclick = "whiteOutAndLoad('art.html');">Visual Art</a>
                     <a>  -  </a>
-                    <a class = "link" onclick = "slideMenu('placeholder_list');" onmouseover = "loadCenterImage(1)" onmouseleave = "clearImages()">Music</a>
+                    <a class = "link" onclick = "slideMenu('placeholder_list');">Music</a>
                     <a>  -  </a>
-                    <a class = "link" onclick = "slideMenu('digital_work_list');" onmouseover = "loadCenterImage(2)" onmouseleave = "clearImages()">Digital Work</a>
+                    <a class = "link" onclick = "slideMenu('digital_work_list');">Digital Work</a>
                     <a>  -  </a>
-                    <a class = "link" onclick = "whiteOutAndLoad('stepchild.html');" onmouseover = "loadCenterImage(3)" onmouseleave = "clearImages()">The Stepchild</a>
+                    <a class = "link" onclick = "whiteOutAndLoad('stepchild.html');"">The Stepchild</a>
                     <a>  -  </a>
                 </textPath>
             </text>

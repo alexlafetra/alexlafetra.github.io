@@ -80,9 +80,6 @@ class Boid {
     this.previousPosition = null;
     this.velocity = p5.Vector.random2D();
     this.velocity.setMag(random(2,4));
-    this.acceleration = createVector();
-    this.maxForce = 0.2;
-    this.maxSpeed = 10;
     // this.color =  color(random(0,255),random(0,255),random(0,255));
     switch(pallette){
       //random
@@ -123,7 +120,6 @@ class Boid {
       this.position.y+=height;
     }
   }
-  
   align(boids){//makes the boids go in the same direction
     let perceptionRadius = 100; //radius the boid can see
     let steering = createVector();
@@ -289,9 +285,6 @@ class Boid {
   show(){
     strokeWeight(pointSize);
     stroke(this.color);
-    if(this.previousPosition == null)
-      point(this.position.x,this.position.y);
-    else
-      line(this.position.x,this.position.y,this.previousPosition.x,this.previousPosition.y);
+    point(this.position.x,this.position.y);
   }
 }

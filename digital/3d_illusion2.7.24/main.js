@@ -15,7 +15,7 @@ let displacementTexCanvas;
 
 function preload(){
   tex = loadImage('render_tileset.png');
-  nTex = loadImage('position.png');
+  nTex = loadImage('normal.png');
 }
 function setup(){
   mainShader = createShader(shaderVert,shaderFrag);
@@ -84,6 +84,7 @@ vec4 getDisplacementTexture(float i){
   vec4 currentPos = texture2D(uPosition,getOffsetCoords(i));
   vec4 nextPos = texture2D(uPosition,getOffsetCoords(i+1.0));
   vec4 dispTex = uDisplacementStrength*(currentPos-nextPos);
+
   //don't forget to set the alpha to 1 if u wanna see it!
   dispTex.a = 1.0;
   return dispTex;
@@ -104,7 +105,7 @@ void main(){
   vec4 nextTexColor = texture2D(uTexture,getOffsetCoords(index+1.0));
 
   gl_FragColor = mix(texColor,nextTexColor,blend);
-  // gl_FragColor = getDisplacementTexture(index);
+  // vec4 color = getDisplacementTexture(index);
   // gl_FragColor = texColor;
   // gl_FragColor = displacement;
   // gl_FragColor = texture2D(uPosition,vTexCoord);
