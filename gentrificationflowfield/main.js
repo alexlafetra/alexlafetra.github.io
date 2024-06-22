@@ -289,8 +289,6 @@ function setup(){
 
     initGL();
 
-
-
     presets[0].setActive(0,flowField);
 }
 
@@ -308,10 +306,10 @@ function draw(){
         if(flowField.showingData)
             flowField.renderData();
         if(flowField.renderAs){
-            // flowField.renderAttractors();
+            flowField.renderAttractors();
         }
         if(flowField.renderRs){
-            // flowField.renderRepulsors();
+            flowField.renderRepulsors();
         }
     }
 }
