@@ -39,9 +39,9 @@ let conversions2000to2010;
 let conversions2010to2020;
 
 //Parameters for viewing the map
-let offset;
-let scale;
-let geoOffset;
+let offset;//offset relative to the window
+let scale;//scale
+let geoOffset;//offset of the geometry
 
 //HOLC tract shapes taken from https://dsl.richmond.edu/panorama/redlining/data
 let oakHolcTracts;
@@ -189,34 +189,6 @@ function alignGeoAndData(features){
     }
 }
 
-//Storing some overall totals in the "totalStats" object
-let totalStats;
-function getTotalStats(){
-    totalStats = {'2000':{total:0,
-                          white:0,
-                          black:0,
-                          asian:0},
-                  '2020':{total:0,
-                          white:0,
-                          black:0,
-                          asian:0}};
-
-    for(let tract of bayTracts){
-        if(!tract.hasData)
-            continue;
-        totalStats[2000].white += tract.raceData2000.obj['White'];
-        totalStats[2020].white += tract.raceData2020.obj['White'];
-
-        totalStats[2000].black += tract.raceData2000.obj['Black'];
-        totalStats[2020].black += tract.raceData2020.obj['Black'];
-
-        totalStats[2000].asian += tract.raceData2000.obj['Asian'];
-        totalStats[2020].asian += tract.raceData2020.obj['Asian'];
-
-        totalStats[2000].total += tract.raceData2000.obj['Total'];
-        totalStats[2020].total += tract.raceData2020.obj['Total'];
-    }
-}
 
 function renderCentroids(geometryOffset){
     //rendering each tract
@@ -396,4 +368,15 @@ function setupMapData(){
     alignGeoAndData(features);
     getTotalStats();
     calculateGeographicCenters();
+}
+
+function setView(x,y,s){
+    scale = {x:s,y:-s};
+    offset = {x:x,y:y};
+    flowField.updateParticleMask();
+    flowField.updateFlow();
+}
+function setViewToSanJose(){
+    let s = mainCanvas.width;
+    setView(width/16,height/4,s);
 }

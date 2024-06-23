@@ -4,54 +4,8 @@
 //Identity function so I can tag string literals with the glsl marker
 const glsl = x => x;
 
-const updateVelVert = glsl`
-precision highp float;
-precision highp sampler2D;
-
-attribute vec3 aPosition;
-attribute vec2 aTexCoord;
-
-//Varying variable to pass the texture coordinates into the fragment shader
-varying vec2 vParticleCoord;
-
-void main(){
-    // //passing aTexCoord into the frag shader
-    vParticleCoord = aTexCoord;
-    vec2 positionVec2 = aPosition.xy;
-    //always gotta end by setting gl_Position equal to something;
-    gl_Position = vec4(positionVec2,aPosition.z,1.0);
-}
-`;
-
-const updateVelFrag = glsl`
-
-precision highp float;
-precision highp sampler2D;
-
-uniform sampler2D uParticleVel;
-uniform sampler2D uParticlePos;
-uniform sampler2D uFlowFieldTexture;
-
-uniform float uForceStrength;
-
-varying vec2 vParticleCoord;
-
-void main(){
-    //Get position in clip space
-    vec4 screenPosition = texture2D(uParticlePos,vParticleCoord);
-    //Get current velocity
-    vec4 oldVel = texture2D(uParticleVel,vParticleCoord);
-    //Get the acceleration/force from the flow field texture
-    vec4 flowForce = texture2D(uFlowFieldTexture,screenPosition.xy);
-    //Recombine the attractor/repulsor forces
-    vec2 newVel = vec2(flowForce.x+flowForce.z,flowForce.y+flowForce.w);
-
-    gl_FragColor = vec4(newVel,1.0,1.0);
-}
-`;
-
+//fills a texture with random noise (used for initializing the simulation)
 const randomFrag = glsl`
-
 precision highp float;
 precision highp sampler2D;
 
@@ -65,30 +19,11 @@ float random(vec2 coord, float seed){
 }
 
 void main(){
-    gl_FragColor = vec4(random(vParticleCoord,1.0+uRandomSeed)*uScale,random(vParticleCoord,2.0+uRandomSeed)*uScale,random(vParticleCoord,0.0+uRandomSeed)*uScale,1.0);
+    gl_FragColor = vec4(random(vParticleCoord,1.0+uRandomSeed)*uScale,random(vParticleCoord,2.0+uRandomSeed)*uScale,random(vParticleCoord,0.0+uRandomSeed)*uScale,random(vParticleCoord,3.0+uRandomSeed)*uScale);
 }
 `;
 
-const defaultVert = glsl`
-precision highp float;
-precision highp sampler2D;
-
-attribute vec3 aPosition;
-attribute vec2 aTexCoord;
-
-//Varying variable to pass the texture coordinates into the fragment shader
-varying vec2 vParticleCoord;
-
-void main(){
-    // //passing aTexCoord into the frag shader
-    vParticleCoord = aTexCoord;
-    vec2 positionVec2 = aPosition.xy * 2.0 - 1.0;
-    //always gotta end by setting gl_Position equal to something;
-    gl_Position = vec4(positionVec2,aPosition.z,1.0);
-}
-`;
-
-const ageVert = glsl`
+const updateParticleAgeVert = glsl`
 precision highp float;
 precision highp sampler2D;
 
@@ -106,7 +41,7 @@ void main(){
 }
 `;
 
-const ageFrag = glsl`
+const updateParticleAgeFrag = glsl`
 precision highp float;
 precision highp sampler2D;
 
@@ -126,31 +61,30 @@ void main(){
 }
 `;
 
-const updatePositionVert = glsl`
+const updateParticleDataVert = glsl`
 precision highp float;
 precision highp sampler2D;
 
 attribute vec3 aPosition;
 attribute vec2 aTexCoord;
 
-uniform vec2 uResolution;
-
 //Varying variable to pass the texture coordinates into the fragment shader
 varying vec2 vParticleCoord;
 
 void main(){
     //passing aTexCoord into the frag shader
-    vParticleCoord = vec2(aTexCoord.x,aTexCoord.y);
+    vParticleCoord = aTexCoord;
     //always gotta end by setting gl_Position equal to something;
     gl_Position = vec4(aPosition,1.0);
 }
 `;
 
-const updatePositionFrag = glsl`
+const updateParticleDataFrag = glsl`
 precision highp float;
 precision highp sampler2D;
 
 uniform sampler2D uParticleVelTexture;
+uniform sampler2D uFlowFieldTexture;
 uniform sampler2D uParticlePosTexture;
 uniform sampler2D uParticleAgeTexture;
 uniform sampler2D uParticleMask;
@@ -170,39 +104,40 @@ float random (vec2 st) {
 }
 
 void main(){
-    //getting the particle position
-    vec4 texturePosition = texture2D(uParticlePosTexture,vParticleCoord);
+    //getting the particle data
+    vec4 particleData =  texture2D(uParticlePosTexture,vParticleCoord);
+    vec2 screenPosition = particleData.xy;//position data is stored in the r,g channels
+    vec2 particleVelocity = particleData.zw;//velocity data is stored in the b,a channels
 
     //checking the age of the particle
     vec4 textureAge = texture2D(uParticleAgeTexture,vParticleCoord);
-    bool died = false;
+
     //if it's too old, put it somewhere random (within the mask) and return
     if(textureAge.x > uAgeLimit){
-        texturePosition.x = random(texturePosition.xy);
-        texturePosition.y = random(texturePosition.xy);
-        died = true;
+        screenPosition.x = random(screenPosition.xy);
+        screenPosition.y = random(screenPosition.xy);
     }
-
-    //getting the velocity
-    vec4 textureVelocity = texture2D(uParticleVelTexture,vParticleCoord);
     //getting the random vel
     if(uRandomScale>0.0){
-        textureVelocity += uRandomScale*vec4(random(texturePosition.xx)-0.5,random(texturePosition.yy)-0.5,1.0,1.0);
+        particleVelocity += uRandomScale*vec2(random(screenPosition.xx)-0.5,random(screenPosition.yy)-0.5);
     }
 
+    vec4 flowForce =  texture2D(uFlowFieldTexture,screenPosition);
+    vec2 newVelocity = vec2(flowForce.x+flowForce.z,flowForce.y+flowForce.w);
+
     //creating the new position (for some reason, you gotta do it like this)
-    vec4 newPos = vec4(texturePosition.x+uDamp*(textureVelocity.x),texturePosition.y+uDamp*(textureVelocity.y),1.0,1.0);
+    vec2 newPos = uDamp*particleVelocity+screenPosition;
+
     //checking to see if it's within the mask
     if(uUseMaskTexture){
-        float val = texture2D(uParticleMask,newPos.xy).x;
+        float val = texture2D(uParticleMask,newPos).x;
         if(val<0.5){
             //try to place the particle 100 times
             for(int i = 0; i<100; i++){
                 vec2 replacementPos = vec2(random(vParticleCoord*uTime),random(vParticleCoord/uTime));
-                // val = texture2D(uParticleMask,replacementPos).x;
                 val = texture2D(uParticleMask,replacementPos).x;
                 if(val>0.5){
-                    gl_FragColor = vec4(replacementPos.xy,1.0,1.0);
+                    gl_FragColor = vec4(replacementPos,newVelocity);
                     return;
                 }
             }
@@ -210,11 +145,13 @@ void main(){
         }
     }
     //you actually don't need to wrap bounds b/c of the particle age decay
-    gl_FragColor = newPos;
+    gl_FragColor = vec4(newPos,newVelocity);
 }
 `;
 
 const drawParticlesVS = glsl`
+precision highp float;
+precision highp sampler2D;
 //attribute that we pass in using an array, to tell the shader which particle we're drawing
 attribute float id;
 uniform sampler2D uPositionTexture;
@@ -238,7 +175,7 @@ void main() {
     vec4 position = getValueFrom2DTextureAs1DArray(uPositionTexture, uTextureDimensions, id);
     //use the position to get the flow value
     vColor = texture2D(uColorTexture,position.xy);
-    gl_Position = vec4(position.x,position.y,1.0,1.0)-vec4(0.5);
+    gl_Position = vec4(position.xy,1.0,1.0)-vec4(0.5);
     gl_PointSize = uParticleSize;
 }
 `;
@@ -246,7 +183,6 @@ void main() {
 const drawParticlesFS = glsl`
 precision highp float;
 varying vec4 vColor;
-
 uniform vec4 uRepulsionColor;
 uniform vec4 uAttractionColor;
 void main() {
@@ -258,70 +194,48 @@ void main() {
 `;
 
 //Creating the flow field from a series of points
-const repulsorDistanceFrag = glsl`
-precision mediump float;
+const calculateFlowFieldFrag = glsl`
+precision highp float;
 
 varying vec2 vTexCoord;
 
-uniform vec3 uRepulsors[`+NUMBER_OF_ATTRACTORS+glsl`];
+uniform vec3 uAttractors[`+NUMBER_OF_ATTRACTORS+glsl`];//array holding all the attractors as [x,y,strength]
+uniform vec3 uRepulsors[`+NUMBER_OF_ATTRACTORS+glsl`];//array holding all the repulsors as [x,y,strength]
 
-// uniform float uThreshold;
+uniform float uAttractionStrength;//attractor strength
+uniform float uRepulsionStrength;//repulsor strength
 
-void main(){
-    float repulsion = 0.0;
-    float threshold = 80.0;
-    //calculate attractors/repulsors
-    for(int i = 0; i<`+NUMBER_OF_ATTRACTORS+glsl`; i++){
-        float dR = distance(uRepulsors[i].xy,vTexCoord);
-        // repulsion+=uRepulsors[i].z/(dR*dR);
-        repulsion+=1.0/(dR*dR);
-    }
-    repulsion/=`+NUMBER_OF_ATTRACTORS+glsl`.0;
-    if(repulsion > threshold)
-        gl_FragColor = vec4(1.0);
-    else
-        gl_FragColor = vec4(0.0,0.0,0.0,1.0);
-}
-`;
-
-//Creating the flow field from a series of points
-const flowMapFrag = glsl`
-precision mediump float;
-
-varying vec2 vTexCoord;
-
-uniform vec3 uAttractors[`+NUMBER_OF_ATTRACTORS+glsl`];
-uniform vec3 uRepulsors[`+NUMBER_OF_ATTRACTORS+glsl`];
-
-uniform float uAttractionStrength;
-uniform float uRepulsionStrength;
+uniform vec2 uCoordinateOffset;//offset
+uniform float uScale;//scale
+uniform float uDimensions;//dimensions of mainCanvas
 
 void main(){
     vec2 attraction = vec2(0.0);
     vec2 repulsion = vec2(0.0);
     //calculate attractors/repulsors
     for(int i = 0; i<`+NUMBER_OF_ATTRACTORS+glsl`; i++){
+        vec2 attractorCoord = vec2(uAttractors[i].x*uScale/uDimensions+uCoordinateOffset.x,-uAttractors[i].y*uScale/uDimensions+uCoordinateOffset.y);
+        vec2 repulsorCoord = vec2(uRepulsors[i].x*uScale/uDimensions+uCoordinateOffset.x,-uRepulsors[i].y*uScale/uDimensions+uCoordinateOffset.y);
         //add a vector pointing toward the attractor from this pixel
         //scaled by the inverse square of the distance AND the scale factor
-        float dA = distance(uAttractors[i].xy,vTexCoord);
-        attraction+=uAttractionStrength*(uAttractors[i].z)*(uAttractors[i].xy-vTexCoord)/(dA*dA);
-
+        float dA = distance(attractorCoord,vTexCoord);
+        attraction += uAttractionStrength*(uAttractors[i].z)*(attractorCoord-vTexCoord) / (dA*dA);
         //the reuplsion force points AWAY from the repulsor point
-        float dR = distance(uRepulsors[i].xy,vTexCoord);
-        repulsion+=uRepulsionStrength*(uRepulsors[i].z)*(vTexCoord-uRepulsors[i].xy)/(dR*dR);
+        float dR = distance(repulsorCoord,vTexCoord);
+        repulsion += uRepulsionStrength*(uRepulsors[i].z)*(vTexCoord-(repulsorCoord)) / (dR*dR);
     }
-    attraction/=`+NUMBER_OF_ATTRACTORS+glsl`.0;
-    repulsion/=`+NUMBER_OF_ATTRACTORS+glsl`.0;
+    attraction /= `+NUMBER_OF_ATTRACTORS+glsl`.0;
+    repulsion /= `+NUMBER_OF_ATTRACTORS+glsl`.0;
     //Storing both attraction and repulsion in the same texture
-    gl_FragColor = vec4(attraction.x,attraction.y,repulsion.x,repulsion.y);
+    gl_FragColor = vec4(attraction,repulsion);
 
     // gl_FragColor = vec4(attraction.x,attraction.y,repulsion.x,0.5*(repulsion.y+2.0));
     //^^ use this one if you want to render it to a texture! prevents alpha channnel from clipping
 }
 `;
 
-const flowMapVert = glsl`
-precision mediump float;
+const calculateFlowFieldVert = glsl`
+precision highp float;
 
 attribute vec3 aPosition;
 attribute vec2 aTexCoord;
@@ -332,8 +246,7 @@ varying vec2 vTexCoord;
 void main(){
     // //passing aTexCoord into the frag shader
     vTexCoord = aTexCoord;
-    vec2 positionVec2 = aPosition.xy * 2.0 - 1.0;
     //always gotta end by setting gl_Position equal to something;
-    gl_Position = vec4(positionVec2,aPosition.z,1.0);
+    gl_Position = vec4(aPosition*2.0-1.0,1.0);//translate it into screen space coords
 }
 `;
