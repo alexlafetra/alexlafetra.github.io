@@ -80,6 +80,7 @@ class Boid {
     this.previousPosition = null;
     this.velocity = p5.Vector.random2D();
     this.velocity.setMag(random(2,4));
+    this.acceleration = createVector(0,0);
     // this.color =  color(random(0,255),random(0,255),random(0,255));
     switch(pallette){
       //random
