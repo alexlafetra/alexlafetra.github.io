@@ -74,13 +74,16 @@ function isWithinRect(p,rect,margin){
   return false;
 }
 
+const maxForce = 0.2;
+const maxSpeed = 10;
+
 class Boid {
   constructor(){
     this.position = createVector(random(width), random(height));
     this.previousPosition = null;
     this.velocity = p5.Vector.random2D();
     this.velocity.setMag(random(2,4));
-    this.acceleration = createVector(0,0);
+    this.acceleration = createVector();
     // this.color =  color(random(0,255),random(0,255),random(0,255));
     switch(pallette){
       //random
@@ -121,6 +124,7 @@ class Boid {
       this.position.y+=height;
     }
   }
+  
   align(boids){//makes the boids go in the same direction
     let perceptionRadius = 100; //radius the boid can see
     let steering = createVector();
@@ -139,9 +143,9 @@ class Boid {
     }
     if(total>0){
       steering.div(total);
-      steering.setMag(this.maxSpeed);
+      steering.setMag(maxSpeed);
       steering.sub(this.velocity);
-      steering.limit(this.maxForce);
+      steering.limit(maxForce);
     }
     return steering;
   }
@@ -165,9 +169,9 @@ class Boid {
     if(total>0){
       steering.div(total);
       steering.sub(this.position);
-      steering.setMag(this.maxSpeed);
+      steering.setMag(maxSpeed);
       steering.sub(this.velocity);
-      steering.limit(this.maxForce);
+      steering.limit(maxForce);
     }
     return steering;
   }
@@ -181,9 +185,9 @@ class Boid {
     if(mouseDistance.mag() < perceptionRadius){
       steering.add(mouse);
       steering.sub(this.position);
-      steering.setMag(this.maxSpeed);
+      steering.setMag(maxSpeed);
       steering.sub(this.velocity);
-      steering.limit(this.maxForce);
+      steering.limit(maxForce);
     }
     return steering;
   }
@@ -208,9 +212,9 @@ class Boid {
     }
     if(total>0){
       steering.div(total);
-      steering.setMag(this.maxSpeed);
+      steering.setMag(maxSpeed);
       steering.sub(this.velocity);
-      steering.limit(this.maxForce);
+      steering.limit(maxForce);
     }
     return steering;
   }
@@ -218,8 +222,8 @@ class Boid {
   //returns a vector containing the x/y acceleration of the device
   tilt(boids){
     let steering = createVector(rotationY,rotationX);
-    // steering.setMag(this.maxSpeed);
-    steering.limit(this.maxForce);
+    // steering.setMag(maxSpeed);
+    steering.limit(maxForce);
     return steering;
   }
 
@@ -281,11 +285,14 @@ class Boid {
     this.previousPosition = this.position;
     this.position.add(this.velocity);
     this.velocity.add(this.acceleration);
-    this.velocity.limit(this.maxSpeed);
+    this.velocity.limit(maxSpeed);
   }
   show(){
     strokeWeight(pointSize);
     stroke(this.color);
-    point(this.position.x,this.position.y);
+    if(this.previousPosition == null)
+      point(this.position.x,this.position.y);
+    else
+      line(this.position.x,this.position.y,this.previousPosition.x,this.previousPosition.y);
   }
 }
