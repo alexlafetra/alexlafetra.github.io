@@ -18,28 +18,21 @@ Add in something about financial policy
 */
 
 let flowField;
-let flowFields = [];
 let holcTexture;
-let mask;
+let tractOutlines;
 let presetFlowMask;
 
-let attractors = [];
-let repulsors = [];
 let gl;
 let mainCanvas;
-let tractOutlines;
 let idBuffer;
-let ids;
 
-let dataTextureDimension = 200;
+const dataTextureDimension = 200;
 let randomShader;
 let drawParticlesProgram;
 let drawParticlesProgLocs;
 
-
-
 //Presets
-let presets;
+let censusDataPresets;
 
 //20 is a good base number
 const NUMBER_OF_ATTRACTORS = 300;
@@ -48,6 +41,10 @@ const NUMBER_OF_ATTRACTORS = 300;
 //or with the full dataset, allowing you to explore/experiment
 // let devMode = true;
 let devMode = false;
+
+const simSettingsPresets = [
+    
+]
 
 const viewPresets = [
     {
@@ -88,35 +85,37 @@ const viewPresets = [
     }
 ];
 
-class DemographicVis{
-    constructor(title,description,data){
-        this.title = title;
-        this.description = description;
-        this.demographicFunction = data;
-    }
-    setActive(index,ff){
-        ff.chartTitle.html(this.title);
-        ff.chartEquation.html(this.description);
-        ff.presetIndex = index;
-        ff.calculateAttractors(NUMBER_OF_ATTRACTORS,this.demographicFunction);
-        ff.updateFlow();
-    }
+let ids;
+
+function initGL(){
+    drawParticlesProgram = webglUtils.createProgramFromSources(
+        gl, [drawParticlesVS, drawParticlesFS]);
+    drawParticlesProgLocs = {
+        id: gl.getAttribLocation(drawParticlesProgram, 'particleID'),
+        uPositionTexture: gl.getUniformLocation(drawParticlesProgram, 'uPositionTexture'),
+        uColorTexture: gl.getUniformLocation(drawParticlesProgram, 'uColorTexture'),
+        uAttractionTexture: gl.getUniformLocation(drawParticlesProgram, 'uAttractionTexture'),
+        uRepulsionTexture: gl.getUniformLocation(drawParticlesProgram, 'uRepulsionTexture'),
+        uTextureDimensions: gl.getUniformLocation(drawParticlesProgram, 'uTextureDimensions'),
+        uMatrix: gl.getUniformLocation(drawParticlesProgram, 'uMatrix'),
+    };
+    ids = new Array(dataTextureDimension*dataTextureDimension).fill(0).map((_, i) => i);
+    idBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, idBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(ids), gl.STATIC_DRAW);
 }
 
-class Preset{
-    constructor(title,description,aPoints,rPoints){
-        this.title = title;
-        this.description = description;
-        this.attractors = aPoints;
-        this.repulsors = rPoints;
-    }
-    setActive(index,ff){
-        ff.chartTitle.html(this.title);
-        ff.chartEquation.html(this.description);
-        ff.presetIndex = index;
-        ff.setPresetAttractors();
-        ff.updateFlow();
-    }
+function fillFBOwithRandom(fbo,scale,seed){
+    fbo.begin();
+    shader(randomShader);
+    randomShader.setUniform('uScale',scale);
+    randomShader.setUniform('uRandomSeed',seed);
+    quad(-1,-1,-1,1,1,1,1,-1);
+    fbo.end();
+}
+
+function saveFlowFieldGif(){
+    saveGif(flowField.censusDataPreset.title+".gif", Number(flowField.gifLengthTextbox.value()),{units:'frames',delay:10})
 }
 
 function saveTracts(){
@@ -149,7 +148,7 @@ function saveHOLCOutlines(){
 function loadPresetMaps(){
     presetFlowMask = loadImage("data/Prerendered/flowFieldMask.png");
     tractOutlines = loadImage("data/Prerendered/censusTractOutlines.png");
-    holcTexture = loadImage("data/Prerendered/HOLC_Red.png");
+    holcTexture = loadImage("data/Prerendered/HOLCTracts.png");
 }
 
 function preload(){
@@ -202,8 +201,17 @@ function setup_DevMode(){
     // tractOutlines.end();
     // saveCanvas(tractOutlines, 'censusTractOutlines.png','png');
 
-    flowField = new FlowField(0);
-    flowField.calculateAttractors(NUMBER_OF_ATTRACTORS);
+    // tractOutlines = createFramebuffer({width:width,height:height});
+    // tractOutlines.begin();
+    // strokeWeight(1);
+    // renderHOLCTracts(geoOffset,oakHolcTracts);
+    // renderHOLCTracts(geoOffset,sfHolcTracts);
+    // renderHOLCTracts(geoOffset,sjHolcTracts);
+    // tractOutlines.end();
+    // saveCanvas(tractOutlines, 'HOLCTractOutlines.png','png');
+
+    flowField = new CensusDataFlowField();
+    flowField.setFlowFieldNodes();
 }
 
 function setup_Prerendered(){
@@ -212,13 +220,13 @@ function setup_Prerendered(){
     offset = {x:mainCanvas.width/4,y:mainCanvas.height/4};
     let s = mainCanvas.width*2/5;
     scale = {x:s,y:s*(-1)};//manually adjusting the scale to taste
-    flowField = new FlowField(0);
+    flowField = new CensusDataFlowField();
 }
 
 function logPresets(){
     let i = 0;
     let bigString;
-    for(let preset of presets){
+    for(let preset of censusDataPresets){
         let a = getSignificantPoints(NUMBER_OF_ATTRACTORS,preset.demographicFunction);
         let r = getLeastSignificantPoints(NUMBER_OF_ATTRACTORS,preset.demographicFunction);
         bigString += "\nconst preset"+i+"Attractors = "+JSON.stringify(a)+";";
@@ -229,9 +237,11 @@ function logPresets(){
 }
 
 let initialStartingPositions;
+
 function setup(){
     //create canvas and grab webGL context
     mainCanvas = createCanvas(700,700,WEBGL);
+    // mainCanvas = createCanvas(1000,1000,WEBGL);
     gl = mainCanvas.GL;
     randomShader = createShader(updateParticleDataVert,randomFrag);
 
@@ -245,16 +255,9 @@ function setup(){
         setup_Prerendered();
 
     initGL();
-
-    presets[0].setActive(0,flowField);
     background(255);
 }
 
 function draw(){
-    flowField.updateParametersFromGui();
-    if(flowField.isActive){
-        flowField.updateParticles();
-        background(0,0);
-        flowField.render();
-    }
+    flowField.run();
 }

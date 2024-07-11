@@ -40,7 +40,6 @@ varying vec2 vTexCoord;
 
 void main(){
     vec4 currentColor = texture2D(uSourceImage,vTexCoord);
-    // currentColor.a *= uFadeAmount;
     currentColor.a -= uFadeAmount;
     if(currentColor.a < 0.01){
         discard;
@@ -178,8 +177,6 @@ void main(){
 
     //if it's too old, put it somewhere random (within the mask) and return
     if(textureAge.x > uAgeLimit){
-        // screenPosition.x = random(screenPosition.xy);
-        // screenPosition.y = random(screenPosition.xy);
         vec4 initialData = texture2D(uInitialData,vParticleCoord);//use this for looping
         screenPosition = initialData.xy;
         particleVelocity = initialData.zw;
@@ -217,11 +214,14 @@ void main(){
 }
 `;
 
+/*
+
+*/
 const drawParticlesVS = glsl`
 precision highp float;
 precision highp sampler2D;
 //attribute that we pass in using an array, to tell the shader which particle we're drawing
-attribute float id;
+attribute float particleID;
 uniform sampler2D uPositionTexture;
 uniform sampler2D uColorTexture;
 
@@ -240,7 +240,7 @@ vec4 getValueFrom2DTextureAs1DArray(sampler2D tex, vec2 dimensions, float index)
 
 void main() {
     // pull the position from the texture
-    vec4 position = getValueFrom2DTextureAs1DArray(uPositionTexture, uTextureDimensions, id);
+    vec4 position = getValueFrom2DTextureAs1DArray(uPositionTexture, uTextureDimensions, particleID);
     //use the position to get the flow value
     vColor = texture2D(uColorTexture,position.xy);
     gl_Position = vec4(position.xy,1.0,1.0)-vec4(0.5);
@@ -287,18 +287,18 @@ void main(){
         //add a vector pointing toward the attractor from this pixel
         //scaled by the inverse square of the distance AND the scale factor
         float dA = distance(attractorCoord,vTexCoord);
-        attraction += uAttractionStrength*(uAttractors[i].z)*(attractorCoord-vTexCoord) / (dA*dA);
-        //the reuplsion force points AWAY from the repulsor point
+        attraction += uAttractionStrength * (uAttractors[i].z) * (attractorCoord-vTexCoord) / (dA*dA);
+        //the repulsion force points AWAY from the repulsor point
         float dR = distance(repulsorCoord,vTexCoord);
-        repulsion += uRepulsionStrength*(uRepulsors[i].z)*(vTexCoord-(repulsorCoord)) / (dR*dR);
+        repulsion += uRepulsionStrength * (uRepulsors[i].z) * (vTexCoord-(repulsorCoord)) / (dR*dR);
     }
     attraction /= `+NUMBER_OF_ATTRACTORS+glsl`.0;
     repulsion /= `+NUMBER_OF_ATTRACTORS+glsl`.0;
     //Storing both attraction and repulsion in the same texture
     gl_FragColor = vec4(attraction,repulsion);
 
-    // gl_FragColor = vec4(attraction.x,attraction.y,repulsion.x,0.5*(repulsion.y+2.0));
-    //^^ use this one if you want to render it to a texture! prevents alpha channnel from clipping
+    // gl_FragColor = vec4(attraction,repulsion.x,0.5*(repulsion.y+2.0));
+    //^^ Prevents alpha channel from clipping -- use this if you want to save the flow field to a texture!
 }
 `;
 
