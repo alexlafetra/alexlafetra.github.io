@@ -89,6 +89,22 @@ const viewPresets = [
         }
     },
     {
+        name: "Marin",
+        x: 3000,
+        y: 2800,
+        scale: 4000,
+        settings: {
+            particleVelocity: 0.05,
+            particleCount: 40000,
+            trailDecayValue: 0.04,
+            particleSize: 1.4,
+            randomMagnitude: 0.0,
+            renderCensusTracts:true,
+            attractionStrength:4.0,
+            repulsionStrength:4.0
+        }
+    },
+    {
         name: "South Bay",
         x: 32,
         y: 125,

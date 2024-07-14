@@ -150,20 +150,26 @@ class CensusDataFlowField{
         let overallMin = min([maxA,maxR,minA,minR]);
 
         for(let point of a){
+            //filter out glitched attractors
             if(point.strength == Infinity)
                 point.strength = maxA;
+            //ignore attractors that are really repulsors
+            if(point.strength<0.0)
+                point.strength = 0;
             this.flowField.attractorArray.push(point.x);
             this.flowField.attractorArray.push(point.y);
             //normalize data, the biggest attractors/repulsors are = 1.0
-            let s = map(point.strength,overallMin,overallMax,0,1.0);
-            // let s = map(point.strength,minA,maxA,0,1.0);
+            // let s = map(point.strength,overallMin,overallMax,0,1.0);
+            let s = map(point.strength,minA,maxA,0,1.0);
             this.flowField.attractorArray.push(s);
         }
         for(let point of r){
+            if(point.strength>0.0)
+                point.strength = 0;
             this.flowField.repulsorArray.push(point.x);
             this.flowField.repulsorArray.push(point.y);
-            let s = map(point.strength,overallMax,overallMin,0,1.0);
-            // let s = map(point.strength,minR,maxR,0,1.0);
+            // let s = map(point.strength,overallMax,overallMin,0,1.0);
+            let s = map(point.strength,minR,maxR,0,1.0);
             this.flowField.repulsorArray.push(s);
         }
     }
