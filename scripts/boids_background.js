@@ -273,11 +273,11 @@ class Boid {
     this.acceleration.add(alignment);
     this.acceleration.add(cohesion);
     this.acceleration.add(separation);
-    this.acceleration.add(tilt);
-    this.acceleration.add(avoidance);
+    // this.acceleration.add(tilt);
+    // this.acceleration.add(avoidance);
 
     if(mouseX<width && mouseY<height){
-      this.acceleration.add(mouse.mult(mouseMultiplier));
+      // this.acceleration.add(mouse.mult(mouseMultiplier));
     }
   }
   
