@@ -57,6 +57,7 @@ function draw(){
   //for giving em trails
   //comment in for no trails
   // background(0);
+  console.log("hey");
   
   for(let boid of flock){
     boid.edges();
