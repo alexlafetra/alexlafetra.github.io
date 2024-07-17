@@ -61,7 +61,7 @@ function draw(){
   
   for(let boid of flock){
     boid.edges();
-    // boid.flock(flock);
+    boid.flock(flock);
     // boid.update();
     boid.show();
   }
