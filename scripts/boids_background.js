@@ -111,18 +111,18 @@ class Boid {
   }
   
   edges(){
-    if (this.position.x > width){
+    if (this.position.x > windowWidth){
       this.position.x-=width;;
     }
     if (this.position.x < 0){
-      this.position.x+=width;
+      this.position.x+=windowWidth;
     }
   
-    if (this.position.y > height){
-      this.position.y-=height;
+    if (this.position.y > windowHeight){
+      this.position.y-=windowHeight;
     }
     if (this.position.y < 0){
-      this.position.y+=height;
+      this.position.y+=windowHeight;
     }
   }
   
