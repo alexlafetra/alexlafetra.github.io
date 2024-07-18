@@ -284,7 +284,7 @@ class Boid {
   
   update(){
     this.previousPosition = this.position;
-    this.position.add(this.velocity);
+    // this.position.add(this.velocity);
     // this.velocity.add(this.acceleration);
     // this.velocity.limit(maxSpeed);
   }
