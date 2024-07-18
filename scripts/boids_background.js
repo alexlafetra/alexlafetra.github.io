@@ -283,10 +283,10 @@ class Boid {
   }
   
   update(){
-    this.previousPosition = this.position;
-    // this.position.add(this.velocity);
-    // this.velocity.add(this.acceleration);
-    // this.velocity.limit(maxSpeed);
+    // this.previousPosition = this.position;
+    this.position.add(this.velocity);
+    this.velocity.add(this.acceleration);
+    this.velocity.limit(maxSpeed);
   }
   show(){
     strokeWeight(pointSize);
