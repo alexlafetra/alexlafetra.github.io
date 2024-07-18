@@ -80,7 +80,6 @@ const maxSpeed = 10;
 class Boid {
   constructor(){
     this.position = createVector(random(width), random(height));
-    this.previousPosition = null;
     this.velocity = p5.Vector.random2D();
     this.velocity.setMag(random(2,4));
     this.acceleration = createVector();
@@ -123,7 +122,6 @@ class Boid {
     while(this.position.y < 0){
       this.position.y+=windowHeight;
     }
-    console.log(windowWidth);
   }
   
   align(boids){//makes the boids go in the same direction
@@ -275,15 +273,14 @@ class Boid {
     this.acceleration.add(cohesion);
     this.acceleration.add(separation);
     this.acceleration.add(tilt);
-    this.acceleration.add(avoidance);
+    if(windowWidth>500)//don't do this if the screen is too small! makes it so you can't rlly see the flocking behavior
+      this.acceleration.add(avoidance);
 
     if(mouseX<width && mouseY<height){
       this.acceleration.add(mouse.mult(mouseMultiplier));
     }
   }
-  
   update(){
-    // this.previousPosition = this.position;
     this.position.add(this.velocity);
     this.velocity.add(this.acceleration);
     this.velocity.limit(maxSpeed);
@@ -291,9 +288,6 @@ class Boid {
   show(){
     strokeWeight(pointSize);
     stroke(this.color);
-    if(this.previousPosition == null)
-      point(this.position.x,this.position.y);
-    else
-      line(this.position.x,this.position.y,this.previousPosition.x,this.previousPosition.y);
+    point(this.position.x,this.position.y);
   }
 }
