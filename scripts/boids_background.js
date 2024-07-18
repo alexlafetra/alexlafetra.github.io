@@ -60,7 +60,7 @@ function draw(){
   
   for(let boid of flock){
     boid.edges();
-    // boid.flock(flock);
+    boid.flock(flock);
     boid.update();
     boid.show();
   }
@@ -274,19 +274,19 @@ class Boid {
     this.acceleration.add(alignment);
     this.acceleration.add(cohesion);
     this.acceleration.add(separation);
-    // this.acceleration.add(tilt);
-    // this.acceleration.add(avoidance);
+    this.acceleration.add(tilt);
+    this.acceleration.add(avoidance);
 
     if(mouseX<width && mouseY<height){
-      // this.acceleration.add(mouse.mult(mouseMultiplier));
+      this.acceleration.add(mouse.mult(mouseMultiplier));
     }
   }
   
   update(){
     this.previousPosition = this.position;
     this.position.add(this.velocity);
-    this.velocity.add(this.acceleration);
-    this.velocity.limit(maxSpeed);
+    // this.velocity.add(this.acceleration);
+    // this.velocity.limit(maxSpeed);
   }
   show(){
     strokeWeight(pointSize);
