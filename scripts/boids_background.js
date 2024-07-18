@@ -57,7 +57,6 @@ function draw(){
   //for giving em trails
   //comment in for no trails
   // background(0);
-  console.log("hey");
   
   for(let boid of flock){
     boid.edges();
@@ -111,19 +110,20 @@ class Boid {
   }
   
   edges(){
-    if (this.position.x > windowWidth){
-      this.position.x-=width;;
+    while(this.position.x > windowWidth){
+      this.position.x-=windowWidth;;
     }
-    if (this.position.x < 0){
+    while(this.position.x < 0){
       this.position.x+=windowWidth;
     }
   
-    if (this.position.y > windowHeight){
+    while(this.position.y > windowHeight){
       this.position.y-=windowHeight;
     }
-    if (this.position.y < 0){
+    while(this.position.y < 0){
       this.position.y+=windowHeight;
     }
+    console.log(windowWidth);
   }
   
   align(boids){//makes the boids go in the same direction
