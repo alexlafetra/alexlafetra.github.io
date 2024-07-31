@@ -37,7 +37,7 @@ class NodeField{
         //Parameters
         this.particleCount = 2000;
         this.trailDecayValue = 1;
-        this.pointSize = 20.0;
+        this.pointSize = 100.0;
         this.opacity = 200;
         this.particleAgeLimit = 150;
         this.velDampValue = 0.0005;
@@ -276,16 +276,16 @@ class NodeField{
 class NoiseField{
     constructor(mask,nodes){
         //Parameters
-        this.particleCount = 4000;
-        this.trailDecayValue = 1;
-        this.pointSize = 10.0;
+        this.particleCount = 2000;
+        this.trailDecayValue = 0.2;
+        this.pointSize = 15.0;
         this.opacity = 200;
         this.particleAgeLimit = 150;
         this.velDampValue = 0.0005;
-        this.forceStrength = 0.05;
-        this.randomAmount = 3.0;
-        this.repulsionStrength = 1.0;
-        this.attractionStrength = 1.0;
+        this.forceStrength = 0.5;
+        this.randomAmount = 1.0;
+        this.repulsionStrength = 2.0;
+        this.attractionStrength = 2.0;
 
         this.x = 0;
         this.size = height;
@@ -315,7 +315,7 @@ class NoiseField{
         this.repulsionColor = color(255,255,255);
         this.attractionColor = color(255,0,120);
 
-        this.initGui();
+        // this.initGui();
 
         //set up the field
         this.resetParticles();
@@ -354,7 +354,7 @@ class NoiseField{
         this.controlPanel.parent(gui);
     }
     update(){
-        this.updateParametersFromGui();
+        // this.updateParametersFromGui();
         this.updateParticles();
         this.renderGL();
     }
@@ -421,7 +421,7 @@ class NoiseField{
     updateAge(){
         this.ageTextureBuffer.begin();
         shader(this.updateAgeShader);
-        this.updateAgeShader.setUniform('uAgeLimit',this.particleAgeLimit/100.0);
+        this.updateAgeShader.setUniform('uAgeLimit',this.particleAgeLimit/400.0);
         this.updateAgeShader.setUniform('uAgeTexture',this.ageTexture);
         quad(-1,-1,1,-1,1,1,-1,1);//upside down bc the textures get flipped
         this.ageTextureBuffer.end();
@@ -470,22 +470,15 @@ class NoiseField{
         gl.drawArrays(gl.POINTS,0,this.particleCount);
         this.trailLayer.end();
 
-        if(this.showFlowCheckbox.value()){
-            fill(0);
-            rect(-height/2,-width/2,height,width);
-            image(this.flowFieldTexture,-height/2,-height/2,width,height);
-        }
+        // fill(0);
+        // rect(-height/2,-width/2,height,width);
+        // image(this.flowFieldTexture,-height/2,-height/2,width,height);
         image(this.trailLayer,-width/2+gap,-height/2+gap,width-2*gap,height-2*gap);
     }
-    renderCPU(){
-        
-    }
     updateParticles(){
-        if(this.activeCheckbox.value()){
-            // this.updateAge();
-            this.updatePos();
-            this.updateVel();
-        }
+        this.updateAge();
+        this.updatePos();
+        this.updateVel();
     }
     logNodes(){
         console.log(JSON.stringify(this.attractors));

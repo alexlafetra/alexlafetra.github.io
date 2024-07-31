@@ -12,8 +12,8 @@ let NUMBER_OF_ATTRACTORS = 5;
 let mainCanvas;
 let particleMaskCanvas;
 let gl;
-const minStrength = 0;
-const maxStrength = 0.1;
+const minStrength = 2;
+const maxStrength = 2;
 
 let backgroundVid;
 const gap = 200;
@@ -54,7 +54,7 @@ function setup(){
     field.updateFlow();
 }
 function mousePressed(){
-    // field.loadNodes(genRandomNodes(random(0,5)));
+    field.loadNodes(genRandomNsodes(random(0,5)));
 }
 
 function draw(){
