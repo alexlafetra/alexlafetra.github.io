@@ -22,6 +22,7 @@ function setup(){
   textSize(150);
   fill(255);
   zAngle = 0;
+  noSmooth();
 }
 
 //fills the flock with a specific number of boids
@@ -65,6 +66,7 @@ function draw(){
     boid.show();
   }
   faceMouse();
+  setDivToMouse();
 }
 
 function isWithinRect(p,rect,margin){
@@ -110,7 +112,7 @@ class Boid {
   
   edges(){
     while(this.position.x > windowWidth){
-      this.position.x-=windowWidth;;
+      this.position.x-=windowWidth;
     }
     while(this.position.x < 0){
       this.position.x+=windowWidth;
@@ -289,5 +291,8 @@ class Boid {
     strokeWeight(pointSize);
     stroke(this.color);
     point(this.position.x,this.position.y);
+    // noStroke();
+    // fill(this.color);
+    // circle(this.position.x,this.position.y,pointSize);
   }
 }

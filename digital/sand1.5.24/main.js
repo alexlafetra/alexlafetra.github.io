@@ -1,6 +1,4 @@
 let flowField;
-let mapTexture;
-let holcTexture;
 
 let attractors = [];
 let repulsors = [];
@@ -15,6 +13,7 @@ const NUMBER_OF_ATTRACTORS = 5;
 let showParticles = true;
 let showFlowMap = false;
 let continouslyRandomizeAttractors = true;
+let font;
 
 function calculateRandomAttractors(n){
     attractors = [];
@@ -29,7 +28,21 @@ function calculateRandomAttractors(n){
     }
 }
 
+function calcAttractorsFromText(text){
+    let points = font.textToPoints(text, 0, 0, 100, { sampleFactor:  0.01 });
+    repulsors = [];
+    attractors = [];
+    for(let point of points){
+        attractors.push(map(point.x,-width/2,width/2,0,1));
+        attractors.push(map(point.y,-height/2,height/2,0,1));
+        // attractors.push(map(point.alpha,0,255,0,1));
+        attractors.push(1);
+    }
+    console.log(attractors);
+}
+
 function preload(){
+    font = loadFont("Batang.ttf");
 }
 
 function setup(){
@@ -62,6 +75,7 @@ function setup(){
 
 function randomizeFlow(){
     if(continouslyRandomizeAttractors)
+        // calcAttractorsFromText("heylllllloooo");
         calculateRandomAttractors(NUMBER_OF_ATTRACTORS);
     setTimeout(randomizeFlow,3000);
 }
@@ -96,27 +110,51 @@ uniform vec2 uMouse;
 uniform bool uAttraction;
 uniform bool uRepulsion;
 
+// void main(){
+//     vec2 c = vec2(0.0);
+//     //calculate attractors/repulsors
+//     for(int i = 0; i<`+NUMBER_OF_ATTRACTORS+glsl`; i++){
+//         //add a vector pointing toward the attractor from this pixel
+//         //scaled by the inverse square of the distance AND the scale factor
+//         if(uAttraction){
+//             float dA = distance(uAttractors[i].xy,vTexCoord);
+//             c+=(uAttractors[i].xy-vTexCoord)/(dA*dA);
+//         }
+//         if(uRepulsion){
+//             float dR = distance(uRepulsors[i].xy,vTexCoord);
+//             c+=uRepulsors[i].z*(-uRepulsors[i].xy+vTexCoord)/(dR*dR);
+//         }
+//     }
+//     float d = distance(uMouse,vTexCoord);
+//     c+=(uMouse-vTexCoord)/(d*d);
+
+//     c = normalize(c);
+
+//     gl_FragColor = vec4(c.x,c.y,1.0,1.0);
+// }
+
 void main(){
-    vec2 c = vec2(0.0);
+    vec2 attraction = vec2(0.0);
+    vec2 repulsion = vec2(0.0);
     //calculate attractors/repulsors
     for(int i = 0; i<`+NUMBER_OF_ATTRACTORS+glsl`; i++){
+        vec2 attractorCoord = vec2(uAttractors[i].x,uAttractors[i].y);
+        vec2 repulsorCoord = vec2(uRepulsors[i].x,uRepulsors[i].y);
         //add a vector pointing toward the attractor from this pixel
         //scaled by the inverse square of the distance AND the scale factor
-        if(uAttraction){
-            float dA = distance(uAttractors[i].xy,vTexCoord);
-            c+=(uAttractors[i].xy-vTexCoord)/(dA*dA);
-        }
-        if(uRepulsion){
-            float dR = distance(uRepulsors[i].xy,vTexCoord);
-            c+=uRepulsors[i].z*(-uRepulsors[i].xy+vTexCoord)/(dR*dR);
-        }
+        float dA = distance(attractorCoord,vTexCoord);
+        attraction += (uAttractors[i].z) * (attractorCoord-vTexCoord) / (dA*dA);
+        //the repulsion force points AWAY from the repulsor point
+        float dR = distance(uRepulsors[i].xy,vTexCoord);
+        repulsion += (uRepulsors[i].z) * (vTexCoord-uRepulsors[i].xy) / (dR*dR);
     }
-    float d = distance(uMouse,vTexCoord);
-    c+=(uMouse-vTexCoord)/(d*d);
+    attraction /= `+NUMBER_OF_ATTRACTORS+glsl`.0;
+    repulsion /= `+NUMBER_OF_ATTRACTORS+glsl`.0;
+    //Storing both attraction and repulsion in the same texture
+    gl_FragColor = vec4(attraction,repulsion);
 
-    c = normalize(c);
-
-    gl_FragColor = vec4(c.x,c.y,1.0,1.0);
+    // gl_FragColor = vec4(attraction,repulsion.x,0.5*(repulsion.y+2.0));
+    //^^ Prevents alpha channel from clipping -- use this if you want to save the flow field to a texture!
 }
 `;
 

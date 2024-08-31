@@ -52,8 +52,10 @@ class FlowField{
         this.forceStrength = 0.1;
         this.randomAmount = 0.0;
 
-        this.particleColor = color(220,180,50);
-        this.backgroundColor = color(10,30,10);
+        // this.particleColor = color(220,180,50);
+        // this.backgroundColor = color(10,30,10);
+        this.particleColor = color(170,0,0);
+        this.backgroundColor = color(255,255,255);
 
         this.maskParticles = false;
         this.normalizeVelocity = false;
@@ -254,6 +256,7 @@ void main(){
     //Add the force to the current vel
     vec2 newVel = uForceStrength*vec2(flowForce.x,flowForce.y)+(1.0-uForceStrength)*vec2(oldVel.x,oldVel.y);
     // vec2 newVel = uForceStrength*vec2(flowForce.x,flowForce.y)+(1.0-uFriction)*vec2(oldVel.x,oldVel.y);
+
 
     gl_FragColor = vec4(newVel,1.0,1.0);
 }
