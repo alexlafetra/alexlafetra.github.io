@@ -20,35 +20,31 @@
         <div id = "manual" class = "manual_markdown"></div>
     </div>
 </body>
-<!-- downloading marked renderer to convert the markdown to html -->
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<!-- 
-<tr>
-<td align="center"><img src="images/buttons/new.svg" title="New" alt="New" class="button-svg"></td>
-<td align="left">Create a new <a href="" title="null" onclick="closeTOCFromLink()">Note</a></td>
-</tr>
- -->
+<!-- loading marked renderer to convert the markdown to html -->
+<script src="marked.min.js"></script>
 <script>
     // Markdown renderer
     const renderer = {
-        heading(text, level) {
+        heading({ tokens, depth }) {
+            const text = this.parser.parseInline(tokens);
             let cleanedText = text.replace(/\./g,'');
             cleanedText = cleanedText.replace("/",'-');
             let escapedText = cleanedText.toLowerCase().replace(/[^\w]+/g, '-');
             escapedText = escapedText.replace("amp","");
             return `
-                    <h${level}>
+                    <h${depth}>
                     <a id="${escapedText}" class="anchor" href="#${escapedText}">
                         <span class="header-link"></span>
                     </a>
                     ${text}
-                    </h${level}>`;
+                    </h${depth}>`;
         },
         //adds the close TOC function to menu links
-        link(href,title,text){
-            return `<a href="${href}" title="${title}" onclick="closeTOCFromLink()">${text}</a>`;
+        link(tokens){
+            return `<a href="${tokens.href}" title="${tokens.title}" onclick="closeTOCFromLink()">${tokens.text}</a>`;
         },
-        tablecell(content){
+        tablecell(tokens){
+            let content = tokens.text;
             let colorClass = null;
             if(/new.svg/g.test(content)){
                 if(/shift.svg/g.test(content)){
@@ -131,25 +127,25 @@
             else if(/menu.svg/g.test(content))
                 colorClass = 'menu-button-row';
             if(colorClass)
-                return '<td class="' + colorClass + '">' + content + '</td>';
+                return '<td class="' + colorClass + '">' + marked.parse(content) + '</td>';
             else
-                return '<td>'+content+'</td>';
+                return '<td>'+marked.parse(content)+'</td>';
         },
-        image(href, title, text) {
+        image(tokens) {
             //check if it's a button svg
-            const isButtonImage = /buttons\//i.test(href);
-            const isGif = /\.gif$/i.test(href);
+            const isButtonImage = /buttons\//i.test(tokens.href);
+            const isGif = /\.gif$/i.test(tokens.href);
 
-            let imageClass = text;
+            let imageClass = tokens.text;
             let imageId = '';
 
             if(isButtonImage)
                 imageClass = 'button-svg';
             else if(isGif){
-                return `<div class = "gif-holder"><img src="${href}" title="${text}" alt="${text}" class="center-gif"`+((imageId=='')?``:`id = "${imageId}"`)+`></div>`;
+                return `<div class = "gif-holder"><img src="${tokens.href}" title="${tokens.text}" alt="${tokens.text}" class="center-gif"`+((imageId=='')?``:`id = "${imageId}"`)+`></div>`;
             }
             // Render the image with the appropriate class for centering
-            return `<img src="${href}" title="${text}" alt="${text}" class="${imageClass}"`+((imageId=='')?`>`:`id = "${imageId}">`);
+            return `<img src="${tokens.href}" title="${tokens.text}" alt="${tokens.text}" class="${imageClass}"`+((imageId=='')?`>`:`id = "${imageId}">`);
         }
     }
 
@@ -225,19 +221,18 @@
     function checkIndexSize(){
         if(isMobile() || window.innerWidth<1000){
             document.getElementById("title_text").innerHTML = "Manual";
-            document.getElementById("title_image").style.visibility = "hidden";
+            // document.getElementById("title_image").style.visibility = "hidden";
             closeTOC();
         }
         else if(document.getElementById("index_column").style.width == "0%"){
             document.getElementById("title_text").innerHTML = "Stepchild User Manual";
-            document.getElementById("title_image").style.visibility = "visible";
+            // document.getElementById("title_image").style.visibility = "visible";
             openTOC();
         }
     }
 
     function updateURL() {
         window.parent.postMessage({ newURL: "manual" }, '*');
-        console.log("manual");
     }
 
     window.onresize = checkIndexSize;
