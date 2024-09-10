@@ -34,7 +34,7 @@ function requestAccess(){
 function setup(){
     let canvas = createCanvas(windowWidth, windowHeight);
     //every time the canvas is pressed, it'll try and request access
-    canvas.mousePressed(requestAccess);
+    // canvas.mousePressed(requestAccess);
     canvas.style.display = "absolute";
     // createElements();
     debug();
@@ -116,17 +116,6 @@ function mouseMoved(){
 }
 
 function draw(){
-    const dX = 0-rotationX
-    const dY = 0-rotationY
-
-    let objects = document.getElementsByClassName("parallaxObject");
-
-    for(let obj of objects){
-        const newX = (Number(obj.dataset.x)+dX/obj.dataset.z);
-        const newY = (Number(obj.dataset.y)+dY/obj.dataset.z);
-        obj.style.left = newX  + 'px';
-        obj.style.top = newY + 'px';
-    }
 
 }
 

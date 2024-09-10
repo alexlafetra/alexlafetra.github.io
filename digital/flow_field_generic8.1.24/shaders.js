@@ -169,7 +169,7 @@ void main(){
     vec2 particleVelocity = particleData.zw;//velocity data is stored in the b,a channels
     if(uMouseInteraction){
         float dM = distance(screenPosition,uMousePosition);
-        particleVelocity += (screenPosition-uMousePosition)/(10.0*dM*dM);
+        particleVelocity += (screenPosition-uMousePosition)/(20.0*dM*dM);
     }
 
     //checking the age of the particle
@@ -316,10 +316,10 @@ void main(){
         //add a vector pointing toward the attractor from this pixel
         //scaled by the inverse square of the distance AND the scale factor
         float dA = distance(attractorCoord,vTexCoord);
-        attraction += uAttractionStrength * (uAttractors[i].z) * (attractorCoord-vTexCoord) / (dA*dA);
+        attraction += uAttractionStrength * uAttractors[i].z * (attractorCoord-vTexCoord) / (dA*dA);
         //the repulsion force points AWAY from the repulsor point
         float dR = distance(repulsorCoord,vTexCoord);
-        repulsion += uRepulsionStrength * (uRepulsors[i].z) * (vTexCoord-(repulsorCoord)) / (dR*dR);
+        repulsion += uRepulsionStrength * uRepulsors[i].z * (vTexCoord-repulsorCoord) / (dR*dR);
     }
     attraction /= `+NUMBER_OF_ATTRACTORS+glsl`.0;
     repulsion /= `+NUMBER_OF_ATTRACTORS+glsl`.0;

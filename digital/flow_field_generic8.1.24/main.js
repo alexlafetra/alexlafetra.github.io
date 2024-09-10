@@ -1,32 +1,14 @@
-/*
-
-Some inspiration:
-https://blog.mapbox.com/how-i-built-a-wind-map-with-webgl-b63022b5537f
-https://nullprogram.com/blog/2014/06/29/
-https://nullprogram.com/webgl-particles/
-https://apps.amandaghassaei.com/gpu-io/examples/fluid/
-
-Future improvements:
-get floating point textures working on mobile
-combine vel+position processing into one texture+shader pass?
-
-To render tract+mask textures:
-set canvas size (mainCanvas) to 1000x1000
-
-Add in something about financial policy
-
-*/
-
 let flowField;
-let holcTexture;
-let tractOutlines;
-let presetFlowMask;
 
 let gl;
 let mainCanvas;
+let sideCanvas;
 let idBuffer;
 
 const dataTextureDimension = 300;
+const windowSize = {width:400,height:400};
+const margin = 0.2;
+
 let randomShader;
 let drawParticlesProgram;
 let drawParticlesProgLocs;
@@ -34,147 +16,64 @@ let drawParticlesProgLocs;
 //Presets
 let censusDataPresets;
 
-//20 is a good base number
-// const NUMBER_OF_ATTRACTORS = 300;
 const NUMBER_OF_ATTRACTORS = 5;
 
-//controls whether or not the sim will load with prerendered data/choropleths
-//or with the full dataset, allowing you to explore/experiment
-// let devMode = true;
-let devMode = false;
+class Node{
+    constructor(){
+        this.x = random(margin,1.0-margin);
+        this.y = random(margin,1.0-margin);
+        this.strength = random(1.0);
+        const maxVel = 4/width;
+        this.velocity = createVector(random(-maxVel,maxVel),random(-maxVel,maxVel));
+    }
+    update(){
+        this.x += this.velocity.x;
+        this.y += this.velocity.y;
+
+        let location = createVector(this.x,this.y);
+        const center = createVector(0.5,0.5);
+
+        const distanceToCenter = p5.Vector.dist(location,center);
+        if(distanceToCenter > (0.5-margin)){
+            let steering = p5.Vector.sub(center,location).setMag(pow(distanceToCenter - (0.5-margin),2)).mult(0.2);
+            this.velocity.add(steering);
+            // this.velocity.div(2);
+        }
+
+        // if((this.x > (1 - margin)) || this.x<margin){
+        //     this.velocity.x += -0.5*this.velocity.x;
+        // }
+        // if((this.y > (1 - margin)) || this.y<margin){
+        //     this.velocity.y = -0.5*this.velocity.y;
+        // }
+    }
+};
+
 
 const defaultSettings = {
     particleCount : 1000000,
     trailDecayValue : 0.5,
-    particleSize : 1.4,
+    particleSize : 0.0,
     particleAgeLimit : 1.6,//this*100 ::> how many frames particles live for
     particleVelocity : 0.1,
     forceMagnitude : 0.07,
-    // randomMagnitude : 2.5,
     randomMagnitude : 0.0,
-    repulsionStrength : 0.0,
+    repulsionStrength : 0.2,
     attractionStrength : 1.0,
     canvasSize : 700,
     useParticleMask : false, //for preventing particles from entering oceans
     isActive : true,
-    renderFlowFieldDataTexture : false,
-    renderCensusTracts: false,
-    renderAttractors : false,//render attractors
-    renderRepulsors : false,//render repulsors
+    renderFlowFieldDataTexture : true,
+    renderAttractors : true,//render attractors
+    renderRepulsors : true,//render repulsors
     repulsionColor : [20,0,180],
     attractionColor : [255,0,120],
+    // repulsionColor : [255,0,0],
+    // attractionColor : [255,255,255],
     mouseInteraction : false,
     rebirthParticlesToInitialPositions : false,
-    fieldStrength: 0.37
+    fieldStrength: 0.3
 };
-
-const viewPresets = [
-    {
-        name: "Entire Bay Area",
-        x: 125,
-        y: 125,
-        scale: 280,
-        settings: defaultSettings
-    },
-    {
-        name: "San Francisco",
-        x: 2850,
-        y: 2000,
-        scale: 5000,
-        settings: {
-            particleVelocity: 0.05,
-            particleCount: 40000,
-            trailDecayValue: 0.04,
-            particleSize: 1.4,
-            randomMagnitude: 0.0,
-            renderCensusTracts:true,
-            attractionStrength:4.0,
-            repulsionStrength:4.0
-        }
-    },
-    {
-        name: "Marin",
-        x: 3000,
-        y: 2800,
-        scale: 4000,
-        settings: {
-            particleVelocity: 0.05,
-            particleCount: 40000,
-            trailDecayValue: 0.04,
-            particleSize: 1.4,
-            randomMagnitude: 0.0,
-            renderCensusTracts:true,
-            attractionStrength:4.0,
-            repulsionStrength:4.0
-        }
-    },
-    {
-        name: "South Bay",
-        x: 32,
-        y: 125,
-        scale: 500
-    },
-    {
-        name: "San Jose",
-        x: 100,
-        y: 0,
-        scale: 2500,
-        settings: {
-            particleVelocity: 0.05,
-            particleCount: 40000,
-            trailDecayValue: 0.04,
-            particleSize: 1.4,
-            randomMagnitude: 0.0,
-            renderCensusTracts:true,
-            attractionStrength:3.0,
-            repulsionStrength:3.0
-        }
-    },
-    {
-        name: "East Bay",
-        x: 1200,
-        y: 1450,
-        scale: 3000,
-        settings: {
-            particleVelocity: 0.05,
-            particleCount: 40000,
-            trailDecayValue: 0.02,
-            particleSize: 1.4,
-            randomMagnitude: 0.0,
-            renderCensusTracts:true,
-            attractionStrength:3.0,
-            repulsionStrength:3.0
-        }
-    },
-    {
-        name: "W. Oakland & Berkeley",
-        x: 2500,
-        y: 2900,
-        scale: 6000,
-        settings: {
-            particleVelocity: 0.05,
-            particleCount: 40000,
-            trailDecayValue: 0.04,
-            particleSize: 1.4,
-            randomMagnitude: 0.0,
-            renderCensusTracts:true,
-            attractionStrength:3.0,
-            repulsionStrength:3.0
-        }
-    },
-    {
-        name: "Richmond",
-        x: 1400,
-        y: 1850,
-        scale: 3000
-    },
-    {
-        name: "Antioch",
-        x: -100,
-        y: 700,
-        scale: 1000
-    }
-];
 
 let ids;
 
@@ -234,23 +133,95 @@ function renderTransformedImage(img,sf = mainCanvas.width*2/5){
             sx,sy,sw,sh);
 }
 
+let attractors = [],repulsors = [];
+
 function setup(){
     //create canvas and grab webGL context
     // mainCanvas = createCanvas(4000,4000,WEBGL);
-    mainCanvas = createCanvas(700,700,WEBGL);
+    mainCanvas = createCanvas(windowSize.width,windowSize.height,WEBGL);
     gl = mainCanvas.GL;
     randomShader = createShader(updateParticleDataVert,randomFrag);
 
-    createPremadePresets();
+    for(let i = 0; i<NUMBER_OF_ATTRACTORS; i++){
+        attractors.push(new Node());
+        repulsors.push(new Node());
+    }
+    let previous = attractors[0];
+    for(let attractor of attractors){
+        if(attractor.strength>previous.strength){
+            previous = attractor;
+        }
+    }
+    maxAttractor = previous;
+
+    previous = attractors[0];
+    for(let attractor of attractors){
+        if(attractor.strength>previous.strength && attractor.strength<maxAttractor.strength){
+            previous = attractor;
+        }
+    }
+    nextMaxAttractor = previous;
+
     flowField = new CensusDataFlowField();
 
     initGL();
 }
 
+let spriteImages = [];
+let maxAttractor;
+let nextMaxAttractor;
+let rabbit;
+
+function preload(){
+    rabbit = loadImage("character/test_rabbit_inverse.png");
+//     for(let i = 0; i<8; i++){
+//         spriteImages[i] = loadImage("character/000"+(i+1)+".png");
+//     }
+}
+
+function getDirectionOfNode(node,other){
+    let pointA = createVector(node.x,node.y);
+    let pointB = createVector(other.x,other.y);
+    let heading = p5.Vector.sub(pointA,pointB).heading();
+    let whichDirection = int(heading/(TWO_PI/8));
+    if(whichDirection<0)
+        whichDirection+=8;
+    return whichDirection;
+}
+
+function pulseSettings(){
+    flowField.flowField.settings.repulsionStrength = pow(0.5*noise(frameCount/50),2);
+    flowField.flowField.settings.particleVelocity = max(0.2*noise(frameCount/301),0.08);
+    flowField.loadSimulationSettingsIntoGUI();
+}
+
+function drawCharacter(){
+    const which = getDirectionOfNode(maxAttractor,nextMaxAttractor);
+    image(spriteImages[which],maxAttractor.x*width-width/2,maxAttractor.y*height-height/2,100,100);
+}
+
+function regenNodes(){
+    attractors = [];
+    repulsors = [];
+    for(let i = 0; i<NUMBER_OF_ATTRACTORS; i++){
+        attractors.push(new Node());
+        repulsors.push(new Node());
+    }
+}
+
 function mousePressed(){
-    flowField.flowField.genRandomNodes(NUMBER_OF_ATTRACTORS);
+    regenNodes();
 }
 
 function draw(){
+    pulseSettings();
+    flowField.flowField.updateNodes(attractors,repulsors);
     flowField.run();
+    if(!(frameCount%60))
+        regenNodes();
+    // for(let i = 0; i<NUMBER_OF_ATTRACTORS; i++){
+    //     attractors[i].update();
+    //     repulsors[i].update();
+    // }
+    // drawCharacter();
 }

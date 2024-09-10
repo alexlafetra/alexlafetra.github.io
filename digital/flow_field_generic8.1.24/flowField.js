@@ -22,6 +22,7 @@ class FlowField{
         this.particleDataTextureBuffer = createFramebuffer({width:dataTextureDimension,height:dataTextureDimension,format:FLOAT,textureFiltering:NEAREST,depth:false});
         this.flowFieldTexture = createFramebuffer({width:this.settings.canvasSize,height:this.settings.canvasSize,format:FLOAT,textureFiltering:NEAREST,depth:false});//holds the flowfield data attraction = (r,g) ; repulsion = (b,a)
         this.particleMask = createFramebuffer({width:mainCanvas.width,height:mainCanvas.height,depth:false});//holds the particle mask data (white is tracts w/people in them, black is empty tracts)
+        this.nodeCanvas = createFramebuffer({width:mainCanvas.width,height:mainCanvas.height,depth:false});
         //not super necessary, but makes it so particles return to their starting position (lets you make seamless looping gifs)
         this.initialStartingPositions = createFramebuffer({width:dataTextureDimension,height:dataTextureDimension,format:FLOAT,textureFiltering:NEAREST,depth:false});
         fillFBOwithRandom(this.initialStartingPositions,1.0,1.1);
@@ -33,21 +34,17 @@ class FlowField{
         //Initialize particle vel/positions w/ random noise
         this.resetParticles();
     }
-    //updates the particle mask, the HOLC tract outlines, and the census outlines
-    //by translating and scaling their source png's
-    updateParticleMask(){
-        this.particleMask.begin();
-        background(0);
-        renderTransformedImage(presetFlowMask)
-        this.particleMask.end();
-    }
     updateSettings(settings){
         this.settings = settings;
     }
-    renderAttractors(){
+    renderAttractors(canvas){
+        canvas.begin();
+        if(!(frameCount%300)){
+            clear();
+        }
         for(let i = 0; i<this.attractorArray.length; i+=3){
-            const x = width*(this.attractorArray[i])-width/2;
-            const y = height*(this.attractorArray[i+1])-height/2;
+            const x = canvas.width*(this.attractorArray[i])-canvas.width/2;
+            const y = canvas.height*(this.attractorArray[i+1])-canvas.height/2;
             const force = this.attractorArray[i+2];
             let size = map(force,0,1,1,12);//scaling size based on the min/max size of attractors
             const alpha = map(size,1,10,0,255);
@@ -55,17 +52,20 @@ class FlowField{
             noStroke();
             ellipse(x,y,size,size);
         }
+        canvas.end();
     }
-    renderRepulsors(){
+    renderRepulsors(canvas){
+        canvas.begin();
         for(let i = 0; i<this.repulsorArray.length; i+=3){
-            const x = width*(this.repulsorArray[i])-width/2;
-            const y = height*(this.repulsorArray[i+1])-height/2;
+            const x = canvas.width*(this.repulsorArray[i])-canvas.width/2;
+            const y = canvas.height*(this.repulsorArray[i+1])-canvas.height/2;
             const size = map(this.repulsorArray[i+2],0,1,10,1);//scaling size
             const alpha = map(size,1,10,0,255);
             fill(this.settings.repulsionColor,alpha);
             noStroke();
             ellipse(x,y,size,size);
         }
+        canvas.end();
     }
     updateFlowField(){
         //ANY drawing to this texture will affect the flow field data
@@ -77,8 +77,6 @@ class FlowField{
         //just a note: attractors and repulsors are FLAT arrays of x,y,strength values
         //Which means they're just a 1x(nx3) flat vector, not an nx3 multidimensional vector
         this.calcFlowFieldShader.setUniform('uCoordinateOffset',[0.0,0.0]);//adjusting coordinate so they're between 0,1 (instead of -width/2,+width/2)
-        // this.calcFlowFieldShader.setUniform('uCoordinateOffset',[offset.x/mainCanvas.width+0.5,offset.y/mainCanvas.height+0.5]);//adjusting coordinate so they're between 0,1 (instead of -width/2,+width/2)
-        // this.calcFlowFieldShader.setUniform('uScale',scale.x);
         this.calcFlowFieldShader.setUniform('uScale',1.0);
         this.calcFlowFieldShader.setUniform('uDimensions',mainCanvas.width);
         this.calcFlowFieldShader.setUniform('uAttractors',this.attractorArray);
@@ -158,6 +156,8 @@ class FlowField{
         gl.drawArrays(gl.POINTS,0,this.settings.particleCount);
         this.particleCanvas.end();
 
+        noStroke();
+
         //rendering the particles
         this.renderFBO.begin();
         clear();//clear out the old image (bc you're about to read from the other canvas)
@@ -174,19 +174,20 @@ class FlowField{
         image(this.renderFBO,-mainCanvas.width/2,-mainCanvas.height/2,mainCanvas.width,mainCanvas.height);
     }
     renderData(){
-        fill(0,255);
-        noStroke();
-        rect(-width/2,-height/2+height/3,width/3,height/3);
-        image(this.particleDataTexture,-width/2,-height/2,width/3,height/3);
-        image(this.flowFieldTexture,-width/2,-height/2+height/3,width/3,height/3);
-        image(this.particleMask,-width/2,-height/2+2*height/3,width/3,height/3);
+        fill(0);
+        // noStroke();
+        const dataHeight = windowSize.width/8;
+        rect(-width/2,height/2,dataHeight,-3*dataHeight);
+        image(this.particleDataTexture,-width/2,height/2,dataHeight,-dataHeight);
+        image(this.flowFieldTexture,-width/2,height/2-dataHeight,dataHeight,-dataHeight);
+        image(this.nodeCanvas,-width/2,height/2-2*dataHeight,dataHeight,-dataHeight);
     }
     render(){
         this.renderGL();
         if(this.settings.renderAttractors)
-            this.renderAttractors();
+            this.renderAttractors(this.nodeCanvas);
         if(this.settings.renderRepulsors)
-            this.renderRepulsors();
+            this.renderRepulsors(this.nodeCanvas);
         if(this.settings.renderFlowFieldDataTexture){
             this.renderData();
         }
@@ -209,11 +210,25 @@ class FlowField{
         }
         this.updateFlowField();
     }
+    updateNodes(attractors,repulsors){
+        for(let a  = 0; a<attractors.length; a++){
+            this.attractorArray[a*3] = attractors[a].x;
+            this.attractorArray[a*3+1] = attractors[a].y;
+            this.attractorArray[a*3+2] = attractors[a].strength;
+        }
+        for(let a  = 0; a<repulsors.length; a++){
+            this.repulsorArray[a*3] = repulsors[a].x;
+            this.repulsorArray[a*3+1] = repulsors[a].y;
+            this.repulsorArray[a*3+2] = repulsors[a].strength;
+        }
+        this.updateFlowField();
+    }
     run(){
         if(this.settings.isActive){
             this.updateParticles();
-            background(0,0);
+            background(50,15,30);
             this.render();
+            image(rabbit,-width/2,-height/2,width,height);
         }
     }
 }

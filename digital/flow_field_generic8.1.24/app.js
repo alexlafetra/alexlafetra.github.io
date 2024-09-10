@@ -2,13 +2,10 @@
 const defaultPresetIndex = 1;
 class CensusDataFlowField{
     constructor(){
-        this.censusDataPreset = censusDataPresets[defaultPresetIndex];
-        this.activeViewPreset = viewPresets[0];
-        this.simulationParameterPreset = defaultSettings;
         this.flowField = new FlowField(defaultSettings);
+        console.log(this.flowField);
         this.initGui();
         this.updateParametersFromGui();
-        this.loadCensusPreset(this.censusDataPreset);
     }
     initGui(){
         let gui = document.getElementById("gui");
@@ -21,29 +18,7 @@ class CensusDataFlowField{
         this.controlPanel = createDiv();
         this.controlPanel.addClass("flowfield_controls");
 
-        this.chartTitle = createDiv();
-        this.chartTitle.addClass('chart_title');
-        this.chartTitle.parent(this.controlPanel);
-
-        this.chartEquation = createDiv();
-        this.chartEquation.addClass('chart_attractor_equation');
-        this.chartEquation.parent(this.controlPanel);
-
-        //preset data selector
-        let options = [];
-        for(let preset of censusDataPresets){
-            options.push(preset.title);
-        }
-        this.presetSelector = new FlowFieldSelector(options,defaultPresetIndex,"Demographic Data",this.controlPanel);
-
-        //preset view selector
-        const geoOptionNames = [];
-        for(let view of viewPresets){
-            geoOptionNames.push(view.name);
-        }
-        this.geoScaleSelector = new FlowFieldSelector(geoOptionNames,0,"View",this.controlPanel);
-
-        this.dampValueSlider = new GuiSlider(0.001,0.1, this.flowField.settings.particleVelocity,0.001,"Speed",this.controlPanel);
+        this.dampValueSlider = new GuiSlider(0.001,0.2, this.flowField.settings.particleVelocity,0.001,"Speed",this.controlPanel);
         this.randomValueSlider = new GuiSlider(0,10, this.flowField.settings.randomMagnitude,0.01,"Drift",this.controlPanel);
 
         this.attractionColorPicker = createColorPicker(this.flowField.settings.attractionColor);
@@ -59,8 +34,6 @@ class CensusDataFlowField{
         this.fieldStrengthSlider = new GuiSlider(0,1.0,this.flowField.settings.fieldStrength,0.01,"Strength",this.controlPanel);
         this.activeCheckbox = new GuiCheckbox("Run Simulation",this.flowField.settings.isActive,this.controlPanel);
         this.mouseInteractionCheckbox = new GuiCheckbox("Mouse Interaction",this.flowField.settings.mouseInteraction,this.controlPanel);
-        this.showTractsCheckbox = new GuiCheckbox("Overlay Census Tract Boundaries",this.flowField.settings.renderCensusTracts,this.controlPanel);
-        this.showHOLCCheckbox = new GuiCheckbox("Overlay HOLC Redlining Tracts",this.flowField.settings.renderHOLCTracts,this.controlPanel);
         this.showAttractorsCheckbox = new GuiCheckbox("Show Attractors",this.flowField.settings.renderAttractors,this.controlPanel);
         this.showRepulsorsCheckbox = new GuiCheckbox("Show Repulsors",this.flowField.settings.renderRepulsors,this.controlPanel);
         this.useParticleMaskCheckbox = new GuiCheckbox("Mask Off Oceans",this.flowField.settings.useParticleMask,this.controlPanel);
@@ -86,8 +59,6 @@ class CensusDataFlowField{
         this.flowField.settings.renderAttractors = this.showAttractorsCheckbox.value();
         this.flowField.settings.renderRepulsors = this.showRepulsorsCheckbox.value();
         this.flowField.settings.mouseInteraction = this.mouseInteractionCheckbox.value();
-        this.flowField.settings.renderCensusTracts = this.showTractsCheckbox.value();
-        this.flowField.settings.renderHOLCTracts = this.showHOLCCheckbox.value();
         this.flowField.settings.fieldStrength = this.fieldStrengthSlider.value();
 
         //updating repulsion/attraction strengths
@@ -102,25 +73,6 @@ class CensusDataFlowField{
         }
         if(needToUpdateFF){//only update ONCE, even if both are changed
             this.flowField.updateFlowField();
-        }
-
-        //check to see if the flowfield selector has been changed, and if it has, set the new preset
-        if(this.censusDataPreset != censusDataPresets[this.presetSelector.selected()]){
-            this.censusDataPreset = censusDataPresets[this.presetSelector.selected()];
-            this.loadCensusPreset(this.censusDataPreset);
-        }
-        //same as above, but with the view presets
-        if(this.activeViewPreset != viewPresets[this.geoScaleSelector.selected()]){
-            this.activeViewPreset = viewPresets[this.geoScaleSelector.selected()];
-            if(this.activeViewPreset.settings)
-                this.loadSimulationSettingsIntoGUI(this.activeViewPreset.settings);
-            else
-                this.loadSimulationSettingsIntoGUI(defaultSettings);
-            offset = {x:this.activeViewPreset.x,y:this.activeViewPreset.y};
-            scale = {x:this.activeViewPreset.scale,y:-this.activeViewPreset.scale};
-            this.flowField.updateParticleMask();
-            this.flowField.updateFlowField();
-            this.flowField.resetParticles();
         }
     }
     logFlowFieldData(presetName){
@@ -211,14 +163,13 @@ class CensusDataFlowField{
     saveFFImage(){
         saveCanvas(this.flowField.flowFieldTexture,"flowField.png","png");
     }
-    loadSimulationSettingsIntoGUI(settings){
-        this.dampValueSlider.set(settings.particleVelocity);
-        this.particleSlider.set(settings.particleCount);
-        this.decaySlider.set(settings.trailDecayValue);
-        this.particleSizeSlider.set(settings.particleSize);
-        this.randomValueSlider.set(settings.randomMagnitude);
-        this.showTractsCheckbox.set(settings.renderCensusTracts);
-        this.attractionStrengthSlider.set(settings.attractionStrength);
-        this.repulsionStrengthSlider.set(settings.repulsionStrength);
+    loadSimulationSettingsIntoGUI(){
+        this.dampValueSlider.set(this.flowField.settings.particleVelocity);
+        this.particleSlider.set(this.flowField.settings.particleCount);
+        this.decaySlider.set(this.flowField.settings.trailDecayValue);
+        this.particleSizeSlider.set(this.flowField.settings.particleSize);
+        this.randomValueSlider.set(this.flowField.settings.randomMagnitude);
+        this.attractionStrengthSlider.set(this.flowField.settings.attractionStrength);
+        this.repulsionStrengthSlider.set(this.flowField.settings.repulsionStrength);
     }
 }
