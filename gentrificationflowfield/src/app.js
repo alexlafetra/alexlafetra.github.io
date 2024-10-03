@@ -61,8 +61,7 @@ class CensusDataFlowField{
         this.mouseInteractionCheckbox = new GuiCheckbox("Mouse Interaction",this.flowField.settings.mouseInteraction,this.controlPanel);
         this.showTractsCheckbox = new GuiCheckbox("Overlay Census Tract Boundaries",this.flowField.settings.renderCensusTracts,this.controlPanel);
         this.showHOLCCheckbox = new GuiCheckbox("Overlay HOLC Redlining Tracts",this.flowField.settings.renderHOLCTracts,this.controlPanel);
-        this.showAttractorsCheckbox = new GuiCheckbox("Show Attractors",this.flowField.settings.renderAttractors,this.controlPanel);
-        this.showRepulsorsCheckbox = new GuiCheckbox("Show Repulsors",this.flowField.settings.renderRepulsors,this.controlPanel);
+        this.showNodesCheckbox = new GuiCheckbox("Show Nodes",this.flowField.settings.renderNodes,this.controlPanel);
         this.useParticleMaskCheckbox = new GuiCheckbox("Mask Off Oceans",this.flowField.settings.useParticleMask,this.controlPanel);
         this.showDataCheckbox = new GuiCheckbox("Overlay Data Textures",this.flowField.settings.renderFlowFieldDataTexture,this.controlPanel);
        
@@ -83,8 +82,7 @@ class CensusDataFlowField{
         this.flowField.settings.isActive = this.activeCheckbox.value();
         this.flowField.settings.randomMagnitude = this.randomValueSlider.value();
         this.flowField.settings.renderFlowFieldDataTexture = this.showDataCheckbox.value();
-        this.flowField.settings.renderAttractors = this.showAttractorsCheckbox.value();
-        this.flowField.settings.renderRepulsors = this.showRepulsorsCheckbox.value();
+        this.flowField.settings.renderNodes = this.showNodesCheckbox.value();
         this.flowField.settings.mouseInteraction = this.mouseInteractionCheckbox.value();
         this.flowField.settings.renderCensusTracts = this.showTractsCheckbox.value();
         this.flowField.settings.renderHOLCTracts = this.showHOLCCheckbox.value();

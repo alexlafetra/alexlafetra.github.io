@@ -59,8 +59,8 @@ class FlowField{
             const x = node.x*scale.x+offset.x;
             const y = -node.y*scale.x+offset.y;
             const force = map(node.strength,trueMin+0.3,trueMax-0.3,0,5);
-            if(force<2)
-                continue;
+            // if(force<2)
+            //     continue;
             let temp = map(node.strength,trueMin+0.3,trueMax-0.3,0,1);
             fill(lerpColor(this.settings.repulsionColor,this.settings.attractionColor,temp));
             noStroke();
@@ -247,28 +247,25 @@ class FlowField{
         image(this.renderFBO,-mainCanvas.width/2,-mainCanvas.height/2,mainCanvas.width,mainCanvas.height);
     }
     renderData(){
-        image(this.particleDataTexture,-width/2,-height/2,width/3,height/3);
+        const dataSize = 100;
+        image(this.particleDataTexture,-width/2,-height/2,dataSize,dataSize);
         fill(0);
         noStroke();
-        rect(-width/2,-height/2+height/3,width/3,height/3);
-        image(this.flowFieldTexture,-width/2,-height/2+height/3,width/3,height/3);
-        fill(255);
-        rect(-width/2,-height/2+2*height/3,width/3,height/3);
-
-        image(this.flowMagnitudeTexture,-width/2,-height/2+2*height/3,width/3,height/3);
+        rect(-width/2,-height/2+dataSize,dataSize,dataSize);
+        image(this.flowFieldTexture,-width/2,-height/2+dataSize,dataSize,dataSize);
+        image(this.flowMagnitudeTexture,-width/2,-height/2+2*dataSize,dataSize,dataSize);
     }
     render(){
-        if(this.settings.renderCensusTracts){
+        if(this.settings.renderCensusTracts)
             // renderTransformedImage(presetFlowMask);
             renderTransformedImage(tractOutlines);
-        }
         if(this.settings.renderHOLCTracts)
             renderTransformedImage(holcTexture);
         this.renderGL();
-        this.renderNodes(this.settings.renderAttractors,this.settings.renderRepulsors);
-        if(this.settings.renderFlowFieldDataTexture){
+        if(this.settings.renderNodes)
+            this.renderNodes();
+        if(this.settings.renderFlowFieldDataTexture)
             this.renderData();
-        }
     }
     updateParticles(){
         this.updateAge();
