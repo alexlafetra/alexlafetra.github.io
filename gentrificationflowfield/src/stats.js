@@ -200,25 +200,25 @@ function createPresets(){
 }
 function createPremadePresets(){
   //Preset color/flows
-  whiteProportionComparisonPreset = new Preset("Change In Proportion of White Population", "P<sub>White 2000</sub> / P<sub>Total 2000</sub> - P<sub>White 2020</sub> / P<sub>Total 2020</sub>",preset0Nodes);
-  blackProportionComparisonPreset = new Preset("Change In Proportion of Black Population","P<sub>Black 2000</sub> / P<sub>Total 2000</sub> - P<sub>Black 2020</sub> / P<sub>Total 2020</sub>",preset1Nodes);
-  asianProportionComparisonPreset = new Preset("Change In Proportion of Asian Population","P<sub>Asian 2000</sub> / P<sub>Total 2000</sub> - P<sub>Asian 2020</sub> / P<sub>Total 2020</sub>",preset2Nodes);
-  hispOrLatinoProportionComparisonPreset = new Preset("Change In Proportion of Hispanic or Latino Population","P<sub>Hisp. or Latino 2000</sub> / P<sub>Total 2000</sub> - P<sub>Hisp. or Latino 2020</sub> / P<sub>Total 2020</sub>",preset3Nodes);
+  whiteProportionComparisonPreset = new Preset("Change in Proportion of Residents who are White", "P<sub>White 2000</sub> / P<sub>Total 2000</sub> - P<sub>White 2020</sub> / P<sub>Total 2020</sub>",preset0Nodes);
+  blackProportionComparisonPreset = new Preset("Change in Proportion of Residents who are Black","P<sub>Black 2000</sub> / P<sub>Total 2000</sub> - P<sub>Black 2020</sub> / P<sub>Total 2020</sub>",preset1Nodes);
+  asianProportionComparisonPreset = new Preset("Change in Proportion of Residents who are Asian","P<sub>Asian 2000</sub> / P<sub>Total 2000</sub> - P<sub>Asian 2020</sub> / P<sub>Total 2020</sub>",preset2Nodes);
+  hispOrLatinoProportionComparisonPreset = new Preset("Change In Proportion of Residents who are Hispanic or Latino","P<sub>Hisp. or Latino 2000</sub> / P<sub>Total 2000</sub> - P<sub>Hisp. or Latino 2020</sub> / P<sub>Total 2020</sub>",preset3Nodes);
 
-  whiteComparisonPreset = new Preset("Change in White Population","P<sub>White 2020</sub> - P<sub>White 2000</sub>",preset4Nodes);
-  blackComparisonPreset = new Preset("Change in Black Population","P<sub>Black 2020</sub> - P<sub>Black 2000</sub>",preset5Nodes);
-  asianComparisonPreset = new Preset("Change in Asian Population","P<sub>Asian 2020</sub> - P<sub>Asian 2000</sub>",preset6Nodes);
-  hispOrLatinoComparisonPreset = new Preset("Change in Hispanic or Latino Population","P<sub>Hisp. or Latino 2020</sub> - P<sub>Hisp. or Latino 2000</sub>",preset7Nodes);
+  whiteComparisonPreset = new Preset("Change in Population of White Residents","P<sub>White 2020</sub> - P<sub>White 2000</sub>",preset4Nodes);
+  blackComparisonPreset = new Preset("Change in Population of Black Residents","P<sub>Black 2020</sub> - P<sub>Black 2000</sub>",preset5Nodes);
+  asianComparisonPreset = new Preset("Change in Population of Asian Residents","P<sub>Asian 2020</sub> - P<sub>Asian 2000</sub>",preset6Nodes);
+  hispOrLatinoComparisonPreset = new Preset("Change in Population of Hispanic or Latino Residents","P<sub>Hisp. or Latino 2020</sub> - P<sub>Hisp. or Latino 2000</sub>",preset7Nodes);
 
-  rentBurden1 = new Preset("Change in Renters spending less than 10% of monthly income","",preset8Nodes);
-  rentBurden2 = new Preset("Change in Renters spending 10-14% of monthly income","",preset9Nodes);
-  rentBurden3 = new Preset("Change in Renters spending 15-19% of monthly income","",preset10Nodes);
-  rentBurden4 = new Preset("Change in Renters spending 20-24% of monthly income","",preset11Nodes);
-  rentBurden5 = new Preset("Change in Renters spending 25-29% of monthly income","",preset12Nodes);
-  rentBurden6 = new Preset("Change in Renters spending 30-34% of monthly income","",preset13Nodes);
-  rentBurden7 = new Preset("Change in Renters spending 35-39% of monthly income","",preset14Nodes);
-  rentBurden8 = new Preset("Change in Renters spending 40-49% of monthly income","",preset15Nodes);
-  rentBurden9 = new Preset("Change in Renters spending more than 50% of monthly income","",preset16Nodes);
+  rentBurden1 = new Preset("Change in Population of Renters Spending Less Than 10% of Monthly Income","",preset8Nodes);
+  rentBurden2 = new Preset("Change in Population of Renters Spending 10-14% of Monthly Income","",preset9Nodes);
+  rentBurden3 = new Preset("Change in Population of Renters Spending 15-19% of Monthly Income","",preset10Nodes);
+  rentBurden4 = new Preset("Change in Population of Renters Spending 20-24% of Monthly Income","",preset11Nodes);
+  rentBurden5 = new Preset("Change in Population of Renters Spending 25-29% of Monthly Income","",preset12Nodes);
+  rentBurden6 = new Preset("Change in Population of Renters Spending 30-34% of Monthly Income","",preset13Nodes);
+  rentBurden7 = new Preset("Change in Population of Renters Spending 35-39% of Monthly Income","",preset14Nodes);
+  rentBurden8 = new Preset("Change in Population of Renters Spending 40-49% of Monthly Income","",preset15Nodes);
+  rentBurden9 = new Preset("Change in Population of Renters Spending More Than 50% of Monthly Income","",preset16Nodes);
 
   censusDataPresets = [
       whiteProportionComparisonPreset,

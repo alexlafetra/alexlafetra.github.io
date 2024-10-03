@@ -48,10 +48,8 @@ const defaultSettings = {
     particleVelocity : 0.004,
     flowInfluence : 1.0,
     randomMagnitude : 0.0,
-    // repulsionStrength : 3.0,
-    // attractionStrength : 3.0,
-    repulsionStrength : 0.6,
-    attractionStrength : 0.6,
+    repulsionStrength : 1,
+    attractionStrength : 1,
     canvasSize : 700,
     useParticleMask : true, //for preventing particles from entering oceans
     isActive : true,
@@ -226,10 +224,6 @@ function preload(){
     loadPresetMaps();
 }
 
-function randomColor(){
-    return color(random(0,255),random(0,255),random(0,255));
-}
-
 function renderTransformedImage(img,sf = mainCanvas.width*2/5){
     const rS = (scale.x/sf);//relative scale, bc the png is scaled already
     const dx = -3*mainCanvas.width/4*rS+offset.x;
@@ -295,8 +289,6 @@ function setup_DevMode(){
     flowField = new CensusDataFlowField();
 
 }
-
-let testArray,testTitle;
 function setup_Prerendered(){
     createPremadePresets();
     //the manual offset
@@ -304,8 +296,6 @@ function setup_Prerendered(){
     let s = mainCanvas.width*2/5;
     scale = {x:s,y:s*(-1)};//manually adjusting the scale to taste
     flowField = new CensusDataFlowField();
-    testArray = [flowField.flowField.attractorArray,flowField.flowField.repulsorArray];
-    testTitle = flowField.censusDataPreset.title;
 }
 
 function logPresets(){
@@ -322,7 +312,7 @@ function logPresets(){
 function setup(){
     //create canvas and grab webGL context
     // mainCanvas = createCanvas(4000,4000,WEBGL);
-    mainCanvas = createCanvas(700,700,WEBGL);
+    mainCanvas = createCanvas(defaultSettings.canvasSize,defaultSettings.canvasSize,WEBGL);
     gl = mainCanvas.GL;
     randomShader = createShader(randomVert,randomFrag);
 
