@@ -265,8 +265,6 @@ class FlowField{
 
         //swap the particle FBO and the rendering FBO
         [this.particleCanvas,this.renderFBO] = [this.renderFBO,this.particleCanvas];
-        background(0);
-        image(this.flowFieldTexture,-width/2,-height/2,width,height);
         //draw the render FBO to the canvas
         image(this.renderFBO,-mainCanvas.width/2,-mainCanvas.height/2,mainCanvas.width,mainCanvas.height);
     }
@@ -289,6 +287,10 @@ class FlowField{
             renderTransformedImage(holcTexture);
         if(this.settings.renderNodes)
             image(this.nodeTexture,-width/2,-height/2,width,height);
+        if(this.settings.renderBigFlowField){
+            background(0);
+            image(this.flowFieldTexture,-width/2,-height/2,width,height);
+        }
         if(this.settings.renderParticles)
             this.renderGL();
         if(this.settings.renderFlowFieldDataTexture)
