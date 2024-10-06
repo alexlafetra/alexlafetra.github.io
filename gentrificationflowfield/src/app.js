@@ -22,11 +22,11 @@ class CensusDataFlowField{
         this.controlPanel.addClass("flowfield_controls");
 
         this.chartTitle = createDiv();
-        this.chartTitle.addClass('chart_title');
+        this.chartTitle.addClass('chart_title_small');
         this.chartTitle.parent(this.controlPanel);
 
         this.chartEquation = createDiv();
-        this.chartEquation.addClass('chart_attractor_equation');
+        this.chartEquation.addClass('chart_equation_small');
         this.chartEquation.parent(this.controlPanel);
 
         //preset data selector
@@ -56,15 +56,20 @@ class CensusDataFlowField{
         this.particleSlider = new GuiSlider(1,dataTextureDimension*dataTextureDimension,this.flowField.settings.particleCount,1,"Particles",this.controlPanel);
         this.decaySlider = new GuiSlider(0.0,0.1,this.flowField.settings.trailDecayValue,0.001,"Decay",this.controlPanel);
         this.particleSizeSlider = new GuiSlider(0,10.0,this.flowField.settings.particleSize,0.1,"Size",this.controlPanel);
+        this.colorWeightSlider = new GuiSlider(0.0,3.0, this.flowField.settings.colorWeight,0.01,"Color Balance",this.controlPanel);
 
         this.activeCheckbox = new GuiCheckbox("Run Simulation",this.flowField.settings.isActive,this.controlPanel);
+        this.drawParticlesCheckbox = new GuiCheckbox("Show Particles",this.flowField.settings.renderParticles,this.controlPanel);
         this.mouseInteractionCheckbox = new GuiCheckbox("Mouse Interaction",this.flowField.settings.mouseInteraction,this.controlPanel);
         this.showTractsCheckbox = new GuiCheckbox("Overlay Census Tract Boundaries",this.flowField.settings.renderCensusTracts,this.controlPanel);
         this.showHOLCCheckbox = new GuiCheckbox("Overlay HOLC Redlining Tracts",this.flowField.settings.renderHOLCTracts,this.controlPanel);
         this.showNodesCheckbox = new GuiCheckbox("Show Nodes",this.flowField.settings.renderNodes,this.controlPanel);
-        this.useParticleMaskCheckbox = new GuiCheckbox("Mask Off Oceans",this.flowField.settings.useParticleMask,this.controlPanel);
+        this.useParticleMaskCheckbox = new GuiCheckbox("Keep Particles From Moving Over Water",this.flowField.settings.useParticleMask,this.controlPanel);
         this.showDataCheckbox = new GuiCheckbox("Overlay Data Textures",this.flowField.settings.renderFlowFieldDataTexture,this.controlPanel);
        
+        //save settings buttons
+        this.logSettingsButton = new GuiButton("Log Settings To Console", logSettingsToConsole,this.controlPanel);
+        
         //save gif button
         this.saveGifButton = new GuiButton("Save GIF", saveFlowFieldGif,this.controlPanel);
         this.gifLengthTextbox = new GuiTextbox("30",this.controlPanel);
@@ -75,6 +80,7 @@ class CensusDataFlowField{
         this.flowField.settings.repulsionColor = color(this.repulsionColorPicker.value());
         this.flowField.settings.attractionColor = color(this.attractionColorPicker.value());
         this.flowField.settings.particleVelocity = this.dampValueSlider.value();
+        this.flowField.settings.colorWeight = this.colorWeightSlider.value();
         this.flowField.settings.particleCount = this.particleSlider.value();
         this.flowField.settings.trailDecayValue = this.decaySlider.value();
         this.flowField.settings.particleSize = this.particleSizeSlider.value();
@@ -86,6 +92,7 @@ class CensusDataFlowField{
         this.flowField.settings.mouseInteraction = this.mouseInteractionCheckbox.value();
         this.flowField.settings.renderCensusTracts = this.showTractsCheckbox.value();
         this.flowField.settings.renderHOLCTracts = this.showHOLCCheckbox.value();
+        this.flowField.settings.renderParticles = this.drawParticlesCheckbox.value();
 
         //updating repulsion/attraction strengths
         let needToUpdateFF = false;
@@ -118,6 +125,7 @@ class CensusDataFlowField{
             this.flowField.updateParticleMask();
             this.flowField.updateFlow();
             this.flowField.resetParticles();
+            this.flowField.renderNodes();
         }
     }
     logFlowFieldData(presetName){
@@ -143,8 +151,10 @@ class CensusDataFlowField{
             this.setFlowFieldNodesFromPreset();
     }
     loadCensusPreset(preset){
-        this.chartTitle.html(preset.title);
-        this.chartEquation.html(preset.chartEquation);
+        this.chartTitle.html("Title:"+preset.title);
+        this.chartEquation.html("Equation:"+preset.chartEquation);
+        document.getElementById("chartTitle").innerHTML = preset.title;
+        document.getElementById("chartEquation").innerHTML = preset.chartEquation;
         this.setFlowFieldNodes();
     }
     run(){

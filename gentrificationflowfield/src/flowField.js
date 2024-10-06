@@ -16,6 +16,8 @@ class FlowField{
         this.updateParticleAgeShader = createShader(updateParticleAgeVert,updateParticleAgeFrag);
         this.drawParticlesShader = createShader(drawParticlesVS,drawParticlesFS);
         this.fadeParticleCanvasShader = createShader(fadeToTransparentVert,fadeToTransparentFrag);
+        this.randomShader = createShader(randomVert,randomFrag);
+
         //these two are recompiled every time the flow field is updated, so don't make them yet:
         this.calcFlowFieldShader;
         this.calcFlowMagShader;
@@ -30,16 +32,25 @@ class FlowField{
         this.particleMask = createFramebuffer({width:mainCanvas.width,height:mainCanvas.height,depth:false});//holds the particle mask data (white is tracts w/people in them, black is empty tracts)
         //not super necessary, but makes it so particles return to their starting position (lets you make seamless looping gifs)
         this.initialStartingPositions = createFramebuffer({width:dataTextureDimension,height:dataTextureDimension,format:FLOAT,textureFiltering:NEAREST,depth:false});
-        fillFBOwithRandom(this.initialStartingPositions,1.0,1.1);
 
         //canvases for drawing to
         this.particleCanvas = createFramebuffer({width:this.settings.canvasSize,height:this.settings.canvasSize,format:FLOAT,depth:false});
         this.renderFBO = createFramebuffer({width:this.settings.canvasSize,height:this.settings.canvasSize,format:FLOAT,depth:false});
+        this.nodeTexture = createFramebuffer({width:mainCanvas.width,height:mainCanvas.height,textureFiltering:NEAREST,depth:false});//the nodes are drawn to this FBO, so they don't need to be redrawn each frame
 
         //move the particle mask to the correct view
         this.updateParticleMask();
         //Initialize particle vel/positions w/ random noise
         this.resetParticles();
+    }
+    //fills a texture/FBO with noise
+    fillFBOwithRandom(fbo,scale,seed){
+        fbo.begin();
+        shader(this.randomShader);
+        this.randomShader.setUniform('uScale',scale);
+        this.randomShader.setUniform('uRandomSeed',seed);
+        quad(-1,-1,-1,1,1,1,1,-1);
+        fbo.end();
     }
     //updates the particle mask, the HOLC tract outlines, and the census outlines
     //by translating and scaling their source png's
@@ -53,6 +64,8 @@ class FlowField{
         this.settings = settings;
     }
     renderNodes(){
+        this.nodeTexture.begin();
+        clear();
         let trueMin = this.nodes[0].strength;
         let trueMax = this.nodes[this.nodes.length-1].strength;
         for(let node of this.nodes){
@@ -66,6 +79,7 @@ class FlowField{
             noStroke();
             ellipse(x,y,force,force);
         }
+        this.nodeTexture.end();
     }
     loadNodes(nodes){
         //sort nodes by strength
@@ -117,6 +131,7 @@ class FlowField{
             this.NUMBER_OF_ATTRACTORS++;
         }
         this.updateFlow();
+        this.renderNodes();
     }
     updateFlow(){
         const newShader = createFlowFieldShader(this.NUMBER_OF_ATTRACTORS,this.NUMBER_OF_REPULSORS);
@@ -124,8 +139,9 @@ class FlowField{
         //ANY drawing to this texture will affect the flow field data
         //Flow field data is stored as attractors(x,y) => r,g; repulsors(x,y) => b,a;
         this.flowFieldTexture.begin();
-        shader(this.calcFlowFieldShader);
+        noStroke();
         clear();
+        shader(this.calcFlowFieldShader);
         //just a note: attractors and repulsors are FLAT arrays of x,y,strength values
         //Which means they're just a 1x(nx3) flat vector, not an nx3 multidimensional vector
         this.calcFlowFieldShader.setUniform('uCoordinateOffset',[offset.x/mainCanvas.width+0.5,offset.y/mainCanvas.height+0.5]);//adjusting coordinate so they're between 0,1 (instead of -width/2,+width/2)
@@ -143,7 +159,7 @@ class FlowField{
         const newShader = createFlowMagnitudeShader(this.NUMBER_OF_ATTRACTORS,this.NUMBER_OF_REPULSORS);
         this.calcFlowMagShader = createShader(newShader.vertexShader,newShader.fragmentShader);
         this.flowMagnitudeTexture.begin();
-        background(0,0);
+        noStroke();
         shader(this.calcFlowMagShader);
         clear();
         //just a note: attractors and repulsors are FLAT arrays of x,y,strength values
@@ -169,7 +185,7 @@ class FlowField{
         this.updateParticleDataShader.setUniform('uRandomScale',this.settings.randomMagnitude);
         this.updateParticleDataShader.setUniform('uMouseInteraction',this.settings.mouseInteraction);
         this.updateParticleDataShader.setUniform('uMousePosition',[mouseX/width,mouseY/height]);
-        this.updateParticleDataShader.setUniform('uTime',(frameCount%120));//this is also the amount of time the sim will take to loop
+        this.updateParticleDataShader.setUniform('uTime',(frameCount%(this.settings.framesBeforeLoop+1)));//this is also the amount of time the sim will take to loop
         this.updateParticleDataShader.setUniform('uInitialData',this.initialStartingPositions);
         this.updateParticleDataShader.setUniform('uAgeLimit',this.settings.particleAgeLimit);
         this.updateParticleDataShader.setUniform('uParticleAgeTexture',this.particleAgeTexture);
@@ -181,22 +197,27 @@ class FlowField{
         this.particleDataTextureBuffer.end();
         [this.particleDataTexture,this.particleDataTextureBuffer] = [this.particleDataTextureBuffer,this.particleDataTexture];
     }
-    updateAge(){
+    updateParticleAges(){
         this.particleAgeTextureBuffer.begin();
         shader(this.updateParticleAgeShader);
         this.updateParticleAgeShader.setUniform('uAgeLimit',this.settings.particleAgeLimit);
+        this.updateParticleAgeShader.setUniform('uAgeIncrement',this.settings.particleAgeLimit/this.settings.framesBeforeLoop);
         this.updateParticleAgeShader.setUniform('uAgeTexture',this.particleAgeTexture);
         quad(-1,-1,1,-1,1,1,-1,1);
         this.particleAgeTextureBuffer.end();
         [this.particleAgeTexture,this.particleAgeTextureBuffer] = [this.particleAgeTextureBuffer,this.particleAgeTexture];
     }
     resetParticles(){
+
+        this.fillFBOwithRandom(this.initialStartingPositions,1.0,1.1);
+
         let r = 1.1;
-        fillFBOwithRandom(this.particleDataTexture,1.0,r);
-        fillFBOwithRandom(this.particleDataTextureBuffer,1.0,r);
+        this.fillFBOwithRandom(this.particleDataTexture,1.0,r);
+        this.fillFBOwithRandom(this.particleDataTextureBuffer,1.0,r);
+
         let r1 = 1;
-        fillFBOwithRandom(this.particleAgeTexture,this.settings.particleAgeLimit,r1);
-        fillFBOwithRandom(this.particleAgeTextureBuffer,this.settings.particleAgeLimit,r1);
+        this.fillFBOwithRandom(this.particleAgeTexture,this.settings.particleAgeLimit,r1);
+        this.fillFBOwithRandom(this.particleAgeTextureBuffer,this.settings.particleAgeLimit,r1);
     }
     renderGL(){
         //using webGL to draw each particle as a point
@@ -223,7 +244,7 @@ class FlowField{
         shader(this.drawParticlesShader);
         this.drawParticlesShader.setUniform('uPositionTexture',this.particleDataTexture);
         this.drawParticlesShader.setUniform('uColorTexture',this.flowMagnitudeTexture);
-
+        this.drawParticlesShader.setUniform('uColorWeight',this.settings.colorWeight);
         this.drawParticlesShader.setUniform('uRepulsionColor',[this.settings.repulsionColor._array[0],this.settings.repulsionColor._array[1],this.settings.repulsionColor._array[2],1.0]);
         this.drawParticlesShader.setUniform('uAttractionColor',[this.settings.attractionColor._array[0],this.settings.attractionColor._array[1],this.settings.attractionColor._array[2],1.0]);
         this.drawParticlesShader.setUniform('uTextureDimensions',[dataTextureDimension,dataTextureDimension]);
@@ -233,6 +254,7 @@ class FlowField{
 
         //rendering the particles
         this.renderFBO.begin();
+        noStroke();
         clear();//clear out the old image (bc you're about to read from the other canvas)
         shader(this.fadeParticleCanvasShader);
         this.fadeParticleCanvasShader.setUniform('uSourceImage',this.particleCanvas);
@@ -242,39 +264,40 @@ class FlowField{
 
         //swap the particle FBO and the rendering FBO
         [this.particleCanvas,this.renderFBO] = [this.renderFBO,this.particleCanvas];
-
         //draw the render FBO to the canvas
         image(this.renderFBO,-mainCanvas.width/2,-mainCanvas.height/2,mainCanvas.width,mainCanvas.height);
     }
     renderData(){
         const dataSize = 100;
-        image(this.particleDataTexture,-width/2,-height/2,dataSize,dataSize);
+        const yStart = height/2-dataSize*4
         fill(0);
         noStroke();
-        rect(-width/2,-height/2+dataSize,dataSize,dataSize);
-        image(this.flowFieldTexture,-width/2,-height/2+dataSize,dataSize,dataSize);
-        image(this.flowMagnitudeTexture,-width/2,-height/2+2*dataSize,dataSize,dataSize);
+        image(this.particleCanvas,-width/2,yStart,dataSize,dataSize);
+        rect(-width/2,yStart+dataSize,dataSize,3*dataSize);
+        image(this.flowFieldTexture,-width/2,yStart+dataSize,dataSize,dataSize);
+        image(this.flowMagnitudeTexture,-width/2,yStart+2*dataSize,dataSize,dataSize);
+        image(this.particleDataTexture,-width/2,yStart+3*dataSize,dataSize,dataSize);
     }
     render(){
         if(this.settings.renderCensusTracts)
-            // renderTransformedImage(presetFlowMask);
             renderTransformedImage(tractOutlines);
         if(this.settings.renderHOLCTracts)
             renderTransformedImage(holcTexture);
-        this.renderGL();
         if(this.settings.renderNodes)
-            this.renderNodes();
+            image(this.nodeTexture,-width/2,-height/2,width,height);
+        if(this.settings.renderParticles)
+            this.renderGL();
         if(this.settings.renderFlowFieldDataTexture)
             this.renderData();
     }
     updateParticles(){
-        this.updateAge();
         this.updateParticleData();
+        this.updateParticleAges();
     }
     run(){
         if(this.settings.isActive){
             this.updateParticles();
-            background(0,0);
+            background(255);
             this.render();
         }
     }

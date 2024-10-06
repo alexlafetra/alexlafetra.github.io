@@ -30,8 +30,10 @@ let tractGeometry;
 //Raw US census data
 let raceData2000;
 let raceData2020;
-let rentData2000;
-let rentData2020;
+let rentBurdenData2000;
+let rentBurdenData2020;
+let medianRentData2000;
+let medianRentData2020;
 
 //conversion forms
 let substantiallyChanged2000;
@@ -64,14 +66,12 @@ function filterNonBayAreaCounties(data){
 }
 
 //Adds rows for tract and county codes
-function getTractAndCountyCodes(data){
+function setTractAndCountyCodes(data){
     //adding 6-digit tract id's for 2000
     data.addColumn('Tract');
-    // const TRACT_COLUMN_ID = data.getColumnCount()-1;
     data.addColumn('County');
-    // const COUNTY_COLUMN_ID = data.getColumnCount()-1;
-
     let rows = data.getRows();
+    // console.log(rows);
     for(let row of rows){
         let GEOID = row.get("GEOID");
         row.set('Tract',GEOID.slice(-6));
@@ -133,9 +133,11 @@ function isItInTheBayTho(countyCode){
     return false;
 }
 
-function alignGeoAndData(features){
+
+function alignGeoAndData(features,datasets){
     bayTracts = [];
     missingTracts = [];
+
     for(let tract of features){
         let countyFIPSCode = tract.properties.COUNTYFP;
         //if it's not in the bay, skip it!
@@ -143,37 +145,36 @@ function alignGeoAndData(features){
             continue;
         }
         // get tract id from the geojson file
+        let hasAllTheData = true;
         let tractID = tract.properties.TRACTCE;
-        // use that id to lookup the racial demographic data from 2000
-        // let row2000 = raceData2000.findRow(tractID,'Tract Number');
-        let raceRow2000 = raceData2000.findRow(tractID,'Tract');
-        if(!raceRow2000){
-            tract.hasRaceData2000 = false;
-            missingTracts.push(tractID+" -- 2000 (RACE)");
+        let rows = [];
+        // use that id to lookup the demographic data
+        for(let data of datasets){
+            let row = data.findRow(tractID,'Tract');
+            if(!row){
+                hasAllTheData = false;
+                missingTracts.push(tractID);
+                break;
+            }
+            else{
+                rows.push(row);
+            }
         }
-        let raceRow2020 = raceData2020.findRow(tractID,'Tract');
-        if(!raceRow2020){
-            tract.hasRaceData2020 = false;
-            missingTracts.push(tractID+" -- 2020 (RACE)");
-        }
-        let rentRow2000 = rentData2000.findRow(tractID,'Tract');
-        if(!rentRow2000){
-            tract.hasRentData2000 = false;
-            missingTracts.push(tractID+" -- 2000 (RENT)");
-        }
-        let rentRow2020 = rentData2020.findRow(tractID,'Tract');
-        if(!rentRow2000){
-            tract.hasRentData2020 = false;
-            missingTracts.push(tractID+" -- 2000 (RENT)");
-        }
+        /*
+
+        this is hardcoded and a lil janky! in the future, come up with a better way of sticking arbitrary census data in here
+
+        */
         //add that data to the tract object, if you found some data
-        if(raceRow2000 && raceRow2020 && rentRow2000 && rentRow2020){
+        if(hasAllTheData){
             //if there are people in the tract
-            if(raceRow2000.get('Total') > 0 && raceRow2020.get('Total') > 0){
-                tract.raceData2000 = raceRow2000;
-                tract.raceData2020 = raceRow2020;
-                tract.rentData2000 = rentRow2000;
-                tract.rentData2020 = rentRow2020;
+            if(rows[0].get('Total') > 0 && rows[1].get('Total') > 0){
+                tract.raceData2000 = rows[0];
+                tract.raceData2020 = rows[1];
+                tract.rentBurdenData2000 = rows[2];
+                tract.rentBurdenData2020 = rows[3];
+                tract.medianRentData2000 = rows[4];
+                tract.medianRentData2020 = rows[5];
                 tract.hasData = true;
             }
         }
@@ -367,7 +368,7 @@ function setupMapData(){
     let features = tractGeometry.features;
     bayTracts = features;
     cleanCensusData();
-    alignGeoAndData(features);
+    alignGeoAndData(features,[raceData2000,raceData2020,rentBurdenData2000,rentBurdenData2020,medianRentData2000,medianRentData2020]);
     getTotalStats();
     calculateGeographicCenters();
 }

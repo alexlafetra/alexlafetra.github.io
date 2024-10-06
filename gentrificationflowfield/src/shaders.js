@@ -122,17 +122,17 @@ precision highp float;
 precision highp sampler2D;
 
 uniform float uAgeLimit;
+uniform float uAgeIncrement;
 varying vec2 vTexCoord;
 
 uniform sampler2D uAgeTexture;
 void main(){
-    float increment = 0.01;
     vec4 currentAge = texture2D(uAgeTexture,vTexCoord);
     // //if you're too old, set age to 0 (at this point, the position should be reset by the pos shader)
-    if(currentAge.x > uAgeLimit)
+    if(currentAge.x >= uAgeLimit)
         gl_FragColor = vec4(0.0,0.0,0.0,1.0);
     else
-        gl_FragColor = vec4(currentAge.x+increment,currentAge.x+increment,currentAge.x+increment,1.0);
+        gl_FragColor = vec4(currentAge.x+uAgeIncrement,currentAge.x+uAgeIncrement,currentAge.x+uAgeIncrement,1.0);
 }
 `;
 
@@ -188,24 +188,23 @@ void main(){
     vec4 particleData =  texture2D(uParticlePosTexture,vParticleCoord);
     vec2 screenPosition = particleData.xy;//position data is stored in the r,g channels
     vec2 particleVelocity = particleData.zw;//velocity data is stored in the b,a channels
-    if(uMouseInteraction){
-        float dM = distance(screenPosition,uMousePosition);
-        particleVelocity += (screenPosition-uMousePosition)/(10.0*dM*dM);
-    }
 
     //checking the age of the particle
     vec4 textureAge = texture2D(uParticleAgeTexture,vParticleCoord);
 
-    //if it's too old, put it somewhere random (within the mask) and return
-    if(textureAge.x > uAgeLimit){
+    //if it's too old, reset it
+    if(textureAge.x >= uAgeLimit){
         vec4 initialData = texture2D(uInitialData,vParticleCoord);//use this for looping
         screenPosition = initialData.xy;
         particleVelocity = initialData.zw;
-
     }
     //getting the random vel
     if(uRandomScale>0.0){
         particleVelocity += uRandomScale*vec2(random(screenPosition.xx)-0.5,random(screenPosition.yy)-0.5);
+    }
+    if(uMouseInteraction){
+        float dM = distance(screenPosition,uMousePosition);
+        particleVelocity += (screenPosition-uMousePosition)/(10.0*dM*dM);
     }
 
     vec4 flowForce =  texture2D(uFlowFieldTexture,screenPosition);
@@ -230,7 +229,7 @@ void main(){
             return;
         }
     }
-    //you actually don't need to wrap bounds b/c of the particle age decay
+    //you don't need to wrap bounds b/c of the particle age decay
     gl_FragColor = vec4(newPos,newVelocity);
 }
 `;
@@ -270,10 +269,11 @@ void main() {
 `;
 
 const drawParticlesFS = glsl`
-precision highp float;
+precision lowp float;
 varying vec4 vColor;
 uniform vec4 uRepulsionColor;
 uniform vec4 uAttractionColor;
+uniform float uColorWeight;
 
 //borrowed from: https://gist.github.com/companje/29408948f1e8be54dd5733a74ca49bb9
 float map(float value, float min1, float max1, float min2, float max2) {
@@ -296,7 +296,7 @@ just some thots:
 */
 void main() {
     //slightly weight it towards repulsors, since they're visually less dominant w/ particles moving away from them
-    float val = vColor.x/(1.8*vColor.z);
+    float val = vColor.x/(uColorWeight*vColor.z);
     gl_FragColor = mix(uRepulsionColor,uAttractionColor,val*val);}
 `;
 
@@ -393,6 +393,10 @@ function createFlowMagnitudeShader(nAttractors,nRepulsors){
         uniform vec2 uCoordinateOffset;//offset
         uniform float uScale;//scale
         uniform float uDimensions;//dimensions of mainCanvas
+
+        float map(float value, float min1, float max1, float min2, float max2) {
+            return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+        }
         
         void main(){
             float attractionMag = 0.0;

@@ -1,5 +1,4 @@
 /*
-
 Some inspiration:
 https://blog.mapbox.com/how-i-built-a-wind-map-with-webgl-b63022b5537f
 https://nullprogram.com/blog/2014/06/29/
@@ -8,12 +7,9 @@ https://apps.amandaghassaei.com/gpu-io/examples/fluid/
 
 Future improvements:
 get floating point textures working on mobile
-combine vel+position processing into one texture+shader pass?
 
 To render tract+mask textures:
 set canvas size (mainCanvas) to 1000x1000
-
-Add in something about financial policy
 
 */
 
@@ -21,14 +17,12 @@ let flowField;
 let holcTexture;
 let tractOutlines;
 let presetFlowMask;
-// let backgroundTexture;
 
 let gl;
 let mainCanvas;
 let idBuffer;
 
 const dataTextureDimension = 200;
-let randomShader;
 let drawParticlesProgram;
 let drawParticlesProgLocs;
 
@@ -44,8 +38,9 @@ const defaultSettings = {
     particleCount : 40000,
     trailDecayValue : 0.04,
     particleSize : 1.4,
-    particleAgeLimit : 1.2,//this*100 ::> how many frames particles live for
-    particleVelocity : 0.004,
+    particleAgeLimit : 4,//this*100 ==> how many frames particles live for
+    framesBeforeLoop : 60,
+    particleVelocity : 0.015,
     flowInfluence : 1.0,
     randomMagnitude : 0.0,
     repulsionStrength : 1,
@@ -53,12 +48,14 @@ const defaultSettings = {
     canvasSize : 800,
     useParticleMask : true, //for preventing particles from entering oceans
     isActive : true,
-    renderFlowFieldDataTexture : true,
+    renderFlowFieldDataTexture : false,
     renderCensusTracts: true,
     renderNodes : true,
+    renderParticles:true,
     repulsionColor : [20,0,180],
     attractionColor : [255,0,120],
-    mouseInteraction : false
+    mouseInteraction : false,
+    colorWeight: 1.6
 };
 
 const viewPresets = [
@@ -67,6 +64,13 @@ const viewPresets = [
         x: 125,
         y: 125,
         scale: 280,
+        settings: defaultSettings
+    },
+    {
+        name: "Zoom on East Bay/SF/South Bay",
+        x: 250,
+        y: 225,
+        scale: 700,
         settings: defaultSettings
     },
     {
@@ -176,8 +180,6 @@ const viewPresets = [
     }
 ];
 
-let ids;
-
 function initGL(){
     drawParticlesProgram = webglUtils.createProgramFromSources(
         gl, [drawParticlesVS, drawParticlesFS]);
@@ -190,21 +192,35 @@ function initGL(){
         uTextureDimensions: gl.getUniformLocation(drawParticlesProgram, 'uTextureDimensions'),
         uMatrix: gl.getUniformLocation(drawParticlesProgram, 'uMatrix'),
     };
-    ids = new Array(dataTextureDimension*dataTextureDimension).fill(0).map((_, i) => i);
+    let ids = new Array(dataTextureDimension*dataTextureDimension).fill(0).map((_, i) => i);
     idBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, idBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(ids), gl.STATIC_DRAW);
 }
 
-function fillFBOwithRandom(fbo,scale,seed){
-    fbo.begin();
-    shader(randomShader);
-    randomShader.setUniform('uScale',scale);
-    randomShader.setUniform('uRandomSeed',seed);
-    quad(-1,-1,-1,1,1,1,1,-1);
-    fbo.end();
+function logSettingsToConsole(){
+    console.log("const settings = "+JSON.stringify(flowField.flowField.settings));
 }
 
+//All this freakin mess because you can't write a floating pt texture to png right now
+function saveFlowFieldTexture(){
+    const flowFieldTexture = createFramebuffer({width:2000,height:2000,textureFiltering:NEAREST});
+    const newShader = createFlowMagnitudeShader(flowField.flowField.NUMBER_OF_ATTRACTORS,flowField.flowField.NUMBER_OF_REPULSORS);
+    let calcFlowFieldShader = createShader(newShader.vertexShader,newShader.fragmentShader);
+    flowFieldTexture.begin();
+    clear();
+    shader(calcFlowFieldShader);
+    calcFlowFieldShader.setUniform('uCoordinateOffset',[offset.x/mainCanvas.width+0.5,offset.y/mainCanvas.height+0.5]);//adjusting coordinate so they're between 0,1 (instead of -width/2,+width/2)
+    calcFlowFieldShader.setUniform('uScale',scale.x);
+    calcFlowFieldShader.setUniform('uDimensions',mainCanvas.width);
+    calcFlowFieldShader.setUniform('uAttractors',flowField.flowField.attractorArray);
+    calcFlowFieldShader.setUniform('uRepulsors',flowField.flowField.repulsorArray);
+    calcFlowFieldShader.setUniform('uAttractionStrength',flowField.flowField.settings.attractionStrength);
+    calcFlowFieldShader.setUniform('uRepulsionStrength',flowField.flowField.settings.repulsionStrength);
+    rect(-flowFieldTexture.width/2,-flowFieldTexture.height/2,flowFieldTexture.width,flowFieldTexture.height);
+    flowFieldTexture.end();
+    saveCanvas(flowFieldTexture,"flowFieldTexture.png","png");
+}
 function saveFlowFieldGif(){
     saveGif(flowField.censusDataPreset.title+".gif", Number(flowField.gifLengthTextbox.value()),{units:'frames',delay:10})
 }
@@ -214,7 +230,6 @@ function loadPresetMaps(){
     presetFlowMask = loadImage("data/prerendered/flowFieldMask.png");
     tractOutlines = loadImage("data/prerendered/censusTractOutlines.png");
     holcTexture = loadImage("data/prerendered/HOLCTractOutlines.png");
-    // backgroundTexture = loadImage("data/prerendered/background.png");
 }
 
 function preload(){
@@ -256,14 +271,13 @@ function setup_DevMode(){
     scale = {x:s,y:s*(-1)};//manually adjusting the scale to taste
 
     //drawing background
-    tractOutlines = createFramebuffer({width:width,height:height});
-    tractOutlines.begin();
-    // blendMode(REPLACE);
-    background(0);
-    noStroke();
-    renderTracts(geoOffset,(t) => fill(255,0));
-    tractOutlines.end();
-    saveCanvas(tractOutlines,'background.png','png');
+    // tractOutlines = createFramebuffer({width:width,height:height});
+    // tractOutlines.begin();
+    // background(0);
+    // noStroke();
+    // renderTracts(geoOffset,(t) => fill(255,0));
+    // tractOutlines.end();
+    // saveCanvas(tractOutlines,'background.png','png');
 
     //drawing tract outlines
 
@@ -313,7 +327,6 @@ function setup(){
     // mainCanvas = createCanvas(4000,4000,WEBGL);
     mainCanvas = createCanvas(defaultSettings.canvasSize,defaultSettings.canvasSize,WEBGL);
     gl = mainCanvas.GL;
-    randomShader = createShader(randomVert,randomFrag);
 
     if(devMode)
         setup_DevMode();
