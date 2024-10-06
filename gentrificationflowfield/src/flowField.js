@@ -151,6 +151,7 @@ class FlowField{
         this.calcFlowFieldShader.setUniform('uRepulsors',this.repulsorArray);
         this.calcFlowFieldShader.setUniform('uAttractionStrength',this.settings.attractionStrength);
         this.calcFlowFieldShader.setUniform('uRepulsionStrength',this.settings.repulsionStrength);
+        this.calcFlowFieldShader.setUniform('uClipAlphaChannel',false);
         rect(-this.flowFieldTexture.width/2,-this.flowFieldTexture.height/2,this.flowFieldTexture.width,this.flowFieldTexture.height);
         this.flowFieldTexture.end();
         this.updateFlowMagnitude();
@@ -264,12 +265,15 @@ class FlowField{
 
         //swap the particle FBO and the rendering FBO
         [this.particleCanvas,this.renderFBO] = [this.renderFBO,this.particleCanvas];
+        background(0);
+        image(this.flowFieldTexture,-width/2,-height/2,width,height);
         //draw the render FBO to the canvas
         image(this.renderFBO,-mainCanvas.width/2,-mainCanvas.height/2,mainCanvas.width,mainCanvas.height);
     }
     renderData(){
         const dataSize = 100;
-        const yStart = height/2-dataSize*4
+        // const yStart = height/2-dataSize*4
+        const yStart = -height/2;
         fill(0);
         noStroke();
         image(this.particleCanvas,-width/2,yStart,dataSize,dataSize);

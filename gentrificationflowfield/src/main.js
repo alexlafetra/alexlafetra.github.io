@@ -203,7 +203,7 @@ function logSettingsToConsole(){
 }
 
 //All this freakin mess because you can't write a floating pt texture to png right now
-function saveFlowFieldTexture(){
+function saveFlowMagTexture(){
     const flowFieldTexture = createFramebuffer({width:2000,height:2000,textureFiltering:NEAREST});
     const newShader = createFlowMagnitudeShader(flowField.flowField.NUMBER_OF_ATTRACTORS,flowField.flowField.NUMBER_OF_REPULSORS);
     let calcFlowFieldShader = createShader(newShader.vertexShader,newShader.fragmentShader);
@@ -215,8 +215,29 @@ function saveFlowFieldTexture(){
     calcFlowFieldShader.setUniform('uDimensions',mainCanvas.width);
     calcFlowFieldShader.setUniform('uAttractors',flowField.flowField.attractorArray);
     calcFlowFieldShader.setUniform('uRepulsors',flowField.flowField.repulsorArray);
+    calcFlowFieldShader.setUniform('uAttractionStrength',flowField.flowField.settings.attractionStrength/10.0);
+    calcFlowFieldShader.setUniform('uRepulsionStrength',flowField.flowField.settings.repulsionStrength/10.0);
+    rect(-flowFieldTexture.width/2,-flowFieldTexture.height/2,flowFieldTexture.width,flowFieldTexture.height);
+    flowFieldTexture.end();
+    saveCanvas(flowFieldTexture,"flowMagTexture.png","png");
+}
+
+//All this freakin mess because you can't write a floating pt texture to png right now
+function saveFlowFieldTexture(){
+    const flowFieldTexture = createFramebuffer({width:2000,height:2000,textureFiltering:NEAREST});
+    const newShader = createFlowFieldShader(flowField.flowField.NUMBER_OF_ATTRACTORS,flowField.flowField.NUMBER_OF_REPULSORS);
+    let calcFlowFieldShader = createShader(newShader.vertexShader,newShader.fragmentShader);
+    flowFieldTexture.begin();
+    clear();
+    shader(calcFlowFieldShader);
+    calcFlowFieldShader.setUniform('uCoordinateOffset',[offset.x/mainCanvas.width+0.5,offset.y/mainCanvas.height+0.5]);//adjusting coordinate so they're between 0,1 (instead of -width/2,+width/2)
+    calcFlowFieldShader.setUniform('uScale',scale.x);
+    calcFlowFieldShader.setUniform('uDimensions',mainCanvas.width);
+    calcFlowFieldShader.setUniform('uAttractors',flowField.flowField.attractorArray);
+    calcFlowFieldShader.setUniform('uRepulsors',flowField.flowField.repulsorArray);
     calcFlowFieldShader.setUniform('uAttractionStrength',flowField.flowField.settings.attractionStrength);
     calcFlowFieldShader.setUniform('uRepulsionStrength',flowField.flowField.settings.repulsionStrength);
+    calcFlowFieldShader.setUniform('uClipAlphaChannel',true);
     rect(-flowFieldTexture.width/2,-flowFieldTexture.height/2,flowFieldTexture.width,flowFieldTexture.height);
     flowFieldTexture.end();
     saveCanvas(flowFieldTexture,"flowFieldTexture.png","png");
