@@ -5,20 +5,29 @@ const italicFont = {charWidth:7,charHeight:7,fontMap:null,getCoords:getItalicCoo
 let font = cursiveFont;
 let lines = 1;
 let invert = false;
+let textBox;
+let longestLength = 0;
+let longestHeight = 0;
 
 function preload(){
     cursiveFont.fontMap = loadImage("fonts/cursive_fontsheet.bmp");
     italicFont.fontMap = loadImage("fonts/italic_fontsheet.bmp");
 }
 function setup(){
-    createCanvas(800,scale*font.charHeight);
+    textBox = createInput();
+    textBox.size(windowWidth);
+    createCanvas(0,scale*font.charHeight);
     background(0,0);
     noSmooth();
 }
 function draw(){
-    resizeCanvas(mainString.length*font.charWidth*scale,scale*font.charHeight);
+    resizeCanvas(longestLength,longestHeight+font.charHeight*scale);
+    textBox.innerHTML = "";
     background(0,0);
     renderText();
+}
+function windowResized(){
+    textBox.size(windowWidth);
 }
 function toggleInvert(){
     invert = !invert;
@@ -36,6 +45,8 @@ function mousePressed(){
         toggleInvert();
 }
 function renderText(){
+    longestLength = 0;
+    longestHeight = 0;
     let cursor = {x:0,y:0};
     for(let letter of mainString){
         if(letter == " "){
@@ -43,7 +54,7 @@ function renderText(){
             continue;
         }
         else if(letter == "\n"){
-            cursor.y += font.charHeight*scale;
+            cursor.y += (font.charHeight*scale);
             cursor.x = 0;
             continue;
         }
@@ -51,19 +62,27 @@ function renderText(){
             cursor.x += 2*font.charWidth*scale;
             continue;
         }
+
         let coords = font.getCoords(letter);
         let sX = coords.x*font.charWidth;
         let sY = coords.y*font.charHeight;
-        // image(fontMap,cursor.x,cursor.y,font.charWidth,font.charHeight,sX,sY,font.charWidth,font.charHeight);
         let img = createImage(font.charWidth,font.charHeight);
         img.copy(font.fontMap,sX,sY,font.charWidth,font.charHeight,0,0,font.charWidth,font.charHeight);
         if(invert)
             img.filter(INVERT);
         image(img,cursor.x,cursor.y,font.charWidth*scale,font.charHeight*scale);
         cursor.x += font.charWidth*scale;
-        if(cursor.x > width){
+        if(cursor.x > windowWidth){
             cursor.x = 0;
-            cursor.y += (font.charWidth+1)*scale;
+            cursor.y += (font.charHeight)*scale;
+            longestLength = windowWidth;
+        }
+        if(cursor.x>longestLength){
+            longestLength = cursor.x;
+        }
+        if(cursor.y>longestHeight){
+            longestHeight = cursor.y;
+            // console.log(longestHeight);
         }
     }
 
