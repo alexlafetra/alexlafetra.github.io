@@ -8,6 +8,7 @@ let invert = false;
 let textBox;
 let longestLength = 0;
 let longestHeight = 0;
+let allowInvert = true;
 
 function preload(){
     cursiveFont.fontMap = loadImage("fonts/cursive_fontsheet.bmp");
@@ -15,12 +16,14 @@ function preload(){
 }
 function setup(){
     textBox = createInput();
+    toggleInvert();
     textBox.size(windowWidth);
     createCanvas(0,scale*font.charHeight);
     background(0,0);
     noSmooth();
 }
 function draw(){
+    allowInvert = (windowWidth>windowHeight);
     resizeCanvas(longestLength,longestHeight+font.charHeight*scale);
     textBox.innerHTML = "";
     background(0,0);
@@ -30,6 +33,8 @@ function windowResized(){
     textBox.size(windowWidth);
 }
 function toggleInvert(){
+    if(!allowInvert)
+        return;
     invert = !invert;
     //black text on white bg
     if(invert){
