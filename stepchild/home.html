@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html style = "overflow-y: hidden;">
+<!-- <html style = "overflow-y: hidden;"> -->
+<html>
 
 <head>
     <meta charset="utf-8">
@@ -56,8 +57,6 @@
 
 </head>
 <body id = "about_body">
-    <!-- <main style = "width:100%;position:absolute;bottom:15px;"></main> -->
-    <img src = "images/logo_standalone.svg" style = "height:100px;width:200px;position:absolute;top:0px;left:20px;">
     <div class = "single_centered_div" id = "title">
         <img id = "img1" src = "images/rotate_optimized_lowFR.gif" onclick = "popIcon()">
         <p id = "ascii_title" class = "ascii" onclick = "swapAscii()">
@@ -69,25 +68,45 @@
     </div>
     <!-- Side image of the 'child -->
     <div id = "info_section">
-        <p id = "preorder_blurb" class = "info_text">
+        <!-- <p id = "preorder_blurb" class = "info_text">
             Preorder <span class = "info_header">the Stepchild</span> <a id = "preorder_link" href = "preorder.html">here</a>
-        </p>
+        </p> -->
         <p id = "introduction" class = "info_text">
             <span class = "info_header" >The Stepchild</span> is a portable step-sequencer,
             MIDI utility, and generative MIDI instrument.
         </p>
         <p id = "about" class = "info_text">
-            You can read more about the Stepchild <a href = "info.html">here</a> and find the online user manual  <a href = "manual/manual.html">here</a>.
+            You can read more about the Stepchild project on the <a href = "https://github.com/alexlafetra/stepchild">github page</a> and find the online user manual  <a href = "manual/manual.html">here</a>.
         </p>
-        <!-- <iframe width="400px" src="https://www.youtube.com/embed/iEO_SwMWsE8?si=dtpM9BOxlLTS7zPt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
+        <img src = "images/connection_diagram.png" style = "width:100%;">
+        <p class = "info_text">
+            The Stepchild has:
+            <li class = "blue_text">
+                four hardware MIDI inputs
+            </li> 
+            <li class = "blue_text">
+                one USB in/out port for connecting to a DAW or USB host device.
+            </li>
+            <li class = "blue_text">
+                Three CV outputs to connect to Eurorack/CV modules
+            </li>
+            Each MIDI port can use both a standard MIDI DIN input jack and 3.5mm TRS jack.
+        </p>
+        <img src = "images/mainMenu.gif" style = "width:100%;">
+        <p class = "info_text">
+            The Stepchild is designed around a graphical UI displaying its sequencer, with up to <span class = "blue_text">127 separate tracks</span>,
+            an <span class = "blue_text">automation curve</span> editor for modulating parameters in real time, 
+            <span class = "blue_text">note FX</span> for experimental songwriting, <span class = "blue_text">generative midi applications</span> for using the Stepchild as a live instrument,
+            <span class = "blue_text">a flexible clock</span> for swung sequences and weird polyrhythms, and a  <span class = "blue_text">live looping</span> application.
+        </p>
     </div>
-    <div id = "bottom_links" style = "position:absolute;bottom:20px;width:100%;text-align:center;color:black;">
+    <!-- <div id = "bottom_links" style = "position:absolute;bottom:20px;width:100%;text-align:center;color:black;">
         <a href = "home.html?page=home" style = "color:black;">Home</a>
         <a href = "preorder.html?page=preorder" style = "color:black;">Buy</a>
         <a href = "info.html?page=info" style = "color:black;">Info</a>
         <a href = "manual.html?page=manual" style = "color:black;">Manual</a>
         <a>Github</a>
-    </div>
+    </div> -->
     <div class = "column" id="scroll_container">
         <div id="scroll-text">
             midi sequencer music computer silent instrument pocket composer compact beat machine quiet thing note book track editor music haiku live looper midi generator midi sequencer music computer silent instrument pocket composer compact beat machine quiet thing note book track editor music haiku live looper midi generator
@@ -102,7 +121,7 @@
        \ \__\ \ \__\ \__\ \_______\        ____\_\  \   \ \__\ \ \_______\ \__\    \ \_______\ \__\ \__\ \__\ \_______\ \_______\
         \|__|  \|__|\|__|\|_______|       |\_________\   \|__|  \|_______|\|__|     \|_______|\|__|\|__|\|__|\|_______|\|_______|
                                            \|_________|</p>
-<p class = "ascii_hidden">
+    <p class = "ascii_hidden">
     (                                     
 *   )   )        )\ )   )                 )   (  (     
 ` )  /(( /(   (   (()/(( /(  (           ( /((  )\ )\ )  
@@ -112,18 +131,18 @@
 | | | ' \/ -_)  \__ \  _/ -_) '_ \) _|| ' \| | / _` |  
 |_| |_||_\___|  |___/\__\___| .__/\__||_||_|_|_\__,_|  
                             |_|</p>
-<p class = "ascii_hidden">   ________  ________  ________      ________  ________  ________  ________  ________  ________   ________  _______    _______ 
+    <p class = "ascii_hidden">   ________  ________  ________      ________  ________  ________  ________  ________  ________   ________  _______    _______ 
   /        \/    /   \/        \    /        \/        \/        \/        \/        \/    /   \ /        \/       \ _/       \
  /        _/         /         /   /        _/        _/         /         /         /         /_/       //        //         /
 /       //         /        _/   /-        //       //        _/       __/       --/         //         /        //         / 
 \_____// \___/____/\________/    \_______// \______/ \________/\______/  \________/\___/____/ \________/\________/\________/</p>
-<p class = "ascii_hidden">  ________         ______               __   _ __   __
+    <p class = "ascii_hidden">  ________         ______               __   _ __   __
  /_  __/ /  ___   / __/ /____ ___  ____/ /  (_) /__/ /
   / / / _ \/ -_) _\ \/ __/ -_) _ \/ __/ _ \/ / / _  / 
  /_/ /_//_/\__/ /___/\__/\__/ .__/\__/_//_/_/_/\_,_/  
                            /_/                         
-</p>
-<p class = "ascii_hidden"> ______  __ __    ___       _____ ______    ___  ____    __  __ __  ____  _      ___   
+    </p>
+    <p class = "ascii_hidden"> ______  __ __    ___       _____ ______    ___  ____    __  __ __  ____  _      ___   
 |      ||  |  |  /  _]     / ___/|      |  /  _]|    \  /  ]|  |  ||    || |    |   \  
 |      ||  |  | /  [_     (   \_ |      | /  [_ |  o  )/  / |  |  | |  | | |    |    \ 
 |_|  |_||  _  ||    _]     \__  ||_|  |_||    _]|   _//  /  |  _  | |  | | |___ |  D  |
@@ -131,7 +150,7 @@
   |  |  |  |  ||     |     \    |  |  |  |     ||  | \     ||  |  | |  | |     ||     |
   |__|  |__|__||_____|      \___|  |__|  |_____||__|  \____||__|__||____||_____||_____|
                                                                                         
-</p>
+    </p>
     <script>
         cropContent();
         window.setInterval(swapAscii,4000);

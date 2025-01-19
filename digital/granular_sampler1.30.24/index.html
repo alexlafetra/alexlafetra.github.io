@@ -47,19 +47,30 @@
       font-style:italic;
       font-size:20px;
     }
+    #murmur_logo{
+      position:absolute;
+      top:0px;
+      transform: scale(0.5);
+
+    }
   </style>
 </head>
 
 <body>
+  <div id = "murmur_logo">
+    <!-- <img src = "murmur_logo_transparent.svg"> -->
+  </div>
   <main>
   </main>
   <div id = "gui"></div>
 </body>
   <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
   <script language="javascript" type="text/javascript" src="libraries/p5.min.js"></script>
-  <script language="javascript" type="text/javascript" src="webgl-utils.js"></script>
-  <script language="javascript" type="text/javascript" src="gui.js"></script>
+  <script language="javascript" type="text/javascript" src="libraries/Tone.min.js"></script>
+  <!-- <script language="javascript" type="text/javascript" src="webgl-utils.js"></script> -->
+  <!-- <script language="javascript" type="text/javascript" src="gui.js"></script> -->
+  <script language="javascript" type="text/javascript" src="octree.js"></script>
   <script language="javascript" type="text/javascript" src="flock.js"></script>
+  <script language="javascript" type="text/javascript" src="granularSynth.js"></script>
   <script language="javascript" type="text/javascript" src="main.js"></script>
-  <!-- <script language="javascript" type="text/javascript" src="webGL_test.js"></script> -->
 </html>

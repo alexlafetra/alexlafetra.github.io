@@ -226,7 +226,8 @@ class FlowField{
     run(){
         if(this.settings.isActive){
             this.updateParticles();
-            background(50,15,30);
+            // background(50,15,30);
+            image(backgroundImage,-width/2,-height/2,width,height);
             this.render();
             image(rabbit,-width/2,-height/2,width,height);
         }

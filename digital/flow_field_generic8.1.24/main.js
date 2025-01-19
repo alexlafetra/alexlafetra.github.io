@@ -4,6 +4,7 @@ let gl;
 let mainCanvas;
 let sideCanvas;
 let idBuffer;
+let backgroundImage;
 
 const dataTextureDimension = 300;
 const windowSize = {width:400,height:400};
@@ -174,6 +175,7 @@ let rabbit;
 
 function preload(){
     rabbit = loadImage("character/test_rabbit_inverse.png");
+    backgroundImage = loadImage("test.mp4");
 //     for(let i = 0; i<8; i++){
 //         spriteImages[i] = loadImage("character/000"+(i+1)+".png");
 //     }
