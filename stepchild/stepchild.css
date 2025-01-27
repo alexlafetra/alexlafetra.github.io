@@ -10,9 +10,14 @@
     font-family: roboto;
     src: url("images/RobotoCondensed-Bold.6b222561.woff2") format("woff2");
 }
+@font-face{
+    font-family: testing;
+    src: url("images/cursive.ttf") format("truetype");
+}
+
 html{
     font-size       : 20px;
-    font-family     :'Courier New', Courier, monospace;
+    font-family:'Times New Roman', Times, serif;
     overflow-x:hidden;
 }
 
@@ -72,9 +77,7 @@ body {
     height:100vh;
     float:left;
     z-index: 1;
-
     background: #ff6200;
-
     overflow-y: hidden;
 }
 
@@ -91,7 +94,6 @@ body {
     /* font-stretch: 250%; */
     writing-mode:vertical-rl;
     text-orientation:sideways;
-
     text-decoration:none;
 }
 
@@ -166,6 +168,7 @@ body {
     writing-mode:vertical-rl;
     text-orientation:sideways;
     font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    /* font-family:testing; */
     font-size:40px;
     font-weight:900;
     white-space:nowrap;
@@ -283,4 +286,34 @@ canvas {
 }
 .blue_text{
     color:blue;
+}
+.build_guide_text{
+    font-family     : 'Arial', Arial, sans-serif;
+    margin:auto;
+    margin-top:20px;
+    font-weight: bold;
+    width:min(1000px,100%);
+}
+.parts_list{
+    display: grid;
+    margin:auto;
+    width:min(1000px,100%);
+    /* gif, name, quantity, aliexpress link */
+    grid-template-columns: minmax(auto,200px) auto auto 20px;
+    grid-auto-rows:minmax(100px,auto);
+    align-items: center;
+    font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.parts_gif{
+    grid-column:1;
+    width:100%;
+}
+.parts_name{
+    grid-column:2;
+}
+.parts_quantity{
+    grid-column:3;
+}
+.parts_link{
+    grid-column:4;
 }

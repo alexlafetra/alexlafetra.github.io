@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<!-- <html style = "overflow-y: hidden;"> -->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Alex LaFetra</title>
+    <link href="stepchild.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+    function updateURL() {
+        window.parent.postMessage({ newURL: "build" }, '*');
+    }
+    </script>
+</head>
+<body>
+    <div style = "width:80%;margin:auto;">
+        <p class = "build_guide_text" style = "text-align:center;color:blue;font-family:Arial, Helvetica, sans-serif;font-style:italic;font-weight: bold;font-size:100px;transform: scaleY(0.4);">Build one!</p>
+        <img src = "images/stepchild_naked.gif" style = "width:min(1000px,100%); display:block; margin:auto;">
+        <p class = "build_guide_text">
+            The Stepchild can be built from a <a href = "store.html?page=store">kit</a> or completely from scratch. 
+        </p>
+    </div>
+    <div style = "width:80%;margin:auto;">
+        <li class = "parts_list">
+            <!-- Titles -->
+            <p class = "parts_name" style = "font-weight: bold;">Part</p>
+            <p class = "parts_quantity" style = "font-weight: bold;">Quant.</p>
+
+            <!-- Pico -->
+            <img class = "parts_gif" src = "build_guide_gifs/pico.gif">
+            <p class = "parts_name">Raspberry Pi Pico</p>
+            <p class = "parts_quantity">x1</p>
+
+            <!-- OLED -->
+            <img class = "parts_gif" src = "build_guide_gifs/oled.gif">
+            <p class = "parts_name">2.42 24pin OLED</p>
+            <p class = "parts_quantity">x1</p>
+
+            <!-- Encoder Knobs -->
+            <img class = "parts_gif" src = "build_guide_gifs/encoder_knob.gif">
+            <p class = "parts_name">Rotary Encoder Knob</p>
+            <p class = "parts_quantity">x2</p>
+            <!-- Encoder -->
+            <img class = "parts_gif" src = "build_guide_gifs/encoder.gif">
+            <p class = "parts_name">Push Switch Rotary Encoder</p>
+            <p class = "parts_quantity">x2</p>
+            <!-- Main Button Caps -->
+            <img class = "parts_gif" src = "build_guide_gifs/main_button_caps.gif">
+            <p class = "parts_name">Button Cap</p>
+            <p class = "parts_quantity">x8</p>
+            <!-- Main Button -->
+            <img class = "parts_gif" src = "build_guide_gifs/top_button.gif">
+            <p class = "parts_name">6mm Push Button</p>
+            <p class = "parts_quantity">x9</p>
+            <!-- Joystick -->
+            <img class = "parts_gif" src = "build_guide_gifs/joystick.gif">
+            <p class = "parts_name">Joystick</p>
+            <p class = "parts_quantity">x1</p>
+            <!-- 3.5mm Jack -->
+            <img class = "parts_gif" src = "build_guide_gifs/3.5mm_smd_jack.gif">
+            <p class = "parts_name">3.5mm SMD Jack</p>
+            <p class = "parts_quantity">x5</p>
+            <!-- MIDI Jack -->
+            <img class = "parts_gif" src = "build_guide_gifs/midi_jack.gif">
+            <p class = "parts_name">5pDIN MIDI Jack</p>
+            <p class = "parts_quantity">x5</p>
+            <!-- Battery Holder -->
+            <img class = "parts_gif" src = "build_guide_gifs/battery_holder.gif">
+            <p class = "parts_name">3xAA THT Battery Holder</p>
+            <p class = "parts_quantity">x1</p>
+            <!-- Power Switch -->
+            <img class = "parts_gif" src = "build_guide_gifs/power_switch.gif">
+            <p class = "parts_name">Slide Switch</p>
+            <p class = "parts_quantity">x1</p>
+            
+            <!-- LED Step Buttons -->
+            <img class = "parts_gif" src = "build_guide_gifs/led_button_cap.gif">
+            <p class = "parts_name">LED Button Cap</p>
+            <p class = "parts_quantity">x16</p>
+            <img class = "parts_gif" src = "build_guide_gifs/led_button.gif">
+            <p class = "parts_name">LED Button</p>
+            <p class = "parts_quantity">x16</p>
+
+            <!-- XH Connectors -->
+            <img class = "parts_gif" src = "build_guide_gifs/4p_xh.gif">
+            <p class = "parts_name">4P JST-XH Connector</p>
+            <p class = "parts_quantity">x2</p>
+            <img class = "parts_gif" src = "build_guide_gifs/5p_xh.gif">
+            <p class = "parts_name">5P JST-XH Connector</p>
+            <p class = "parts_quantity">x2</p>
+            <img class = "parts_gif" src = "build_guide_gifs/8p_xh.gif">
+            <p class = "parts_name">8P JST-XH Connector</p>
+            <p class = "parts_quantity">x2</p>
+
+            <!-- TRS Jacks -->
+            <img class = "parts_gif" src = "build_guide_gifs/trs_port.gif">
+            <p class = "parts_name">TRS Jack</p>
+            <p class = "parts_quantity">x4</p>
+            <a class = "parts_link" href = "https://www.aliexpress.us/item/2255801077942335.html">link</a>
+
+            <!-- Hardware -->
+            <!-- M2 Screws -->
+            <img class = "parts_gif" src = "build_guide_gifs/m2_screw.gif">
+            <p class = "parts_name">M2 Screw</p>
+            <p class = "parts_quantity">x16</p>
+            <!-- 22mm brass standoff -->
+            <img class = "parts_gif" src = "build_guide_gifs/22mm_standoff.gif">
+            <p class = "parts_name">22mm Brass M2 Standoff</p>
+            <p class = "parts_quantity">x4</p>
+            <img class = "parts_gif" src = "build_guide_gifs/4mm_standoff.gif">
+            <p class = "parts_name">4mm Brass M2 Standoff</p>
+            <p class = "parts_quantity">x4</p>
+            <img class = "parts_gif" src = "build_guide_gifs/8mm_standoff.gif">
+            <p class = "parts_name">8mm Brass M2 Threaded Standoff</p>
+            <p class = "parts_quantity">x4</p>
+
+            <!-- PCBs -->
+            <!-- CV PCB -->
+            <img class = "parts_gif" src = "build_guide_gifs/cv_board.gif">
+            <p class = "parts_name">CV PCB</p>
+            <p class = "parts_quantity">x1</p>
+            <!-- Lower Board PCB-->
+            <img class = "parts_gif" src = "build_guide_gifs/lower_board.gif">
+            <p class = "parts_name">Step Button PCB</p>
+            <p class = "parts_quantity">x1</p>
+            <!-- Lower Board PCB-->
+            <img class = "parts_gif" src = "build_guide_gifs/main_board.gif">
+            <p class = "parts_name">Main Board PCB</p>
+            <p class = "parts_quantity">x1</p>
+        </li>
+    </div>
+    <div style = "width:80%;margin:auto;margin-bottom:100px;">
+        <p class = "build_guide_text">
+            The Stepchild is designed to be easy to assemble and build yourself without using a kit, but here are a few things to know
+            about building the Stepchild from scratch:
+        </p>
+        <li class = "build_guide_text">
+            Two of the PCBs (the <span style = "color:blue;">main board</span> and <span style = "color:blue;">step button board</span>) require tight SMD component soldering.
+            I really recommend having these boards populated using a PCBA service! If you're using
+            a service to fabricate your own PCBs, you should have these two fully populated with their SMD components.
+        </li>
+        <li class = "build_guide_text">
+            There is a <span style = "color:blue;">lot</span> of soldering required to build the Stepchild both from a kit and from scratch. Most of the assembly process
+            isn't difficult, but if you're totally new to soldering, buying a kit/scratch building might not be a great experience. Check out the <a href = "">build video</a>
+            and see if this is a project you'd feel comfortable with.
+        </li>
+        <p class = "build_guide_text" style = "color:blue;">
+            Tools you'll need:
+        </p>
+        <li class = "build_guide_text">
+            A soldering iron + solder + be safe! Don't solder without good ventilation, and use good safety procedures if you're working with leaded solder.
+        </li>
+        <li class = "build_guide_text">
+            Small clippers for trimming pins
+        </li>
+        <p class = "build_guide_text" style = "color:blue;font-family:Arial, Helvetica, sans-serif;font-style:italic;font-weight: bold;font-size:100px;transform: scaleY(0.4);">And that's it!</p>
+        <p class = "build_guide_text" style = "font-weight:bold;">
+            Unless you're printing your own case, in which case you need:
+        </p>
+        <li class = "build_guide_text">
+            An FDM 3D printer with an 0.2mm nozzle, or an SLA printer -- no graphics, though! Get out your markers :)
+        </li>
+    </div>
+</body>
+<script>
+    updateURL();
+</script>
+</html>
