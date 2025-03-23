@@ -20,7 +20,6 @@
         function cropContent(){
             window.addEventListener("scroll", (event) => {
                 // //shrinking the stepchild icon once it's at the top
-                // let scroll = this.scrollY;
                 let title =  document.getElementById("title");
                 let titleCoords = title.getBoundingClientRect();
 
@@ -52,13 +51,11 @@
             setTimeout(floatImage,timing,id,min,max,timing);
         }
     </script>
-    <!-- <script language="javascript" type="text/javascript" src="../scripts/libraries/p5.min.js"></script> -->
-    <!-- <script language="javascript" type="text/javascript" src="wireframe_pram.js"></script> -->
-
 </head>
 <body id = "about_body">
     <div class = "single_centered_div" id = "title">
-        <img id = "img1" src = "images/rotate_optimized_lowFR.gif" onclick = "popIcon()">
+        <img id = "star" src = "images/big_star.svg">
+        <img id = "img1" src = "images/switching_pcb_case_gif_half_speed.gif" onclick = "popIcon()">
         <p id = "ascii_title" class = "ascii" onclick = "swapAscii()">
    ________  ________  ________      ________  ________  ________  ________  ________  ________   ________  _______    _______ 
   /        \/    /   \/        \    /        \/        \/        \/        \/        \/    /   \ /        \/       \ _/       \
@@ -68,39 +65,63 @@
     </div>
     <!-- Side image of the 'child -->
     <div id = "info_section">
-        <!-- <p id = "preorder_blurb" class = "info_text">
-            Preorder <span class = "info_header">the Stepchild</span> <a id = "preorder_link" href = "preorder.html">here</a>
-        </p> -->
-        <p id = "introduction" class = "info_text">
-            <span class = "info_header" >The Stepchild</span> is a portable step-sequencer,
-            MIDI utility, and generative MIDI instrument.
+        <p id = "preorder_blurb" class = "info_text">
+            <a id = "preorder_link" href = "preorder.html">PREORDER</a>
         </p>
-        <p id = "about" class = "info_text">
-            You can read more about the Stepchild project on the <a href = "https://github.com/alexlafetra/stepchild">github page</a> and find the online user manual  <a href = "manual/manual.html">here</a>.
+        <p id = "introduction" class = "info_text">
+            <span class = "info_header" >The Stepchild</span> is a portable step sequencer,
+            MIDI utility, and generative MIDI instrument built for experimental sequencing with hardware samplers and synthesizers.
         </p>
         <p class = "info_text">
-            The Stepchild has:
-            <li class = "blue_text">
-                four hardware MIDI inputs
+            This project started because I wanted an affordable, powerful sequencer that would let me experiment with writing MIDI
+            the way a DAW does. The Stepchild is supposed to be a flexible, experimental, and 
+        </p>
+        <p id = "about" class = "info_text">
+            The Stepchild is an <a href = "">open source</a> project, meaning both the software and hardware designs are
+            accessible to everyone. You can <a href = "build.html">build your own</a> or <a href = "store.html" >buy</a> a completed stepchild or kit.
+        </p>
+        <p class = "info_text" style = "font-size:60px;margin-bottom:10px;">
+            The Stepchild is designed to be a:
+            <li>
+                <span class = "blue_text">MIDI interface</span> for connecting a DAW, TRS MIDI, and DIN MIDI devices together
             </li> 
-            <li class = "blue_text">
-                one USB in/out port for connecting to a DAW or USB host device.
+            <li>
+                Portable <span class = "blue_text">live performance sequencer</span>, with live looping and an onboard
+                filesystem for storing sequences
+            </li> 
+            <li>
+                <span class = "blue_text">Composition tool</span> for experimenting with MIDI and hardware instruments
+            </li> 
+            <li>
+                <span class = "blue_text">Generative sequencer</span> for creating ambient samples using generative algorithms
+            </li> 
+        </p>
+        <p class = "info_text" style = "font-size:60px;margin-bottom:10px;">
+            The Stepchild hardware has:
+            <li>
+                <span class = "blue_text">4 MIDI outputs, 1 hardware input,</span> <span style = "font-style:italic;">each with dual TRS/DIN inputs</span>
+            </li> 
+            <li>
+                <span class = "blue_text">1 MIDI USB in/out port</span> for connecting to a DAW or USB host device. <span style = "font-style:italic;color:rgba(0,0,255,0.5)">The Stepchild can't act as a USB host... yet!</span>
             </li>
-            <li class = "blue_text">
-                Three CV outputs to connect to Eurorack/CV modules
+            <li>
+                <span class = "blue_text">4 CV output jacks</span> to interface with modular synth systems, supporting a 0<->+12V voltage range.
+            </li>
+            <li>
+                <span class = "blue_text">16 LED step buttons</span> for old-school step sequencing and an additional input.
+            </li>
+            <li>
+                <span class = "blue_text">2 rotary encoders</span> and <span class = "blue_text">1 joystick</span> for expressive MIDI control.
             </li>
         </p>
         <img src = "images/connection_diagram.png" style = "width:100%;">
-        <p class = "info_text">
-            Each MIDI port can use both a standard MIDI DIN input jack and 3.5mm TRS jack, letting you use the Stepchild to translate between TRS, DIN MIDI, and USB MIDI signals.
-        </p>
-        <img src = "images/mainMenu.gif" style = "width:100%;">
-        <p class = "info_text">
-            The Stepchild is designed around a graphical UI displaying its sequencer, with contains up to <span class = "blue_text">127 separate tracks</span>. Additionally,
-            there's:
+
+        <p class = "info_text" style = "font-size:60px;margin-bottom:10px;">
+            The Stepchild software has:
             <li>
                 an <span class = "blue_text">automation curve</span> editor for messing with hardware instruments in real time
             </li>
+            <img src = "images/mainMenu.gif" style = "width:100%;margin-top:20px;margin-bottom:20px;">
             <li>
                 <span class = "blue_text">note FX</span> for experimental songwriting
             </li>
@@ -111,17 +132,8 @@
                 <span class = "blue_text">a flexible clock</span> for swung sequences and weird polyrhythms
             </li>
         </p>
-        <!-- <img src = "images/bottom_buttons.png" style = "width:100%;"> -->
         <p class = "info_text"></p>
-        <img src = "images/stepchild_naked.gif" style = "width:100%;">
     </div>
-    <!-- <div id = "bottom_links" style = "position:absolute;bottom:20px;width:100%;text-align:center;color:black;">
-        <a href = "home.html?page=home" style = "color:black;">Home</a>
-        <a href = "preorder.html?page=preorder" style = "color:black;">Buy</a>
-        <a href = "info.html?page=info" style = "color:black;">Info</a>
-        <a href = "manual.html?page=manual" style = "color:black;">Manual</a>
-        <a>Github</a>
-    </div> -->
     <div class = "column" id="scroll_container">
         <div id="scroll-text">
             midi sequencer music computer silent instrument pocket composer compact beat machine quiet thing note book track editor music haiku live looper midi generator midi sequencer music computer silent instrument pocket composer compact beat machine quiet thing note book track editor music haiku live looper midi generator

@@ -18,9 +18,46 @@
     <div style = "width:80%;margin:auto;">
         <p class = "build_guide_text" style = "text-align:center;color:blue;font-family:Arial, Helvetica, sans-serif;font-style:italic;font-weight: bold;font-size:100px;transform: scaleY(0.4);">Build one!</p>
         <img src = "images/stepchild_naked.gif" style = "width:min(1000px,100%); display:block; margin:auto;">
-        <p class = "build_guide_text">
-            The Stepchild can be built from a <a href = "store.html?page=store">kit</a> or completely from scratch. 
-        </p>
+
+        <div style = "width:80%;margin:auto;margin-bottom:100px;">
+            <p class = "build_guide_text" style = "text-align:left;font-weight:bold;font-size:50px;">Notes:</p>
+            <p class = "build_guide_text">
+                The Stepchild is designed to be relatively simple to assemble and build yourself, but there are a few things to to keep in mind before jumping into the project. The first thing is that
+                even though all the Stepchild components can be easily sourced from scratch, the Stepchild's four PCBs need to 
+                fabricated with a manufacturing service. This is why there's a <a href = "">kit!</a> You can of course have them fabricated and assembled yourself,
+                but they're likely cheaper when bought in the kit, which also comes with the full parts list.
+                
+            </p>
+            <p class = "build_guide_text" style = "font-size:18px;">
+                <span style = "font-weight: bold;">A note on ordering the PCBs yourself:</span> 
+                Three of the PCBs (the <span style = "color:blue;">main board</span>, screen board, and <span style = "color:blue;">step button board</span>) require tight SMD component soldering.
+                Although you can assemble them by hand, I really recommend having these boards populated using a PCBA service! If you're already using
+                a service to fabricate your own PCBs, I recommend paying to have these three boards fully populated with their SMD components.
+            </p>
+            <p class = "build_guide_text">
+                There is a <span style = "color:blue;">lot</span> of soldering required to build the Stepchild. Most of the assembly process
+                isn't very difficult, but if you're totally new to soldering, this might not be the best experience. Check out the <a href = "">build video</a>
+                and see if this is a project you'd feel comfortable with.
+            </p>
+            <p class = "build_guide_text" style = "color:blue;text-align:left;font-weight:bold;font-size:50px;">Things you'll need:</p>
+            <li class = "build_guide_text">
+                A soldering iron + solder + be safe! Don't solder without good ventilation, and use good safety procedures if you're working with leaded solder.
+            </li>
+            <li class = "build_guide_text">
+                Small clippers for trimming pins
+            </li>
+            <li class = "build_guide_text">
+                Foam tape or superglue for mounting the screen & screen protector
+            </li>
+            <p class = "build_guide_text" style = "font-weight:bold;">
+                A google doc with the parts listing can be found <a href = "https://docs.google.com/spreadsheets/d/12Wk0SPM7m0A2Of6NsmILRJ6Frhj2IcVQJerGJKPWT98/edit?usp=sharing">here</a> (note that the listings might not be updated).
+            </p>
+            <p class = "build_guide_text">
+                If you're printing your own case, the enclosure can be printed on any FDM 3D printer with an 0.2mm nozzle, or an SLA printer, with a build size of at least 180x180mm.
+            </p>
+            <p class = "build_guide_text" style = "color:blue;font-family:Arial, Helvetica, sans-serif;font-style:italic;font-weight: bold;font-size:100px;transform: scaleY(0.4);">And that's it!</p>
+            <img src = "images/stepchild_w_shell_w_sun.gif" style = "width:min(1000px,100%); display:block; margin:auto;">
+        </div>
     </div>
     <div style = "width:80%;margin:auto;">
         <li class = "parts_list">
@@ -155,53 +192,25 @@
             <p class = "parts_quantity">x4</p>
 
             <!-- PCBs -->
-            <!-- CV PCB -->
-            <img class = "parts_gif" src = "build_guide_gifs/cv_board.gif">
-            <p class = "parts_name">CV PCB</p>
+            <!-- Main Board PCB-->
+            <img class = "parts_gif" src = "build_guide_gifs/main_board.gif">
+            <p class = "parts_name">Main Board PCB</p>
+            <p class = "parts_quantity">x1</p>
+            <!-- Screen Board PCB -->
+            <img class = "parts_gif" src = "build_guide_gifs/screen_board.gif">
+            <p class = "parts_name">Screen Board PCB</p>
             <p class = "parts_quantity">x1</p>
             <!-- Lower Board PCB-->
             <img class = "parts_gif" src = "build_guide_gifs/lower_board.gif">
             <p class = "parts_name">Step Button PCB</p>
             <p class = "parts_quantity">x1</p>
-            <!-- Lower Board PCB-->
-            <img class = "parts_gif" src = "build_guide_gifs/main_board.gif">
-            <p class = "parts_name">Main Board PCB</p>
+            <!-- CV PCB -->
+            <img class = "parts_gif" src = "build_guide_gifs/cv_board.gif">
+            <p class = "parts_name">CV PCB</p>
             <p class = "parts_quantity">x1</p>
         </li>
     </div>
-    <div style = "width:80%;margin:auto;margin-bottom:100px;">
-        <p class = "build_guide_text">
-            The Stepchild is designed to be easy to assemble and build yourself without using a kit, but here are a few things to know
-            about building the Stepchild from scratch:
-        </p>
-        <li class = "build_guide_text">
-            Two of the PCBs (the <span style = "color:blue;">main board</span> and <span style = "color:blue;">step button board</span>) require tight SMD component soldering.
-            I really recommend having these boards populated using a PCBA service! If you're using
-            a service to fabricate your own PCBs, you should have these two fully populated with their SMD components.
-        </li>
-        <li class = "build_guide_text">
-            There is a <span style = "color:blue;">lot</span> of soldering required to build the Stepchild both from a kit and from scratch. Most of the assembly process
-            isn't difficult, but if you're totally new to soldering, buying a kit/scratch building might not be a great experience. Check out the <a href = "">build video</a>
-            and see if this is a project you'd feel comfortable with.
-        </li>
-        <p class = "build_guide_text" style = "color:blue;">
-            Tools you'll need:
-        </p>
-        <li class = "build_guide_text">
-            A soldering iron + solder + be safe! Don't solder without good ventilation, and use good safety procedures if you're working with leaded solder.
-        </li>
-        <li class = "build_guide_text">
-            Small clippers for trimming pins
-        </li>
-        <p class = "build_guide_text" style = "color:blue;font-family:Arial, Helvetica, sans-serif;font-style:italic;font-weight: bold;font-size:100px;transform: scaleY(0.4);">And that's it!</p>
-        <p class = "build_guide_text" style = "font-weight:bold;">
-            Unless you're printing your own case, in which case you need:
-        </p>
-        <li class = "build_guide_text">
-            An FDM 3D printer with an 0.2mm nozzle, or an SLA printer -- no graphics, though! Get out your markers :)
-        </li>
-        <img src = "images/stepchild_w_shell_w_sun.gif" style = "width:min(1000px,100%); display:block; margin:auto;">
-    </div>
+    
 </body>
 <script>
     updateURL();
