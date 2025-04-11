@@ -75,10 +75,6 @@
                 }
             }
         }
-        function whiteOutAndLoad(url){
-            document.getElementById('whiteScreen').style.width = "100%";
-            setTimeout(()=>{window.location.href = url},800);
-        }
         function loadPage(url){
             window.location.href = url;
         }
@@ -114,7 +110,6 @@
 </head>
 <body>
     <!-- <div id = "mouseChaser" class = "collisionElement" style = "z-index:1;display:block;position:absolute;width:100px;height:100px;background-color: white;font-size:100px;background-size: contain; background-repeat: no-repeat;"></div> -->
-    <!-- <div id = "whiteScreen" style = "position:absolute;transition:1s;width:0;height:100%;background-color:white;z-index:3;"></div> -->
     <div id = "center_index" class = "collisionElement">
         <div id = "center_description_container">
             <img class = "center_description" src = "images/backgrounds/babyface.jpg">
@@ -128,13 +123,14 @@
                 <textPath alignment-baseline = "top" xlink:href="#curve" startOffset = "0" id = "circleText" color = "rgb(255,255,255)">
                     <a class = "link">work</a>
                     <a>  -  </a>
-                    <a class = "link" onmouseenter = "setCursorInfo(null,'writing');" onclick = "loadPage('blog.html')">writing</a>
+                    <a class = "link" href = "blog.html">writing</a>
                     <a>  -  </a>
-                    <a class = "link" onclick = "loadPage('stepchild.html')">the stepchild</a>
+                    <a class = "link" href = "stepchild.html">the stepchild</a>
                     <a>  -  </a>
-                    <a class = "link" onclick = "loadPage('about.html')">about</a>
+                    <a class = "link" href = "about.html">about</a>
                     <a>  -  </a>
-                    <a class = "link" onmouseenter = "setCursorInfo('main_menu_media/tamo.gif','about');">links</a>
+                    <a class = "link" href = "about.html">links</a>
+                    <a>  ----------- </a>
                 </textPath>
             </text>
         </svg>
