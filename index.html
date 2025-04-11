@@ -15,6 +15,8 @@
     <script>
         function setDivToMouse(){
             const element = document.getElementById("mouseChaser");
+            if(!element)
+                return;
             const dimX = element.offsetWidth;
             const dimY = element.offsetHeight;
             if(windowWidth > windowHeight){
@@ -83,6 +85,8 @@
         function setCursorInfo(img,text){
             clearCursorInfo();
             let cursor = document.getElementById("mouseChaser");
+            if(!cursor)
+                return;
             if(img){
                 cursor.style.backgroundImage = "url("+img+")";
                 cursor.style.backgroundColor = "transparent";
@@ -98,6 +102,8 @@
         }
         function clearCursorInfo(){
             let cursor = document.getElementById("mouseChaser");
+            if(!cursor)
+                return;
             cursor.style.backgroundImage = null;
             cursor.innerText = null;
             cursor.style.backgroundColor = "white";
@@ -107,30 +113,28 @@
     </script>
 </head>
 <body>
-    <div id = "mouseChaser" class = "collisionElement" style = "z-index:1;display:block;position:absolute;width:100px;height:100px;background-color: white;font-size:100px;background-size: contain; background-repeat: no-repeat;"></div>
-    <div id = "whiteScreen" style = "position:absolute;transition:1s;width:0;height:100%;background-color:white;z-index:3;"></div>
+    <!-- <div id = "mouseChaser" class = "collisionElement" style = "z-index:1;display:block;position:absolute;width:100px;height:100px;background-color: white;font-size:100px;background-size: contain; background-repeat: no-repeat;"></div> -->
+    <!-- <div id = "whiteScreen" style = "position:absolute;transition:1s;width:0;height:100%;background-color:white;z-index:3;"></div> -->
     <div id = "center_index" class = "collisionElement">
         <div id = "center_description_container">
             <img class = "center_description" src = "images/backgrounds/babyface.jpg">
             <!-- <p>My name is Alex, I'm an Artist and Designer from California interested in exploring connection and its opposites. </p> -->
         </div>
-        <!-- center media -->
         <!-- circular menu -->
         <!-- note to self: i made this path using http://complexdan.com/svg-circleellipse-to-path-converter/ -->
         <svg id = "text_svg" width="250" height="250" onmouseleave = "clearImages()">
             <path id = "curve" fill = "none" d="M25,125a100,100 0 1,0 200,0a100,100 0 1,0 -200,0"/>
             <text>
                 <textPath alignment-baseline = "top" xlink:href="#curve" startOffset = "0" id = "circleText" color = "rgb(255,255,255)">
-                    <a class = "link">Portfolio</a>
+                    <a class = "link">work</a>
                     <a>  -  </a>
-                    <a class = "link" onmouseenter = "setCursorInfo(null,'writing');" onclick = "loadPage('blog.html')">Writing</a>
+                    <a class = "link" onmouseenter = "setCursorInfo(null,'writing');" onclick = "loadPage('blog.html')">writing</a>
                     <a>  -  </a>
-                    <a class = "link"  onmouseenter = "setCursorInfo('main_menu_media/tamo.gif','hardware');">Electric Projects</a>
+                    <a class = "link" onclick = "loadPage('stepchild.html')">the stepchild</a>
                     <a>  -  </a>
-                    <a class = "link"  onmouseenter = "setCursorInfo('main_menu_media/tamo.gif','hardware');">Software</a>
+                    <a class = "link" onclick = "loadPage('about.html')">about</a>
                     <a>  -  </a>
-                    <a class = "link" onmouseenter = "setCursorInfo('main_menu_media/tamo.gif','about');">About</a>
-                    <a>  -  </a>
+                    <a class = "link" onmouseenter = "setCursorInfo('main_menu_media/tamo.gif','about');">links</a>
                 </textPath>
             </text>
         </svg>
