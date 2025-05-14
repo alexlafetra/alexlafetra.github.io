@@ -1,8 +1,0 @@
-okay, so thinking about the stepchild site, i want it to be a fun mix of explorable/informative so it's engaging and gives a sense of the playfullness of the stepchild. 
-
-the INFO page should have:
-
-a technical/faq/quick specs column
-a nice technical drawing
-a bit of background about how the stepchild came to be
-

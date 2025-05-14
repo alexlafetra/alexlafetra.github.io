@@ -9,10 +9,10 @@ function popIcon(){
         const newIcon = document.createElement("img");
         let which = 2*Math.random();
         if(which < 0.5){
-            newIcon.src = "stepchild/images/star_quiet.svg";
+            newIcon.src = "images/star_quiet.svg";
         }
         else{
-            newIcon.src = "stepchild/images/star.svg";
+            newIcon.src = "images/star.svg";
         }
         newIcon.style.top = window.innerHeight*Math.random()+"px";
         newIcon.style.left = (window.innerWidth-40)*Math.random()+"px";//-40px so it doesn't run on top of the scroll text

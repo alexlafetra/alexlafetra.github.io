@@ -4,30 +4,128 @@
 <head>
     <meta charset="utf-8">
     <title>Alex LaFetra</title>
-    <link href="styles/index.css" rel="stylesheet">
+    <link href="index.css" rel="stylesheet">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- this is the code linking the boids background-->
     <script language="javascript" type="text/javascript" src="scripts/libraries/p5.min.js"></script>
-    <script language="javascript" type="text/javascript" src="scripts/boids_background.js"></script>
+    <script language="javascript" type="text/javascript" src="scripts/flock.js"></script>
     <!-- this is the code loading each center image -->
     <script>
-        function setDivToMouse(){
-            const element = document.getElementById("mouseChaser");
-            if(!element)
-                return;
-            const dimX = element.offsetWidth;
-            const dimY = element.offsetHeight;
-            if(windowWidth > windowHeight){
-                element.style.left = mouseX-dimX/2+"px";
-                element.style.top = mouseY-dimY/2+"px";
+        const galleries = [
+            {
+                title:"Looking Very Lifelike!!",
+                image:"images/gallery/looking_very_lifelike!!.JPG",
+                text:"<span style = 'font-style:italic;'>Looking Very Lifelike!!</span><p>8\"x8\"</p><p>oil on canvas, 2025</p>"
+            },
+            {
+                title:"Tamagotchi Performances",
+                image:"images/gallery/tamo_guts.jpeg",
+                text:"this is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test text"
+            },
+            {
+                title:"Try Your Best",
+                image:["images/gallery/clothes_don't_fit_now.jpeg","images/gallery/try_your_best.jpeg"],
+            },
+            {
+                title:"Gentrification Flow Field",
+                image:"images/gallery/gentrification_flow_field.jpg",
+                text:"this is some test text"
             }
-            //if it's a skinny window (or mobile) just show it at the top
+        ];
+        let currentGallery = "Looking Very Lifelike!!";
+        function closeGallery(){
+            let element = document.getElementById("gallery");
+            if(element.style.display != "none"){
+                element.style.display = "none";
+            }
+        }
+        function toggleGallery(){
+            let element = document.getElementById("gallery");
+            let collider = document.getElementById("click_collider");
+
+            if(element.style.display == "block"){
+                element.style.display = "none";
+                collider.onclick = "";
+            }
             else{
-                element.style.left = windowWidth/2-dimX/2+"px";
-                element.style.top = "40px";
+                if(gallery){
+                    loadHomeGallery();
+                    element.style.display = "block";
+                    collider.onclick = closeGallery;
+                }
             }
+        }
+        function loadHomeGallery(){
+            let gallery_window_content = document.getElementById("gallery_window_content");
+            gallery_window_content.innerHTML = "";
+            //holds the grid
+            let homeGalleryDiv = document.createElement("div");
+            homeGalleryDiv.className = "home_gallery";
+
+            //grab data from galleries
+            for(let g of galleries){
+                //new entry in the grid
+                let newEntry = document.createElement("div");
+                newEntry.className = "home_gallery_image";
+                if(g.title){
+                    let title = document.createElement("p");
+                    title.innerHTML = g.title;
+                    newEntry.appendChild(title);
+                    //if there're multiple images, just grab the first one
+                    if(Array.isArray(g.image)){
+                        let img = document.createElement("img");
+                        img.src = g.image[0];
+                        newEntry.appendChild(img);
+                    }
+                    else if(g.image){
+                        let img = document.createElement("img");
+                        img.src = g.image;
+                        newEntry.appendChild(img);
+                    }
+                    newEntry.onclick = function(){loadGallery(g.title)};
+                }
+                homeGalleryDiv.appendChild(newEntry);
+            }
+            gallery_window_content.appendChild(homeGalleryDiv);
+            document.getElementById("home_gallery_button").style.display = "none";
+        }
+        function loadGallery(which){
+            //get the gallery info
+            let gallery;
+            for(let g of galleries){
+                if(g.title == which){
+                    gallery = g;
+                }
+            }
+            let gallery_window_content = document.getElementById("gallery_window_content");
+            gallery_window_content.innerHTML = "";
+            //for multiple images
+            if(Array.isArray(gallery.image)){
+                let imageContainer = document.createElement("div");
+                imageContainer.className = "multi_image_container";
+                for(let i of gallery.image){
+                    let img = document.createElement("img");
+                    img.src = i;
+                    // imageContainer.appendChild(img);
+                    gallery_window_content.appendChild(img);
+                }
+                // gallery_window_content.appendChild(imageContainer);
+            }
+            //for single images
+            else if(gallery.image){
+                let img = document.createElement("img");
+                img.src = gallery.image;
+                gallery_window_content.appendChild(img);
+
+            }
+            if(gallery.text){
+                let text = document.createElement("p");
+                text.innerHTML = gallery.text;
+                gallery_window_content.appendChild(text);
+            }
+            document.getElementById("home_gallery_button").style.display = "";
         }
         function faceMouse(){
             let xAngle = map((mouseY-height/2),-height/2,height/2,-90,90)*(0.6)+360;
@@ -59,61 +157,12 @@
             clearImages();
             document.getElementById(which).style.display = "block";
         }
-        function slideMenu(id){
-            let element = document.getElementById(id);
-            let bounds  = element.getBoundingClientRect();
-            if(window.width-bounds.right == bounds.width){
-                element.style.right = (-bounds.width)+'px';
-            }
-            else{
-                element.style.right = bounds.width+'px';
-            }
-            let elements = document.getElementsByClassName('side_list');
-            for(let e of elements){
-                if(e.id != id){
-                    e.style.right = (-e.getBoundingClientRect().width)+'px';
-                }
-            }
-        }
-        function loadPage(url){
-            window.location.href = url;
-        }
-        function setCursorInfo(img,text){
-            clearCursorInfo();
-            let cursor = document.getElementById("mouseChaser");
-            if(!cursor)
-                return;
-            if(img){
-                cursor.style.backgroundImage = "url("+img+")";
-                cursor.style.backgroundColor = "transparent";
-                cursor.style.width = "200px";
-                cursor.style.height = "200px";
-            }
-            else{
-                cursor.style.backgroundColor = "white";
-                cursor.innerText = text;
-                cursor.style.width = "auto";
-                cursor.style.height = "auto";
-            }
-        }
-        function clearCursorInfo(){
-            let cursor = document.getElementById("mouseChaser");
-            if(!cursor)
-                return;
-            cursor.style.backgroundImage = null;
-            cursor.innerText = null;
-            cursor.style.backgroundColor = "white";
-            cursor.style.width = "100px";
-            cursor.style.height = "100px";
-        }
     </script>
 </head>
 <body>
-    <!-- <div id = "mouseChaser" class = "collisionElement" style = "z-index:1;display:block;position:absolute;width:100px;height:100px;background-color: white;font-size:100px;background-size: contain; background-repeat: no-repeat;"></div> -->
     <div id = "center_index" class = "collisionElement">
         <div id = "center_description_container">
             <img class = "center_description" src = "images/backgrounds/babyface.jpg">
-            <!-- <p>My name is Alex, I'm an Artist and Designer from California interested in exploring connection and its opposites. </p> -->
         </div>
         <!-- circular menu -->
         <!-- note to self: i made this path using http://complexdan.com/svg-circleellipse-to-path-converter/ -->
@@ -121,19 +170,34 @@
             <path id = "curve" fill = "none" d="M25,125a100,100 0 1,0 200,0a100,100 0 1,0 -200,0"/>
             <text>
                 <textPath alignment-baseline = "top" xlink:href="#curve" startOffset = "0" id = "circleText" color = "rgb(255,255,255)">
-                    <a class = "link">work</a>
+                    <a class = "link" onclick = "toggleGallery()">work</a>
                     <a>  -  </a>
-                    <a class = "link" href = "blog.html">writing</a>
+                    <a>Alex LaFetra</a>
                     <a>  -  </a>
-                    <a class = "link" href = "stepchild.html">the stepchild</a>
+                    <a class = "link">about</a>
                     <a>  -  </a>
-                    <a class = "link" href = "about.html">about</a>
-                    <a>  -  </a>
-                    <a class = "link" href = "about.html">links</a>
-                    <a>  ----------- </a>
+                    <a class = "link">contact</a>
+                    <a>  --------------------- </a>
                 </textPath>
             </text>
         </svg>
+    </div>
+    <div id = "click_collider" style = "width:100%;height:100%;display:block;position:absolute;z-index:1;"></div>
+    <div id = "gallery">
+        <div id = "gallery_window" class = "collisionElement">
+            <span id = "gallery_navigator_title" onclick = "loadHomeGallery()">current work</span>
+            <div id = "gallery_navigator" class = "collisionElement">
+                <p onclick = "loadGallery('Looking Very Lifelike!!')">Looking Very Lifelike!!</p>
+                <p onclick = "loadGallery('Tamagotchi Performances')">Tamagotchi Performances</p>
+                <p>The Stepchild</p>
+                <p onclick = "loadGallery('Gentrification Flow Field')">Gentrification Flow Field</p>
+            </div>
+            <div id = "gallery_window_controls">
+                <span class  = "gallery_button" onclick = "closeGallery()">[x]</span>
+                <span class  = "gallery_button" id = "home_gallery_button" onclick = "loadHomeGallery()"><<</span>
+            </div>
+            <div id = "gallery_window_content"></div>
+        </div>
     </div>
 </body>
 <script>
