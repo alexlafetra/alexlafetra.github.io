@@ -89,38 +89,47 @@ canvas{
     height:100%;
 }
 #gallery_window{
-    background: transparent;
     z-index:2;
     /* centering it */
     top:50%;
     left: 50%;
     transform: translateY(-50%) translateX(-50%);
+
+    background:white;
     display:grid;
     grid-template-columns: 150px auto;
-    grid-template-rows: 30px auto auto;
+    grid-template-rows: 30px auto 30px;
     grid-template-areas: 
     'controls gallery'
     'navigator gallery'
-    'blank gallery';
+    'title gallery';
     position:absolute;
-    gap:20px;
     width:90%;
     min-width: 200px;
     max-width:min(1000px,100%);
-    /* min-height:fit-content; */
-    /* height:fit-content; */
-    height:80%;
-    max-height:80%;
-    /* overflow-y: scroll; */
+    min-height:80%;
+    height:100%;
+    max-height:90vh;
 }
 
 /* element that appears with a list of links */
+#gallery_navigator_title{
+    text-decoration: none;
+    font-style: italic;
+    font: size 22px;px;
+    font-family: Arial, Helvetica, sans-serif;
+    color:#868686;
+    grid-area: title;
+    margin:14px;
+}
+#gallery_navigator_title:hover{
+    cursor:pointer;
+    color:blue;
+}
 #gallery_navigator{
     grid-area:navigator;
-    padding:14px;
-    /* margin:14px; */
+    margin:14px;
     font-size:13px;
-    background:white;
 }
 #gallery_navigator p{
     text-decoration: underline;
@@ -133,6 +142,8 @@ canvas{
     color:blue;
     background-color: red;
 }
+
+
 /* images/videos/text */
 #gallery_window_content{
     grid-area:gallery;
@@ -140,14 +151,15 @@ canvas{
     padding:30px;
     object-fit: contain;
     font-size: 16px;
-    max-height:100%;
-    background:white;
 }
 #gallery_window_content img{
-    max-width: 100%;
-    max-height:80%;
+    /* max-height: 80%; */
+    /* max-width:100%; */
+    /* height:80%; */
+    width:100%;
     margin:auto;
     overflow-y: scroll;
+    align-self: center;
 }
 
 
@@ -155,10 +167,8 @@ canvas{
 #gallery_window_controls{
     grid-area:controls;
     align-self: center;
-    /* margin-left:12px; */
-    padding:6px;
+    margin-left:12px;
     font-size:14px;
-    background:white;
 }
 .gallery_button{
     color:blue;
