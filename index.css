@@ -149,6 +149,12 @@ canvas{
     margin:auto;
     overflow-y: scroll;
 }
+#gallery_window_content video{
+    max-width: 100%;
+    max-height:80%;
+    margin:auto;
+    overflow-y: scroll;
+}
 
 
 /* close button */
@@ -187,6 +193,15 @@ canvas{
     width:100%;
 }
 .home_gallery_image img:hover{
+    opacity:0.5;
+    cursor:pointer;
+}
+.home_gallery_image video{
+    transition:0.5s;
+    object-fit: cover;
+    width:100%;
+}
+.home_gallery_image video:hover{
     opacity:0.5;
     cursor:pointer;
 }

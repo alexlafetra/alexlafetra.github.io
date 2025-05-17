@@ -20,6 +20,10 @@
                 text:"<span style = 'font-style:italic;'>Looking Very Lifelike!!</span><p>8\"x8\"</p><p>oil on canvas, 2025</p>"
             },
             {
+                title:"Tai Yang (Collaboration w/Jacob Li Rosenberg)",
+                image:["images/gallery/tai_yang.MOV","images/gallery/tai_yang_google_translate.PNG"],
+            },
+            {
                 title:"Tamagotchi Performances",
                 image:"images/gallery/tamo_guts.jpeg",
                 text:"this is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test textthis is some test text"
@@ -90,12 +94,32 @@
                     newEntry.appendChild(title);
                     //if there're multiple images, just grab the first one
                     if(Array.isArray(g.image)){
-                        let img = document.createElement("img");
+                        let img;
+                        //if it's a video
+                        if(g.image[0].endsWith("MOV")||g.image[0].endsWith("MP4")){
+                            img = document.createElement("video");
+                            img.autoplay = true;
+                            img.loop = true;
+                            img.muted = true;
+                        }
+                        else{
+                            img = document.createElement("img");
+                        }
                         img.src = g.image[0];
                         newEntry.appendChild(img);
                     }
                     else if(g.image){
-                        let img = document.createElement("img");
+                      let img;
+                        //if it's a video
+                        if(g.image[0].endsWith("MOV")||g.image[0].endsWith("MP4")){
+                            img = document.createElement("video");
+                            img.autoplay = true;
+                            img.loop = true;
+                            img.muted = true;
+                        }
+                        else{
+                            img = document.createElement("img");
+                        }
                         img.src = g.image;
                         newEntry.appendChild(img);
                     }
@@ -135,7 +159,17 @@
                 let imageContainer = document.createElement("div");
                 imageContainer.className = "multi_image_container";
                 for(let i of gallery.image){
-                    let img = document.createElement("img");
+                    let img;
+                    //if it's a video
+                    if(i.endsWith("MOV")||i.endsWith("MP4")){
+                        img = document.createElement("video");
+                        img.autoplay = true;
+                        img.loop = true;
+                        img.muted = true;
+                    }
+                    else{
+                        img = document.createElement("img");
+                    }
                     img.src = i;
                     gallery_window_content.appendChild(img);
                 }
@@ -219,8 +253,8 @@
     </div>
     <div id = "click_collider" style = "width:100%;height:100%;display:block;position:absolute;z-index:1;"></div>
     <div id = "gallery">
-        <div id = "gallery_window" class = "collisionElement">
-            <div id = "gallery_window_controls">
+        <div id = "gallery_window">
+            <div id = "gallery_window_controls" class = "collisionElement">
                 <span class  = "gallery_button" onclick = "closeGallery()">[x]</span>
                 <span class  = "gallery_button" id = "home_gallery_button" onclick = "loadHomeGallery()"><<</span>
             </div>
@@ -230,7 +264,7 @@
                 <p>The Stepchild</p>
                 <p onclick = "loadGallery('Gentrification Flow Field')">Gentrification Flow Field</p> -->
             </div>
-            <div id = "gallery_window_content"></div>
+            <div id = "gallery_window_content" class = "collisionElement"></div>
         </div>
     </div>
 </body>
