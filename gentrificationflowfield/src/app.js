@@ -1,13 +1,15 @@
 //this is a wrapper for the flow field that feeds it census data and handles the gui
-const defaultPresetIndex = 0;
 class CensusDataFlowField{
-    constructor(){
-        this.censusDataPreset = censusDataPresets[defaultPresetIndex];
+    constructor(preset){
+        this.censusDataPreset = preset;
+        console.log(this.censusDataPreset);
         this.activeViewPreset = viewPresets[0];
         this.simulationParameterPreset = defaultSettings;
         this.flowField = new FlowField(defaultSettings);
         this.initGui();
+        console.log(this.censusDataPreset);
         this.updateParametersFromGui();
+        console.log(this.censusDataPreset);
         this.loadCensusPreset(this.censusDataPreset);
     }
     initGui(){
@@ -16,7 +18,7 @@ class CensusDataFlowField{
             gui = createDiv();
             gui.id("gui");
         }
-        gui.textContent = '';//clear it out;
+        // gui.textContent = '';//clear it out;
 
         this.controlPanel = createDiv();
         this.controlPanel.addClass("flowfield_controls");
@@ -34,14 +36,15 @@ class CensusDataFlowField{
         for(let preset of censusDataPresets){
             options.push(preset.title);
         }
-        this.presetSelector = new FlowFieldSelector(options,defaultPresetIndex,"Demographic Data",this.controlPanel);
+        this.presetSelector = new FlowFieldSelector(options,this.censusDataPreset.title,"Demographic Data",this.controlPanel);
+        // this.presetSelector.
 
         //preset view selector
         const geoOptionNames = [];
         for(let view of viewPresets){
             geoOptionNames.push(view.name);
         }
-        this.geoScaleSelector = new FlowFieldSelector(geoOptionNames,0,"View",this.controlPanel);
+        this.geoScaleSelector = new FlowFieldSelector(geoOptionNames,this.activeViewPreset.name,"View",this.controlPanel);
 
         this.dampValueSlider = new GuiSlider(0.001,0.1, this.flowField.settings.particleVelocity,0.001,"Speed",this.controlPanel);
         this.randomValueSlider = new GuiSlider(0,10, this.flowField.settings.randomMagnitude,0.01,"Drift",this.controlPanel);
@@ -74,6 +77,11 @@ class CensusDataFlowField{
         //save gif button
         this.saveGifButton = new GuiButton("Save GIF", saveFlowFieldGif,this.controlPanel);
         this.gifLengthTextbox = new GuiTextbox("30",this.controlPanel);
+
+        this.rerenderNodesButton = new GuiButton("Rerender Nodes",rerenderNodes,this.controlPanel);
+        //save presets button
+        if(devMode)
+            this.savePresetsButton = new GuiButton("Save Presets to JSON", savePresetsToJSON,this.controlPanel);
 
         this.controlPanel.parent(gui);
     }

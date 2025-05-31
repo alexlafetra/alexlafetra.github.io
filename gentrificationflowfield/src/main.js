@@ -13,18 +13,14 @@ set canvas size (mainCanvas) to 1000x1000
 
 */
 
-let flowField;
+let flowField,flowField2;
 let holcTexture;
 let tractOutlines;
 let presetFlowMask;
 
 let gl;
 let mainCanvas;
-let idBuffer;
-
-const dataTextureDimension = 400;
-let drawParticlesProgram;
-let drawParticlesProgLocs;
+const dataTextureDimension = 200;
 
 //Presets
 let censusDataPresets;
@@ -35,17 +31,19 @@ let censusDataPresets;
 let devMode = false;
 
 const defaultSettings = {
+    backgroundColor: [255,255,255],
     particleCount : 40000,
-    trailDecayValue : 0.04,
-    particleSize : 1.4,
-    particleAgeLimit : 4,//this*100 ==> how many frames particles live for
+    trailDecayValue : 0.02,
+    particleSize :0,
+    particleAgeLimit : 1,//this*100 ==> how many frames particles live for
     framesBeforeLoop : 60,
-    particleVelocity : 0.015,
+    particleVelocity : 0.01,
     flowInfluence : 1.0,
     randomMagnitude : 0.0,
-    repulsionStrength : 1,
+    repulsionStrength : 1.6,
     attractionStrength : 1,
-    canvasSize : 800,
+    canvasSize : 600,//big canvas
+    dataCanvasSize : 400,
     useParticleMask : true, //for preventing particles from entering oceans
     isActive : true,
     renderFlowFieldDataTexture : false,
@@ -56,8 +54,11 @@ const defaultSettings = {
     repulsionColor : [20,0,180],
     attractionColor : [255,0,120],
     mouseInteraction : false,
-    colorWeight: 1.6
+    colorWeight: 2.22
 };
+
+// const defaultSettings = {backgroundColor:[255,0,0],particleCount:40000,trailDecayValue:0.017,particleSize:1,particleAgeLimit:1,framesBeforeLoop:60,particleVelocity:0.024,flowInfluence:1,randomMagnitude:1.11,repulsionStrength:0.411,attractionStrength:0.306,canvasSize:1080,dataSize:200,useParticleMask:true,isActive:true,renderFlowFieldDataTexture:true,renderCensusTracts:false,renderNodes:true,renderParticles:true,renderBigFlowField:false,repulsionColor:[0,64,255,255],attractionColor:[0,255,30,255],mouseInteraction:false,colorWeight:2.05,renderHOLCTracts:false};
+// const defaultSettings = {backgroundColor:[0,0,0],particleCount:40000,trailDecayValue:0.046,particleSize:2.3,particleAgeLimit:1,framesBeforeLoop:60,particleVelocity:0.054,flowInfluence:1,randomMagnitude:0.49,repulsionStrength:0.411,attractionStrength:0.306,canvasSize:1080,dataSize:200,useParticleMask:true,isActive:true,renderFlowFieldDataTexture:true,renderCensusTracts:false,renderNodes:true,renderParticles:true,renderBigFlowField:false,repulsionColor:[255,0,0,255],attractionColor:[0,85,255,255],mouseInteraction:false,colorWeight:2.05,renderHOLCTracts:false};
 
 const viewPresets = [
     {
@@ -128,26 +129,11 @@ const viewPresets = [
     }
 ];
 
-function initGL(){
-    drawParticlesProgram = webglUtils.createProgramFromSources(
-        gl, [drawParticlesVS, drawParticlesFS]);
-    drawParticlesProgLocs = {
-        id: gl.getAttribLocation(drawParticlesProgram, 'particleID'),
-        uPositionTexture: gl.getUniformLocation(drawParticlesProgram, 'uPositionTexture'),
-        uColorTexture: gl.getUniformLocation(drawParticlesProgram, 'uColorTexture'),
-        uAttractionTexture: gl.getUniformLocation(drawParticlesProgram, 'uAttractionTexture'),
-        uRepulsionTexture: gl.getUniformLocation(drawParticlesProgram, 'uRepulsionTexture'),
-        uTextureDimensions: gl.getUniformLocation(drawParticlesProgram, 'uTextureDimensions'),
-        uMatrix: gl.getUniformLocation(drawParticlesProgram, 'uMatrix'),
-    };
-    let ids = new Array(dataTextureDimension*dataTextureDimension).fill(0).map((_, i) => i);
-    idBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, idBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(ids), gl.STATIC_DRAW);
-}
-
 function logSettingsToConsole(){
     console.log("const settings = "+JSON.stringify(flowField.flowField.settings));
+}
+function rerenderNodes(){
+    flowField.flowField.renderNodes();
 }
 
 //All this freakin mess because you can't write a floating pt texture to png right now
@@ -194,7 +180,6 @@ function saveFlowFieldGif(){
     saveGif(flowField.censusDataPreset.title+".gif", Number(flowField.gifLengthTextbox.value()),{units:'frames',delay:10})
 }
 
-
 function loadPresetMaps(){
     presetFlowMask = loadImage("data/prerendered/flowFieldMask.png");
     tractOutlines = loadImage("data/prerendered/censusTractOutlines.png");
@@ -226,59 +211,70 @@ function renderTransformedImage(img,sf = mainCanvas.width*2/5){
             sx,sy,sw,sh);
 }
 
-function saveMaskAndTracts(){
-
-    //drawing background
-    // tractOutlines = createFramebuffer({width:width,height:height});
-    // tractOutlines.begin();
-    // background(0);
-    // noStroke();
-    // renderTracts(geoOffset,(t) => fill(255,0));
-    // tractOutlines.end();
-    // saveCanvas(tractOutlines,'background.png','png');
+function renderTractsAndMask(){
+    //Resize canvas to 2000,2000 if you want to create a prerendered background
+    resizeCanvas(2000,2000);
 
     //drawing tract outlines
 
-    // tractOutlines = createFramebuffer({width:width,height:height});
-    // tractOutlines.begin();
-    // strokeWeight(1);
-    // renderTractOutlines(geoOffset,color(100));
-    // tractOutlines.end();
-    // saveCanvas(tractOutlines, 'censusTractOutlines.png','png');
+    tractOutlines = createFramebuffer({width:width,height:height});
+    tractOutlines.begin();
+    strokeWeight(1);
+    renderTractOutlines(geoOffset,color(100));
+    tractOutlines.end();
+    saveCanvas(tractOutlines, 'censusTractOutlines.png','png');
 
-    //drawing HOLC outlines
+    // drawing HOLC outlines
 
-    // tractOutlines = createFramebuffer({width:width,height:height});
-    // tractOutlines.begin();
-    // strokeWeight(1);
-    // renderHOLCTracts(geoOffset,oakHolcTracts);
-    // renderHOLCTracts(geoOffset,sfHolcTracts);
-    // renderHOLCTracts(geoOffset,sjHolcTracts);
-    // tractOutlines.end();
-    // saveCanvas(tractOutlines, 'HOLCTractOutlines.png','png');
+    tractOutlines = createFramebuffer({width:width,height:height});
+    tractOutlines.begin();
+    strokeWeight(1);
+    renderHOLCTracts(geoOffset,oakHolcTracts);
+    renderHOLCTracts(geoOffset,sfHolcTracts);
+    renderHOLCTracts(geoOffset,sjHolcTracts);
+    tractOutlines.end();
+    saveCanvas(tractOutlines, 'HOLCTractOutlines.png','png');
 }
-function logPresets(){
+
+
+function getPresetsJSON(){
     let i = 0;
-    let bigString;
+    let bigString = "";
     for(let preset of censusDataPresets){
         let nodes = createNodesFromTracts(preset.demographicFunction);
         bigString += "const preset"+i+"Nodes = "+JSON.stringify(nodes)+";\n";
         i++;
     }
-    console.log(bigString);
+    return bigString;
 }
+function logPresets(){
+    console.log(getPresetsJSON());
+}
+
+function savePresetsToJSON(){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([getPresetsJSON()], {
+    type: "text/plain"
+  }));
+  a.setAttribute("download", "presetData.js");
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+let zip;
+let frameData = [];
 
 function setup(){
     //create canvas and grab webGL context
-    // mainCanvas = createCanvas(4000,4000,WEBGL);
     mainCanvas = createCanvas(defaultSettings.canvasSize,defaultSettings.canvasSize,WEBGL);
     gl = mainCanvas.GL;
 
     if(devMode){
+        console.log("creating presets...");
         createPresets();
         //parsing data and attaching it to tract geometry
         setupMapData();
-    
         //setting the offsets so that the first point in the first shape is centered
         let samplePoint = bayTracts[0].geometry.coordinates[0][0][0];
         geoOffset = {x:-samplePoint[0],y:-samplePoint[1]};
@@ -290,10 +286,92 @@ function setup(){
     offset = {x:mainCanvas.width/4,y:mainCanvas.height/4};
     let s = mainCanvas.width*2/5;
     scale = {x:s,y:s*(-1)};//manually adjusting the scale to taste
-    flowField = new CensusDataFlowField();
-    initGL();
+
+    //build the flow field
+    console.log(censusDataPresets);
+    flowField = new CensusDataFlowField(censusDataPresets[4]);
+    // zip = new JSZip();
+}
+
+function exportVideo(e) {
+    console.log("stopping!");
+    var blob = new Blob(chunks, { 'type' : 'video/webm' });
+
+    // Draw video to screen
+    var videoElement = document.createElement('video');
+    videoElement.setAttribute("id", Date.now());
+    videoElement.controls = true;
+    document.body.appendChild(videoElement);
+    videoElement.src = window.URL.createObjectURL(blob);
+
+    // Download the video 
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    document.body.appendChild(a);
+    a.style = 'display: none';
+    a.href = url;
+    a.download = 'newVid.webm';
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+let chunks = [];
+const fr = 60;
+let recording = false;
+let frame = 0;
+
+function record() {
+    recording = true;
+    chunks.length = 0;
+    let stream = document.querySelector('canvas').captureStream(fr);
+        recorder = new MediaRecorder(stream);
+    recorder.ondataavailable = e => {
+        if (e.data.size) {
+        chunks.push(e.data);
+        }
+    };
+    recorder.onstop = exportVideo;
+    recorder.start();
+}
+
+function captureFrame() {
+    const domCanvas = mainCanvas.elt;
+
+    domCanvas.toBlob((blob) => {
+        console.log(frame);
+        const filename = 'frame_'+String(frame)+'.png';
+        zip.file(filename, blob);
+        if (frame >= 60 && recording) {
+            recording = false;
+            // noLoop();
+            downloadZip();
+        }
+    }, 'image/png');
+}
+
+function keyPressed(){
+    if(key == 'r'){
+        if(!recording){
+            frameRate(2);
+            recording = true;
+        }
+        else
+            recording = false;
+    }
+}
+function downloadZip() {
+  zip.generateAsync({ type: 'blob' }).then((content) => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(content);
+    a.download = 'webgl_frames.zip';
+    a.click();
+  });
 }
 
 function draw(){
     flowField.run();
+    if(recording){
+        captureFrame();
+        frame++;
+    }
 }

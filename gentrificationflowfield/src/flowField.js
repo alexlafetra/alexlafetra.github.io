@@ -38,11 +38,31 @@ class FlowField{
         this.renderFBO = createFramebuffer({width:this.settings.canvasSize,height:this.settings.canvasSize,format:FLOAT,depth:false});
         this.nodeTexture = createFramebuffer({width:mainCanvas.width,height:mainCanvas.height,textureFiltering:NEAREST,depth:false});//the nodes are drawn to this FBO, so they don't need to be redrawn each frame
 
+        //get the shader uniform locations so you can pass particle data in
+        this.initGL();
         //move the particle mask to the correct view
         this.updateParticleMask();
         //Initialize particle vel/positions w/ random noise
         this.resetParticles();
     }
+    initGL(){
+        this.drawParticlesProgram = webglUtils.createProgramFromSources(
+            gl, [drawParticlesVS, drawParticlesFS]);
+        this.drawParticlesProgLocs = {
+            id: gl.getAttribLocation(this.drawParticlesProgram, 'particleID'),
+            uPositionTexture: gl.getUniformLocation(this.drawParticlesProgram, 'uPositionTexture'),
+            uColorTexture: gl.getUniformLocation(this.drawParticlesProgram, 'uColorTexture'),
+            uAttractionTexture: gl.getUniformLocation(this.drawParticlesProgram, 'uAttractionTexture'),
+            uRepulsionTexture: gl.getUniformLocation(this.drawParticlesProgram, 'uRepulsionTexture'),
+            uTextureDimensions: gl.getUniformLocation(this.drawParticlesProgram, 'uTextureDimensions'),
+            uMatrix: gl.getUniformLocation(this.drawParticlesProgram, 'uMatrix'),
+        };
+        let ids = new Array(dataTextureDimension*dataTextureDimension).fill(0).map((_, i) => i);
+        this.idBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.idBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(ids), gl.STATIC_DRAW);
+    }
+    
     //fills a texture/FBO with noise
     fillFBOwithRandom(fbo,scale,seed){
         fbo.begin();
@@ -132,6 +152,14 @@ class FlowField{
         }
         this.updateFlow();
         this.renderNodes();
+    }
+    clear(){
+        this.renderFBO.begin();
+        clear();
+        this.renderFBO.end();
+        this.particleCanvas.begin();
+        clear();
+        this.particleCanvas.end();
     }
     updateFlow(){
         const newShader = createFlowFieldShader(this.NUMBER_OF_ATTRACTORS,this.NUMBER_OF_REPULSORS);
@@ -225,10 +253,10 @@ class FlowField{
         this.particleCanvas.begin();
 
         //setting ID attributes (or trying to at least)
-        gl.bindBuffer(gl.ARRAY_BUFFER, idBuffer);
-        gl.enableVertexAttribArray(drawParticlesProgLocs.id);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.idBuffer);
+        gl.enableVertexAttribArray(this.drawParticlesProgLocs.id);
         gl.vertexAttribPointer(
-            drawParticlesProgLocs.id,
+            this.drawParticlesProgLocs.id,
             1,         // size (num components)
             gl.FLOAT,  // type of data in buffer
             false,     // normalize
@@ -240,11 +268,14 @@ class FlowField{
         gl.bindTexture(gl.TEXTURE_2D, this.particleDataTexture.colorTexture);
         gl.activeTexture(gl.TEXTURE1);
         gl.bindTexture(gl.TEXTURE_2D, this.flowMagnitudeTexture.colorTexture);
+        gl.activeTexture(gl.TEXTURE2);
+        gl.bindTexture(gl.TEXTURE_2D, this.particleAgeTexture.colorTexture);
 
         //running the particle-drawing shader
         shader(this.drawParticlesShader);
-        this.drawParticlesShader.setUniform('uPositionTexture',this.particleDataTexture);
+        this.drawParticlesShader.setUniform('uDataTexture',this.particleDataTexture);
         this.drawParticlesShader.setUniform('uColorTexture',this.flowMagnitudeTexture);
+        this.drawParticlesShader.setUniform('uAgeTexture',this.particleAgeTexture);
         this.drawParticlesShader.setUniform('uColorWeight',this.settings.colorWeight);
         this.drawParticlesShader.setUniform('uRepulsionColor',[this.settings.repulsionColor._array[0],this.settings.repulsionColor._array[1],this.settings.repulsionColor._array[2],1.0]);
         this.drawParticlesShader.setUniform('uAttractionColor',[this.settings.attractionColor._array[0],this.settings.attractionColor._array[1],this.settings.attractionColor._array[2],1.0]);
@@ -269,18 +300,18 @@ class FlowField{
         image(this.renderFBO,-mainCanvas.width/2,-mainCanvas.height/2,mainCanvas.width,mainCanvas.height);
     }
     renderData(){
-        const dataSize = 100;
-        // const yStart = height/2-dataSize*4
         const yStart = -height/2;
-        fill(0);
         noStroke();
-        image(this.particleCanvas,-width/2,yStart,dataSize,dataSize);
-        rect(-width/2,yStart+dataSize,dataSize,3*dataSize);
-        image(this.flowFieldTexture,-width/2,yStart+dataSize,dataSize,dataSize);
-        image(this.flowMagnitudeTexture,-width/2,yStart+2*dataSize,dataSize,dataSize);
-        image(this.particleDataTexture,-width/2,yStart+3*dataSize,dataSize,dataSize);
+        fill(0,0,0);
+        rect(-width/2,yStart,this.settings.dataSize,2*this.settings.dataSize);
+        fill(0,100,255);
+        rect(-width/2,yStart+this.settings.dataSize*2,this.settings.dataSize,this.settings.dataSize)
+        image(this.flowFieldTexture,-width/2,yStart,this.settings.dataSize,this.settings.dataSize);
+        image(this.flowMagnitudeTexture,-width/2,yStart+1*this.settings.dataSize,this.settings.dataSize,this.settings.dataSize);
+        image(this.particleDataTexture,-width/2,yStart+2*this.settings.dataSize,this.settings.dataSize,this.settings.dataSize);
     }
     render(){
+        background(this.settings.backgroundColor);
         if(this.settings.renderCensusTracts)
             renderTransformedImage(tractOutlines);
         if(this.settings.renderHOLCTracts)
@@ -303,7 +334,6 @@ class FlowField{
     run(){
         if(this.settings.isActive){
             this.updateParticles();
-            background(255);
             this.render();
         }
     }
