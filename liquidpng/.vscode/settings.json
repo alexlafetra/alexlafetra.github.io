@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.txt": "plaintext",
+        "__bit_reference": "cpp",
+        "vector": "cpp",
+        "iosfwd": "cpp"
+    }
+}
