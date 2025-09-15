@@ -6,15 +6,18 @@ let tiltMultiplier = 1.5;
 let separationMultiplier = 1.8;
 let alignmentMultiplier = 1;
 let avoidanceMultiplier = 10;
-let maxBoids = 150;
+let maxBoids = 250;
 const pointSize = 32;
 let pallette;
 let zAngle;
+let canvas;
 
 function setup(){
-  let canvas = createCanvas(windowWidth, windowHeight);
+  canvas = createCanvas(windowWidth+pointSize*2, windowHeight+pointSize*2);
   //every time the canvas is pressed, it'll try and request access
   canvas.mousePressed(requestAccess);
+  canvas.style('left',String(-pointSize)+'px');
+  canvas.style('top',String(-pointSize)+'px');
   pallette = floor(random(0,5));
   // pallette = 3;
   background(0); //for giving em trails
@@ -29,6 +32,7 @@ function setup(){
 function initFlock(){
   //getting number of boids relative to window size
   let number = min(windowWidth/10,maxBoids);
+  number = 200;
   //if you need to ADD birds
   if(number>flock.length){
     while(number > flock.length){
@@ -47,7 +51,7 @@ function initFlock(){
 
 //resizes canvas when the window is changed
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+  resizeCanvas(windowWidth+pointSize*2, windowHeight+pointSize*2);
   background(0);
   initFlock();
 }
@@ -119,17 +123,17 @@ class Boid {
   
   edges(){
     while(this.position.x > windowWidth){
-      this.position.x-=windowWidth;
+      this.position.x-=(canvas.width);
     }
     while(this.position.x < 0){
-      this.position.x+=windowWidth;
+      this.position.x+=(canvas.width);
     }
   
     while(this.position.y > windowHeight){
-      this.position.y-=windowHeight;
+      this.position.y-=(canvas.height);
     }
     while(this.position.y < 0){
-      this.position.y+=windowHeight;
+      this.position.y+=(canvas.height);
     }
   }
   
@@ -238,7 +242,7 @@ class Boid {
   avoidElements(boids){
     let steering = createVector();
     let elements = document.getElementsByClassName("collisionElement");
-    let collisionMargin = pointSize-20;
+    let collisionMargin = pointSize/2;
     let total = 0;
     //avoid element if it's within a certain distance
     for(let element of elements){

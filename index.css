@@ -67,8 +67,8 @@ body {
 
 canvas{
     z-index:0;
-    left:0;
-    top:0;
+    /* left:-1px;
+    top:-1px; */
     position:absolute;
     display:block;
 }
