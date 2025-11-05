@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Alex LaFetra</title>
+    <link href="index.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #entry_holder{
+            margin-left:100px;
+            width:fit-content;
+        }
+        .entry{
+            /* display:grid; */
+            grid-template-rows: 100%;
+            grid-template-columns: 80px auto;
+            grid-template-areas: "image everythingelse";
+            height:fit-content;
+            /* grid-area:everythingelse; */
+        }
+        .description{
+            grid-area:everythingelse;
+            /* transform: scaleY(0.5); */
+        }
+        .link{
+            grid-area:everythingelse;
+        }
+        .timeline{
+            grid-area:everythingelse;
+            font-style: italic;
+            /* transform: scaleY(0.5); */
+        }
+        .image{
+            grid-area:image;
+            width:80px;
+        }
+    </style>
+    <script>
+    const pages = [
+        {
+            title : "gentrification flow field data visualization",
+            link : "https://alexlafetra.github.io/gentrificationflowfield",
+            time : "December 2023, ongoing",
+            description : "exploring gentrification & segregation using US census data",
+            image : undefined
+        },
+        {
+            title : "liquidpng",
+            link : "https://alexlafetra.github.io/liquidpng",
+            time : "June 2025 - August 2025, ongoing",
+            description : undefined,
+            image: "images/thumbnails/liquidpng.jpg",
+        },
+        {
+            title : "ascii sketchbook",
+            link : "https://alexlafetra.github.io/asciisketchbook",
+            time : "August 2025",
+            description : undefined,
+            image: undefined,
+        },
+        {
+            title : "contradictions.jpeg",
+            link : "https://alexlafetra.github.io/contradictions.jpeg",
+            time : "October 2025, ongoing",
+            description : "webpage for hiding secrets inside images",
+            image:"images/thumbnails/contradictions.png"
+        }
+    ];
+
+    window.onload = () =>{
+        const mainIndex = document.getElementById("entry_holder");
+        for(let page of pages){
+
+            //main div holding everything
+            const div = document.createElement("div");
+            div.className = "entry";
+
+            //link to project/project title
+            const link = document.createElement("a");
+            link.href = page.link;
+            link.innerHTML = page.title;
+            link.className = "link";
+            div.appendChild(link);
+
+            //timeline, kind of emulating art blurb dates
+            const time = document.createElement("div");
+            time.className = "timeline";
+            time.innerHTML = page.time;
+            div.appendChild(time);
+
+            if(page.description !== undefined){
+                const description = document.createElement("div");
+                description.className = "description";
+                description.innerHTML = page.description;
+                div.appendChild(description);
+            }
+
+            if(page.image !== undefined){
+                const image = document.createElement("img");
+                image.src = page.image;
+                image.className = "image";
+                div.appendChild(image);
+            }
+
+            //add the elements to the DOM
+            mainIndex.appendChild(div);
+        }
+    }
+    </script>
+</head>
+<body>
+    <div id = "entry_holder">
+    </div>
+</body>
+</html>
