@@ -1,8 +1,5 @@
 let flock = []; 
 let permissionGranted = false;
-let maxBoids = 250;
-let pallette;
-let zAngle;
 let canvas;
 
 const flockSettings = {
@@ -12,11 +9,13 @@ const flockSettings = {
   separationMultiplier: 1.8,
   alignmentMultiplier:  1,
   avoidanceMultiplier:  10,
-  maxBirds : 150,
-  averageSize: 50
+  maxForce:0.5,
+  maxSpeed:8,
+  maxBirds : 250,
+  averageSize: 32,
+  pallette:3
 };
-const maxForce = 0.8;
-const maxSpeed = 10;
+
 
 const bgColor = [255,255,255,0];
 
@@ -24,22 +23,21 @@ function setup(){
   canvas = createCanvas(windowWidth+flockSettings.averageSize*2, windowHeight+flockSettings.averageSize*2);
   //every time the canvas is pressed, it'll try and request access
   canvas.mousePressed(requestAccess);
-  canvas.style('left',String(-flockSettings.averageSize)+'px');
-  canvas.style('top',String(-flockSettings.averageSize)+'px');
-  pallette = floor(random(0,5));
-  // pallette = 3;
+  canvas.mousePressed(requestAccess);
+  canvas.style('left',`${-flockSettings.averageSize}px`);
+  canvas.style('top',`${-flockSettings.averageSize}px`);
+  flockSettings.pallette = floor(random(0,5));
+
   background(bgColor); //for giving em trails
   initFlock();
-  textSize(150);
   fill(255);
-  zAngle = 0;
   noSmooth();
 }
 
 //fills the flock with a specific number of boids
 function initFlock(){
   //getting number of boids relative to window size
-  let number = min(windowWidth/10,maxBoids);
+  let number = min(windowWidth/10,flockSettings.maxBirds);
   number = 200;
   //if you need to ADD birds
   if(number>flock.length){
@@ -104,7 +102,7 @@ class Boid {
     // this.size = random(flockSettings.averageSize - 5,flockSettings.averageSize + 5);
     this.size = flockSettings.averageSize;
     // this.color =  color(random(0,255),random(0,255),random(0,255));
-    switch(pallette){
+    switch(flockSettings.pallette){
       //random
       case 0:
         this.color =  color(random(0,255),random(0,255),random(0,255));
@@ -162,9 +160,9 @@ class Boid {
     }
     if(total>0){
       steering.div(total);
-      steering.setMag(maxSpeed);
+      steering.setMag(flockSettings.maxSpeed);
       steering.sub(this.velocity);
-      steering.limit(maxForce);
+      steering.limit(flockSettings.maxForce);
     }
     return steering;
   }
@@ -188,9 +186,9 @@ class Boid {
     if(total>0){
       steering.div(total);
       steering.sub(this.position);
-      steering.setMag(maxSpeed);
+      steering.setMag(flockSettings.maxSpeed);
       steering.sub(this.velocity);
-      steering.limit(maxForce);
+      steering.limit(flockSettings.maxForce);
     }
     return steering;
   }
@@ -204,9 +202,9 @@ class Boid {
     if(mouseDistance.mag() < perceptionRadius){
       steering.add(mouse);
       steering.sub(this.position);
-      steering.setMag(maxSpeed);
+      steering.setMag(flockSettings.maxSpeed);
       steering.sub(this.velocity);
-      steering.limit(maxForce);
+      steering.limit(flockSettings.maxForce);
     }
     return steering;
   }
@@ -231,9 +229,9 @@ class Boid {
     }
     if(total>0){
       steering.div(total);
-      steering.setMag(maxSpeed);
+      steering.setMag(flockSettings.maxSpeed);
       steering.sub(this.velocity);
-      steering.limit(maxForce);
+      steering.limit(flockSettings.maxForce);
     }
     return steering;
   }
@@ -242,7 +240,7 @@ class Boid {
   tilt(boids){
     let steering = createVector(rotationY,rotationX);
     // steering.setMag(maxSpeed);
-    steering.limit(maxForce);
+    steering.limit(flockSettings.maxForce);
     return steering;
   }
 
@@ -306,15 +304,11 @@ class Boid {
     this.oldPosition = {...this.position};
     this.position.add(this.velocity);
     this.velocity.add(this.acceleration);
-    this.velocity.limit(maxSpeed);
+    this.velocity.limit(flockSettings.maxSpeed);
   }
   show(){
     strokeWeight(this.size);
     stroke(this.color);
     line(this.position.x,this.position.y,this.oldPosition.x,this.oldPosition.y);
-    // point(this.position.x,this.position.y);
-    // noStroke();
-    // fill(this.color);
-    // circle(this.position.x,this.position.y,this.size);
   }
 }
