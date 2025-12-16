@@ -12,9 +12,11 @@ const flockSettings = {
   separationMultiplier: 1.8,
   alignmentMultiplier:  1,
   avoidanceMultiplier:  10,
-  maxBirds : 250,
-  averageSize: 32
+  maxBirds : 150,
+  averageSize: 50
 };
+const maxForce = 0.8;
+const maxSpeed = 10;
 
 const bgColor = [255,255,255,0];
 
@@ -93,16 +95,14 @@ function isWithinRect(p,rect,margin){
   return false;
 }
 
-const maxForce = 0.2;
-const maxSpeed = 10;
-
 class Boid {
   constructor(){
     this.position = createVector(random(width), random(height));
     this.velocity = p5.Vector.random2D();
     this.velocity.setMag(random(2,4));
     this.acceleration = createVector();
-    this.size = random(flockSettings.averageSize - 5,flockSettings.averageSize + 5);
+    // this.size = random(flockSettings.averageSize - 5,flockSettings.averageSize + 5);
+    this.size = flockSettings.averageSize;
     // this.color =  color(random(0,255),random(0,255),random(0,255));
     switch(pallette){
       //random
@@ -303,6 +303,7 @@ class Boid {
     // }
   }
   update(){
+    this.oldPosition = {...this.position};
     this.position.add(this.velocity);
     this.velocity.add(this.acceleration);
     this.velocity.limit(maxSpeed);
@@ -310,7 +311,8 @@ class Boid {
   show(){
     strokeWeight(this.size);
     stroke(this.color);
-    point(this.position.x,this.position.y);
+    line(this.position.x,this.position.y,this.oldPosition.x,this.oldPosition.y);
+    // point(this.position.x,this.position.y);
     // noStroke();
     // fill(this.color);
     // circle(this.position.x,this.position.y,this.size);
