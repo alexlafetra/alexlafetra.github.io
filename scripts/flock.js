@@ -1,26 +1,32 @@
 let flock = []; 
 let permissionGranted = false;
-let mouseMultiplier = 2;
-let cohesionMultiplier = 1.3;
-let tiltMultiplier = 1.5;
-let separationMultiplier = 1.8;
-let alignmentMultiplier = 1;
-let avoidanceMultiplier = 10;
 let maxBoids = 250;
-const pointSize = 32;
 let pallette;
 let zAngle;
 let canvas;
 
+const flockSettings = {
+  mouseMultiplier:      2,
+  cohesionMultiplier:   1.3,
+  tiltMultiplier:       1.5,
+  separationMultiplier: 1.8,
+  alignmentMultiplier:  1,
+  avoidanceMultiplier:  10,
+  maxBirds : 250,
+  averageSize: 32
+};
+
+const bgColor = [255,255,255,0];
+
 function setup(){
-  canvas = createCanvas(windowWidth+pointSize*2, windowHeight+pointSize*2);
+  canvas = createCanvas(windowWidth+flockSettings.averageSize*2, windowHeight+flockSettings.averageSize*2);
   //every time the canvas is pressed, it'll try and request access
   canvas.mousePressed(requestAccess);
-  canvas.style('left',String(-pointSize)+'px');
-  canvas.style('top',String(-pointSize)+'px');
+  canvas.style('left',String(-flockSettings.averageSize)+'px');
+  canvas.style('top',String(-flockSettings.averageSize)+'px');
   pallette = floor(random(0,5));
   // pallette = 3;
-  background(0); //for giving em trails
+  background(bgColor); //for giving em trails
   initFlock();
   textSize(150);
   fill(255);
@@ -51,8 +57,8 @@ function initFlock(){
 
 //resizes canvas when the window is changed
 function windowResized() {
-  resizeCanvas(windowWidth+pointSize*2, windowHeight+pointSize*2);
-  background(0);
+  resizeCanvas(windowWidth+flockSettings.averageSize*2, windowHeight+flockSettings.averageSize*2);
+  background(bgColor);
   initFlock();
 }
 
@@ -68,7 +74,7 @@ function requestAccess(){
 function draw(){
   //for giving em trails
   //comment in for no trails
-  // background(0);
+  // background(bgColor);
   
   for(let boid of flock){
     boid.edges();
@@ -76,7 +82,7 @@ function draw(){
     boid.update();
     boid.show();
   }
-  faceMouse();
+  // faceMouse();
   // setDivToMouse();
 }
 
@@ -96,6 +102,7 @@ class Boid {
     this.velocity = p5.Vector.random2D();
     this.velocity.setMag(random(2,4));
     this.acceleration = createVector();
+    this.size = random(flockSettings.averageSize - 5,flockSettings.averageSize + 5);
     // this.color =  color(random(0,255),random(0,255),random(0,255));
     switch(pallette){
       //random
@@ -242,12 +249,15 @@ class Boid {
   avoidElements(boids){
     let steering = createVector();
     let elements = document.getElementsByClassName("collisionElement");
-    let collisionMargin = pointSize/2;
+    let collisionMargin = this.size/2;
     let total = 0;
+    const canvasOffset = document.getElementById("defaultCanvas0").getBoundingClientRect();
     //avoid element if it's within a certain distance
     for(let element of elements){
       //get element size and position
       let loc = element.getBoundingClientRect();
+      loc.x -= canvasOffset.x;
+      loc.y -= canvasOffset.y;
       let centerPos = {y:loc.y+loc.height/2,x:loc.x+loc.width/2};
       if(isWithinRect(this.position,loc,collisionMargin)){
         let d = dist(
@@ -256,7 +266,6 @@ class Boid {
           centerPos.x,
           centerPos.y);
         steering.add(p5.Vector.sub(this.position,createVector(centerPos.x,centerPos.y)));
-        // steering.mult();
         total++;
       }
     }
@@ -276,11 +285,11 @@ class Boid {
     let tilt  = this.tilt(boids);  
     let avoidance = this.avoidElements(boids);
 
-    separation.mult(separationMultiplier);
-    cohesion.mult(cohesionMultiplier);
-    alignment.mult(alignmentMultiplier);
-    tilt.mult(tiltMultiplier);
-    avoidance.mult(avoidanceMultiplier);
+    separation.mult(flockSettings.separationMultiplier);
+    cohesion.mult(flockSettings.cohesionMultiplier);
+    alignment.mult(flockSettings.alignmentMultiplier);
+    tilt.mult(flockSettings.tiltMultiplier);
+    avoidance.mult(flockSettings.avoidanceMultiplier);
     
     this.acceleration.add(alignment);
     this.acceleration.add(cohesion);
@@ -290,7 +299,7 @@ class Boid {
       this.acceleration.add(avoidance);
 
     // if(mouseX<width && mouseY<height){
-    //   this.acceleration.add(mouse.mult(mouseMultiplier));
+    //   this.acceleration.add(mouse.mult(flockSettings.mouseMultiplier));
     // }
   }
   update(){
@@ -299,11 +308,11 @@ class Boid {
     this.velocity.limit(maxSpeed);
   }
   show(){
-    strokeWeight(pointSize);
+    strokeWeight(this.size);
     stroke(this.color);
     point(this.position.x,this.position.y);
     // noStroke();
     // fill(this.color);
-    // circle(this.position.x,this.position.y,pointSize);
+    // circle(this.position.x,this.position.y,this.size);
   }
 }

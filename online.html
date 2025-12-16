@@ -11,30 +11,48 @@
         #entry_holder{
             margin-left:100px;
             width:fit-content;
+            /* width:100%; */
         }
         .entry{
-            /* display:grid; */
-            grid-template-rows: 100%;
-            grid-template-columns: 80px auto;
-            grid-template-areas: "image everythingelse";
+            display:grid;
+            grid-template-rows: 20px 20px 20px;
+            grid-template-columns: 200px auto;
+            grid-template-areas: "image link"
+                                 "image timeline"
+                                 "image description";
             height:fit-content;
-            /* grid-area:everythingelse; */
+            width:100%;
+            padding:20px;
+            transition:0.2s;
+            text-decoration: none;
+            color:black;
+        }
+        .entry:hover{
+            color:white;
+            background-color: blue;
+            cursor:pointer;
+        }
+        .entry:hover a{
+            color:red;
         }
         .description{
-            grid-area:everythingelse;
+            grid-area:description;
             /* transform: scaleY(0.5); */
         }
         .link{
-            grid-area:everythingelse;
+            grid-area:link;
         }
         .timeline{
-            grid-area:everythingelse;
+            grid-area:timeline;
             font-style: italic;
             /* transform: scaleY(0.5); */
         }
         .image{
             grid-area:image;
-            width:80px;
+            height:100%;
+            align-self: center;
+            image-rendering: pixelated;
+            /* width:80px; */
         }
     </style>
     <script>
@@ -57,8 +75,8 @@
             title : "ascii sketchbook",
             link : "https://alexlafetra.github.io/asciisketchbook",
             time : "August 2025",
-            description : undefined,
-            image: undefined,
+            description : 'canvas for drawing with ascii characters',
+            image: 'images/thumbnails/ascii_sketchbook.png',
         },
         {
             title : "contradictions.jpeg",
@@ -66,6 +84,20 @@
             time : "October 2025, ongoing",
             description : "webpage for hiding secrets inside images",
             image:"images/thumbnails/contradictions.png"
+        },
+        {
+            title : "thermal printer fighter",
+            link : "https://alexlafetra.github.io/thermalprinterfighter",
+            time : "November 2025",
+            description : "wrestling with ESC-POS receipt printers",
+            image:"images/thumbnails/printer.png"
+        },
+        {
+            title : "flipbook (for tamo)",
+            link : "https://alexlafetra.github.io/flipbook",
+            time : "December 2025",
+            description : "website for drawing sprites for **tamo**",
+            image:"images/thumbnails/tamo.gif"
         }
     ];
 
@@ -74,8 +106,9 @@
         for(let page of pages){
 
             //main div holding everything
-            const div = document.createElement("div");
+            const div = document.createElement("a");
             div.className = "entry";
+            div.href = page.link;
 
             //link to project/project title
             const link = document.createElement("a");

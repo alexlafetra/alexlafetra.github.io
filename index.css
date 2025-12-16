@@ -2,6 +2,7 @@ html{
     font-size       : 20px;
     font-family     : "Times New Roman", sans-serif;
     background-color: #ffffff;
+    /* background:blue; */
     /* background-image: url('https://alexlafetra.github.io/images/backgrounds/background1.jpg'); */
 }
 
@@ -14,197 +15,42 @@ body {
   border:none;
 }
 
-/* center menu */
-#center_index{
-    display:block;
-    position:absolute;
-    width: 150px;
-    height:150px;
-    /* centering it */
-    top:50%;
-    left: 50%;
-    transform: translateY(-50%) translateX(-50%);
-
-    /* making sure it renders above the canvas */
-    z-index: 2;
-}
-#center_description_container{
-    position:absolute;
-    width:200px;
-    height: 200px; 
-    overflow-x: hidden;
-    overflow-y: auto;
-    background:white;
-}
-.center_description{
-    width:100%;
-    display:block;
-}
-/* links */
-#center_index a{
-    fill:rgb(255, 255, 255);
-    font-size: 29.55px;
-    transition: 0.2s;
-}
-#center_index .link{
-    pointer-events: auto;
-}
-#center_index .link:hover{
-    fill:rgb(255, 0, 238);
-    paint-order: stroke;
-    stroke: #000000;
-    stroke-width: 1px;
-    stroke-linecap: butt;
-    stroke-linejoin: miter;
-    cursor: pointer;
-}
-#text_svg{
-    position: fixed;
-    display: block;
-    margin: auto;
-    transition: 0.3s;
-}
-
 canvas{
-    z-index:0;
-    /* left:-1px;
-    top:-1px; */
+    image-rendering: pixelated;
+}
+#page_container{
     position:absolute;
-    display:block;
-}
-
-.main_menu_media{
-    display:none;
-    position:absolute;
-    margin:auto;
-    height: inherit;
-    width: inherit;
-    overflow: hidden;
-    object-fit: cover;
-}
-
-#gallery{
-    display:none;
-    width:100%;
-    height:100%;
-}
-#gallery_window{
-    background: transparent;
-    z-index:2;
-    /* centering it */
-    top:50%;
-    left: 50%;
-    transform: translateY(-50%) translateX(-50%);
+    left:20px;
+    right:20px;
+    top:20px;
+    bottom:20px;
     display:grid;
-    grid-template-columns: 150px auto;
-    grid-template-rows: 30px auto auto;
-    grid-template-areas: 
-    'controls gallery'
-    'navigator gallery'
-    'blank gallery';
-    position:absolute;
-    gap:20px;
-    width:90%;
-    min-width: 200px;
-    max-width:min(1000px,100%);
-    /* min-height:fit-content; */
-    /* height:fit-content; */
-    height:80%;
-    max-height:80%;
-    /* overflow-y: scroll; */
+    grid-template-rows: max-content max-content max-content;
+    grid-template-columns: max-content max-content max-content;
+    grid-template-areas:    "me blank blank"
+                            "projects blank blank"
+                            "projects blank blank";
 }
-
-/* element that appears with a list of links */
-#gallery_navigator{
-    grid-area:navigator;
-    padding:14px;
-    /* margin:14px; */
-    font-size:13px;
-    background:white;
+#project_links{
+    grid-area:projects;
 }
-#gallery_navigator p{
+.site_link{
+    color:blue;
     text-decoration: underline;
-    font-style: italic;
-    color:blue;
-    cursor:pointer;
-    transition:0.5s;
+    background-color: transparent;
+    font-size: 15px;
+    width:fit-content;
+    height:fit-content;
+    cursor:italic;
 }
-#gallery_navigator p:hover{
-    color:blue;
-    background-color: red;
+.link_title{
+    font-style:italic;
 }
-/* images/videos/text */
-#gallery_window_content{
-    grid-area:gallery;
-    overflow-y: scroll;
-    padding:30px;
-    object-fit: contain;
-    font-size: 16px;
-    max-height:100%;
-    background:white;
+#center_image{
+    width:250px;
+    height:250px;
+    grid-area:me;
 }
-#gallery_window_content img{
-    max-width: 100%;
-    max-height:80%;
-    margin:auto;
-    overflow-y: scroll;
-}
-#gallery_window_content video{
-    max-width: 100%;
-    max-height:80%;
-    margin:auto;
-    overflow-y: scroll;
-}
-
-
-/* close button */
-#gallery_window_controls{
-    grid-area:controls;
-    align-self: center;
-    /* margin-left:12px; */
-    padding:6px;
-    font-size:14px;
-    background:white;
-}
-.gallery_button{
-    color:blue;
-    cursor: pointer;
-}
-.gallery_button:hover{
-    font-weight:bold;
-}
-
-/* gallery with all the thumbnails */
-.home_gallery{
-    width:100%;
-    height:100%;
-    display:flex;
-    align-content:flex-start;
-    flex-flow: row wrap;
-    gap:6px;
-}
-.home_gallery_image{
-    width:30%;
-    /* height:30%; */
-}
-.home_gallery_image img{
-    transition:0.5s;
-    object-fit: cover;
-    width:100%;
-}
-.home_gallery_image img:hover{
-    opacity:0.5;
-    cursor:pointer;
-}
-.home_gallery_image video{
-    transition:0.5s;
-    object-fit: cover;
-    width:100%;
-}
-.home_gallery_image video:hover{
-    opacity:0.5;
-    cursor:pointer;
-}
-.home_gallery_image p{
+#mouse_image{
     display:none;
 }
