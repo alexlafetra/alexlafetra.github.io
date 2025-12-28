@@ -41,7 +41,7 @@ canvas{
 .site_link{
   color:blue;
   text-decoration: underline;
-  background-color: red;
+  /* background-color: red; */
   font-size: 15px;
   width:fit-content;
   height:fit-content;

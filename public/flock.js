@@ -72,18 +72,12 @@ function requestAccess(){
 }
 
 function draw(){
-  //for giving em trails
-  //comment in for no trails
-  // background(bgColor);
-  
   for(let boid of flock){
     boid.edges();
     boid.flock(flock);
     boid.update();
     boid.show();
   }
-  // faceMouse();
-  // setDivToMouse();
 }
 
 function isWithinRect(p,rect,margin){
