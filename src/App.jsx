@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { name } from './ascii';
 import './App.css'
 
 function App() {
