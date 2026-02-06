@@ -60,6 +60,8 @@ tspan:hover {
     display:flex;
     flex-direction: column;
     justify-content: left;
+    width:fit-content;
+    height:fit-content;
 }
 #center_link{
     image-rendering: pixelated;
@@ -69,9 +71,8 @@ tspan:hover {
 }
 #center_image{
     image-rendering: pixelated;
-    /* width:80%; */
-    min-width:250px;
-    max-width:500px;
+    width:100%;
+    max-width:min(500px,50vw);
 }
 #center_title{
     color:white;

@@ -12,6 +12,26 @@
             const list = document.getElementById("list");
             list.style.display = 'none';
         }
+        function handleKeyPress(e){
+            const textBox = document.getElementById('password_box');
+            if(e.key == 'Enter'){
+                const password = textBox.innerText;
+                textBox.innerText = 'alex lafetra thompson';
+                textBox.style.color = 'black';
+                return;
+            }
+            else if(e.key == 'Backspace'){
+                textBox.innerText = textBox.innerText.slice(0,-1);
+            }
+            else if(e.key.length == 1){
+                if(textBox.innerText == 'alex lafetra thompson')
+                    textBox.innerText = e.key;
+                else
+                    textBox.innerText += e.key;
+            }
+            textBox.style.color = 'red';
+        }
+        window.onkeydown = handleKeyPress;
         const flockSize = 'small';
     </script>
     <script language="javascript" type="text/javascript" src="/flock.js"></script>
@@ -43,7 +63,7 @@
 <div id = "mouse_image_container"></div>
 <div id = "page_container" style = "grid-template-columns: 500px auto auto;">
     <div id = "list">
-        <div class = "title">alex lafetra thompson</div>
+        <div class = "title" id = "password_box">alex lafetra thompson</div>
         <a href = "https://alexlafetra.github.io/">
         <main></main>
         </a>
