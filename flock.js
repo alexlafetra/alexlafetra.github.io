@@ -4,9 +4,9 @@ let canvas;
 
 const flockSettings = {
   mouseMultiplier:      2,
-  cohesionMultiplier:   1.3,
+  cohesionMultiplier:   1.0,
   tiltMultiplier:       1.5,
-  separationMultiplier: 1.8,
+  separationMultiplier: 1.2,
   alignmentMultiplier:  1,
   avoidanceMultiplier:  10,
   maxForce:0.5,
@@ -58,8 +58,8 @@ function initFlock(){
 //resizes canvas when the window is changed
 function windowResized() {
   resizeCanvas(windowWidth+flockSettings.averageSize*2, windowHeight+flockSettings.averageSize*2);
-  background(bgColor);
-  initFlock();
+  // background(bgColor);
+  // initFlock();
 }
 
 //asking for user permission to get access to motion info
@@ -93,7 +93,7 @@ class Boid {
     this.velocity = p5.Vector.random2D();
     this.velocity.setMag(random(2,4));
     this.acceleration = createVector();
-    // this.size = random(flockSettings.averageSize - 5,flockSettings.averageSize + 5);
+    // this.size = random(flockSettings.averageSize - 20,flockSettings.averageSize + 20);
     this.size = flockSettings.averageSize;
     // this.color =  color(random(0,255),random(0,255),random(0,255));
     switch(flockSettings.pallette){

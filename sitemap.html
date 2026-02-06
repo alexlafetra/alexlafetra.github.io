@@ -1,0 +1,72 @@
+<head>
+    <meta charset="utf-8">
+    <title>Alex LaFetra</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="home.css">
+    <script>
+        function toggleIndex(){
+            const index = document.getElementById('page_container');
+            index.style.gridTemplateColumns = "auto auto";
+            const list = document.getElementById("list");
+            list.style.display = 'none';
+        }
+    </script>
+    <style>
+        #page_container{
+            display:grid;
+            font-size:20px;
+            padding:20px;
+            transition:0.2s;
+        }
+        .heading{
+            font-style: italic;
+        }
+        .subheading{
+            font-style: italic;
+            color:rgb(108, 108, 108);
+        }
+        .link{
+            color:rgb(77, 14, 14);
+            padding-left: 20px;;
+        }
+        .link:hover{
+            color:blue;
+            cursor:pointer;
+        }
+     </style>
+</head>
+<body>
+<div id = "mouse_image_container"></div>
+<div id = "page_container" style = "grid-template-columns: 500px auto auto;">
+    <div id = "list">
+        <div class = "title">alex lafetra thompson</div>
+        <div class = "title" onclick = "toggleIndex()">site map</div>
+
+        <br/>
+        <div class = "heading">/websites</div>
+        <div class = "link">thermal printer fighter</div>
+        <div class = "link">draw.txt</div>
+        <div class = "link">confession.jpeg</div>
+        <div class = "link">liquid.png</div>
+        <div class = "link">flipbook</div>
+        <div class = "link">gentrification flow field</div>
+
+        <br/>
+        <div class = "heading">/visual</div>
+        <div class = "subheading">loose ends ~~ 2026</div>
+        <div class = "link">third chamber stung</div>
+        <div class = "link">match made in heaven</div>
+
+        <br/>
+        <div class = "heading">/hardware</div>
+        <div class = "link">stepchild midi sequencer</div>
+        <div class = "link">open source tamagotchi</div>
+
+        <br/>
+        <div class = "heading">/wip</div>
+
+    </div>
+</div>
+</body>
+</html>

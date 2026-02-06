@@ -9,9 +9,196 @@
     <script language="javascript" type="text/javascript" src="/p5.min.js"></script>
     <script language="javascript" type="text/javascript" src="/flock.js"></script>
     <!-- this is the code loading each center image -->
+     <script>
+        /*
+
+        Slideshow code
+
+        */
+        const slideshow = {
+            currentImage : 0,
+            delay : 1000,
+            callbackID : undefined,
+            filter : undefined,
+            //object holding all the page links/images/descriptions
+            slides : {
+                // about : {tags:[],src:'images/thumbnails/ascii_sketchbook.png',link:'https://alexlafetra.github.io/draw.txt/'},
+                // index :  {tags:[],src:'images/thumbnails/confession.jpeg',link:'https://alexlafetra.github.io/draw.txt/'},
+                
+                // websites/software
+                confessionjpeg :  {tags:[],src:'images/thumbnails/confession.jpeg',link:'https://alexlafetra.github.io/https://alexlafetra.github.io/contradictions.jpeg/'},
+                liquidpng :  {tags:['web','tool'],src:'images/thumbnails/liquidpng.gif',link:'https://alexlafetra.github.io/liquidpng/'},
+                drawtxt : {tags:['ascii','web','tool'],src:'images/thumbnails/ascii_sketchbook.png',link:'https://alexlafetra.github.io/draw.txt/'},
+                wire_handdrawn : {tags:['ascii','web','tool'],src:'images/thumbnails/barbed_wire_handdrawn.png',link:'https://alexlafetra.github.io/draw.txt/'},
+                thermalprinterfighter : {tags:['web','tool'],src:'images/thumbnails/printer.png',link:'https://alexlafetra.github.io/thermalprinterfighter/'},
+                flipbook : {tags:['web','tool','tamo'],src:'images/thumbnails/border_animated_white.gif',link:'https://alexlafetra.github.io/flipbook/'},
+                gentrificationflowfield : {tags:['web','tool'],src:'images/thumbnails/border_animated_white.gif',link:'https://alexlafetra.github.io/flipbook/'},
+                // hardware
+                tamo :  {tags:['hardware','pcb','tamo'],src:'images/thumbnails/tamo_rotating_small.gif',link:'https://alexlafetra.github.io/draw.txt/'},
+                tamo_handdrawn :  {tags:['tamo','image'],src:'images/thumbnails/tamo_pixels.jpg',link:'https://alexlafetra.github.io/draw.txt/'},
+                matchmadeinheaven :  {tags:['image','hardware','pcb','tamo'],src:'images/thumbnails/match_made_in_heaven.jpeg',link:'https://alexlafetra.github.io/draw.txt/'},
+                stepchild :  {tags:['unsound','hardware','pcb'],src:'images/thumbnails/ascii_sketchbook.png',link:'https://alexlafetra.github.io/draw.txt/'},
+                //paintings/visual art
+                lookingverylifelike :  {tags:['image'],src:'images/thumbnails/lookingverylifelike_close_crop.jpg',link:'https://alexlafetra.github.io/images.html/'},
+                walnut :  {tags:['image'],src:'images/thumbnails/walnut_small.jpeg',link:'https://alexlafetra.github.io/images.html/'},
+            }
+        }
+        //locks the slideshow to one image
+        function showCenterImage(title){
+            clearTimeout(slideshow.callbackID);
+            let item = slideshow.slides[title];
+            show(item);
+        }
+        function onlyShowImagesWithTag(tag){
+            slideshow.filter = tag;
+            slideshow.delay = 500;
+            clearTimeout(slideshow.callbackID);
+            runSlideshow();
+        }
+        function resetSlideshow(){
+            clearTimeout(slideshow.callbackID);
+            slideshow.filter = undefined;
+            slideshow.delay = 1000;
+            runSlideshow();
+        }
+        //cycles through objects in the imageSrc object
+        function runSlideshow(){
+            let slideKeyName;
+            const list = Object.entries(slideshow.slides);
+            if(slideshow.filter){
+                const filteredList = list.filter((item) => {return (item[1].tags.indexOf(slideshow.filter) != -1)});
+                console.log(filteredList,slideshow.currentImage);
+                if(!filteredList.length)
+                    return;
+                slideshow.currentImage ++;
+                slideshow.currentImage %= filteredList.length;
+                slideKeyName = filteredList[slideshow.currentImage][0];
+            }
+            else{
+                slideshow.currentImage ++;
+                slideshow.currentImage %= list.length;
+                slideKeyName = list[slideshow.currentImage][0];
+            }
+            show(slideshow.slides[slideKeyName]);
+            slideshow.callbackID = setTimeout(runSlideshow, slideshow.delay);
+        }
+        //injects the image/link/text into the center box
+        function show(which){
+            const img = document.getElementById('center_image');
+            const link = document.getElementById('center_link');
+            if(which.src)
+                img.src = which.src;
+            if(which.link)
+                link.href = which.link;
+            if(which.text)
+                text
+        }
+
+        let velocity = 0;
+        let offset = 0;
+        const playingVelocity = 0.1;
+        const pausedVelocity = 0.0;
+        let targetVelocity = playingVelocity;
+
+        //js-based text animation
+        function animateText(){
+            const path = document.getElementById('center_text_path');
+            const easing = 0.2;
+            
+            velocity += (targetVelocity - velocity) * easing;
+            offset = (offset + velocity) % 100;
+            path.setAttribute("startOffset", (100-offset) + "%");
+
+
+            requestAnimationFrame(animateText);
+        }
+
+        function slowText(){
+            targetVelocity = pausedVelocity;
+        }
+        function playText(){
+            targetVelocity = playingVelocity;
+        }
+
+        const menuText = ""
+        function rebuildSVG(){
+            const svg  = document.getElementById('menu_svg');
+            const path = document.getElementById('center_path');
+
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+
+            svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+
+            const r = 50;
+            const inset = 100;
+            const pathData =  `
+
+                M${inset},${r+inset}
+                a ${r} ${r} 90 0 1 ${r},-${r}
+                h ${w-2*(inset+r)}
+                a ${r} ${r} 90 0 1 ${r},${r}
+                v ${h-2*(inset+r)}
+                a ${r} ${r} 90 0 1 -${r},${r}
+                h -${w-2*(inset+r)}
+                a ${r} ${r} 90 0 1 -${r},-${r}
+                v -${h-2*(inset+r)}
+            `;
+            path.setAttribute('d',pathData);
+        }
+        window.onload = () => {
+            rebuildSVG();
+            animateText();
+            runSlideshow();
+        };
+        window.onresize = rebuildSVG;
+        window.ontouchstart = slowText;
+        window.ontouchend = playText;
+        window.onmousedown = slowText;
+        window.onmouseup = playText;
+     </script>
 </head>
 <body>
-    <div id="root"></div>
-    <!-- <script type="module" src="/src/main.jsx"></script> -->
+    <div id = "content_holder">
+        <a id = "center_link">
+            <img id = "center_image">
+        </a>
+        <!-- <img src = "public/border_animated_white.gif" style = "mix-blend-mode:difference; height:100vh; top:0; position:fixed; image-rendering: pixelated;"> -->
+    </div>
+    <svg id = "menu_svg" viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+        <!-- wrapping the path in a <defs> element to hide it -->
+        <defs>
+        <path
+            id="center_path"
+            fill="none"
+            stroke="red"
+            d = ""
+        />
+        </defs>
+        <text>
+            <textPath id = "center_text_path" href="#center_path" onmouseenter="slowText()" onmouseleave="playText()">
+
+                <a href="/about.html">
+                    <tspan onmouseenter = 'onlyShowImagesWithTag("web")' onmouseleave = "resetSlideshow()" class="word">alex lafetra thompson</tspan>
+                </a>
+                <tspan>_</tspan>
+                <a href="/sitemap.html">
+                    <tspan onmouseenter = 'onlyShowImagesWithTag("image")' onmouseleave = "resetSlideshow()" class="word">index</tspan>
+                </a>
+                <tspan>_</tspan>
+                <a href="/online.html">
+                    <tspan onmouseenter = 'onlyShowImagesWithTag("web")' onmouseleave = "resetSlideshow()" class="word">web</tspan>
+                </a>
+                <tspan>_</tspan>
+                <a href="https://alexlafetra.github.io/stepchild/">
+                    <tspan onmouseenter = 'onlyShowImagesWithTag("stepchild")' onmouseleave = "resetSlideshow()" class = "word">stepchild</tspan>
+                </a>
+                <tspan>_</tspan>
+                <a href="/opentamagotchi.html">
+                    <tspan onmouseenter = 'onlyShowImagesWithTag("stepchild")' onmouseleave = "resetSlideshow()" class = "word">stepchild</tspan>
+                </a>
+        </textPath>
+        </text>
+    </svg>
 </body>
 </html>

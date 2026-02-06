@@ -1,5 +1,4 @@
 html{
-
   /* background:blue; */
   /* background-image: url('https://alexlafetra.github.io/images/backgrounds/background1.jpg'); */
 }
@@ -11,66 +10,65 @@ body {
   width:100%;
   height:100%;
   border:none;
-  background-color: #ffffff;
   font-size       : 20px;
   font-family     : "Times New Roman", sans-serif;
-  background-color: #ffffff;
+  background-color: transparent;
 }
 
 canvas{
   image-rendering: pixelated;
 }
-#page_container{
-  position:absolute;
-  left:20px;
-  right:20px;
-  top:20px;
-  bottom:20px;
-  display:grid;
-  grid-template-rows: max-content max-content max-content;
-  grid-template-columns: max-content max-content max-content;
-  grid-template-areas:    "me blank blank1"
-                          "projects blank blank1"
-                          "pages blank lookingverylifelike";
+
+#menu_svg {
+    position: fixed;
+    background: none;
+    pointer-events: none;
+
 }
-#project_links{
-  grid-area:projects;
-  display:flex;
-  flex-direction:column;
-}
-.site_link{
-  color:blue;
-  text-decoration: underline;
-  /* background-color: red; */
-  font-size: 15px;
-  width:fit-content;
-  height:fit-content;
-  cursor:pointer;
-  margin:10px;
+tspan {
+    /* dominant-baseline: middle; */
+    font-size: 50px;
+    white-space: pre;
+    fill: white;
+    stroke:white;
+    stroke-width: 3px;
+    transition: fill 0.2s, letter-spacing 0.2s;
+    pointer-events: all;
 }
 
-.link_title{
-  font-style:italic;
-  font-weight:bold;
-  color:blue;
-  pointer-events:none;
+a:hover .word {
+    cursor: pointer;
+    fill: blue;
+    stroke:none;
+    /* letter-spacing: 1px; */
+    stroke-width: 3px;
+    text-decoration: underline;
+    /* font-style: italic; */
 }
-#photo_id{
-  grid-area:me;
-  position: relative;
-  margin:40px;
-  image-rendering: pixelated;
+tspan:hover { 
+    cursor: pointer; 
 }
-#lookingverylifelike{
-  width:250px;
-  height:250px;
-  grid-area:lookingverylifelike;
+#content_holder{
+    display:flex;
+    position:fixed;
+    width:100%;
+    height:100vh;
+    align-items: center;
+    justify-content: center;
 }
-#mouse_image{
-  display:none;
+#center_link{
+    image-rendering: pixelated;
+    width:fit-content;
+    height:fit-content;
+    pointer-events: all;
 }
-#site_links{
-  grid-area:pages;
-  display:flex;
-  flex-direction:column;
+#center_image{
+    image-rendering: pixelated;
+    /* width:80%; */
+    min-width:250px;
+    max-width:500px;
+}
+
+textPath {
+    animation: flow 10s linear infinite;
 }
