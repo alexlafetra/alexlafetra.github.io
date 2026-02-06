@@ -56,6 +56,11 @@ tspan:hover {
     align-items: center;
     justify-content: center;
 }
+#content_wrapper{
+    display:flex;
+    flex-direction: column;
+    justify-content: left;
+}
 #center_link{
     image-rendering: pixelated;
     width:fit-content;
@@ -67,6 +72,11 @@ tspan:hover {
     /* width:80%; */
     min-width:250px;
     max-width:500px;
+}
+#center_title{
+    color:white;
+    mix-blend-mode: difference;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 textPath {

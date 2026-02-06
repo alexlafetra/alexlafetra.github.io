@@ -13,14 +13,21 @@ const flockSettings = {
   maxSpeed:8,
   maxBirds : 250,
   averageSize: 32,
-  pallette:3
+  pallette:3,
+  perceptionRadius : 80
 };
-
 
 const bgColor = [255,255,255,0];
 
 function setup(){
-  canvas = createCanvas(windowWidth+flockSettings.averageSize*2, windowHeight+flockSettings.averageSize*2);
+  if(flockSize == 'small'){
+    canvas = createCanvas(200,200);
+    flockSettings.averageSize = 5;
+    flockSettings.maxSpeed = 3;
+    flockSettings.perceptionRadius = 20;
+  }
+  else
+    canvas = createCanvas(windowWidth+flockSettings.averageSize*2, windowHeight+flockSettings.averageSize*2);
   //every time the canvas is pressed, it'll try and request access
   canvas.mousePressed(requestAccess);
   canvas.mousePressed(requestAccess);
@@ -37,8 +44,7 @@ function setup(){
 //fills the flock with a specific number of boids
 function initFlock(){
   //getting number of boids relative to window size
-  let number = min(windowWidth/10,flockSettings.maxBirds);
-  number = 200;
+  let number = 200;
   //if you need to ADD birds
   if(number>flock.length){
     while(number > flock.length){
@@ -57,9 +63,8 @@ function initFlock(){
 
 //resizes canvas when the window is changed
 function windowResized() {
-  resizeCanvas(windowWidth+flockSettings.averageSize*2, windowHeight+flockSettings.averageSize*2);
-  // background(bgColor);
-  // initFlock();
+  if(flockSize == 'normal')
+   resizeCanvas(windowWidth+flockSettings.averageSize*2, windowHeight+flockSettings.averageSize*2);
 }
 
 //asking for user permission to get access to motion info
@@ -121,14 +126,14 @@ class Boid {
   }
   
   edges(){
-    while(this.position.x > windowWidth){
+    while(this.position.x > canvas.width){
       this.position.x-=(canvas.width);
     }
     while(this.position.x < 0){
       this.position.x+=(canvas.width);
     }
   
-    while(this.position.y > windowHeight){
+    while(this.position.y > canvas.height){
       this.position.y-=(canvas.height);
     }
     while(this.position.y < 0){
@@ -137,7 +142,6 @@ class Boid {
   }
   
   align(boids){//makes the boids go in the same direction
-    let perceptionRadius = 100; //radius the boid can see
     let steering = createVector();
     let total = 0;
     for(let other of boids){
@@ -147,7 +151,7 @@ class Boid {
         other.position.x,
         other.position.y);
        
-      if( other != this && d < perceptionRadius){
+      if( other != this && d < flockSettings.perceptionRadius){
         steering.add(other.velocity);
         total++;
       }
@@ -172,7 +176,7 @@ class Boid {
         other.position.x,
         other.position.y);
        
-      if(other != this && d < perceptionRadius){
+      if(other != this && d < flockSettings.perceptionRadius){
         steering.add(other.position);
         total++;
       }
@@ -193,7 +197,7 @@ class Boid {
     let mouse = createVector(mouseX, mouseY);
     let mouseDistance = p5.Vector.sub(this.position,mouse);
     
-    if(mouseDistance.mag() < perceptionRadius){
+    if(mouseDistance.mag() < flockSettings.perceptionRadius){
       steering.add(mouse);
       steering.sub(this.position);
       steering.setMag(flockSettings.maxSpeed);
@@ -214,7 +218,7 @@ class Boid {
         other.position.x,
         other.position.y);
        
-      if(other != this && d < perceptionRadius){
+      if(other != this && d < flockSettings.perceptionRadius){
         let diff = p5.Vector.sub(this.position, other.position);
         diff.div(d);
         steering.add(diff);
@@ -290,9 +294,9 @@ class Boid {
     if(windowWidth>500)//don't do this if the screen is too small! makes it so you can't rlly see the flocking behavior
       this.acceleration.add(avoidance);
 
-    // if(mouseX<width && mouseY<height){
-    //   this.acceleration.add(mouse.mult(flockSettings.mouseMultiplier));
-    // }
+    if(mouseX<width && mouseY<height){
+      this.acceleration.add(mouse.mult(mouseIsPressed?flockSettings.mouseMultiplier:-flockSettings.mouseMultiplier));
+    }
   }
   update(){
     this.oldPosition = {...this.position};

@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="home.css">
 
-    <!-- this is the code linking the boids background-->
-    <script language="javascript" type="text/javascript" src="/p5.min.js"></script>
-    <script language="javascript" type="text/javascript" src="/flock.js"></script>
-    <!-- this is the code loading each center image -->
-     <script>
+    <script>
         /*
 
         Slideshow code
@@ -26,19 +22,19 @@
                 // index :  {tags:[],src:'images/thumbnails/confession.jpeg',link:'https://alexlafetra.github.io/draw.txt/'},
                 
                 // websites/software
-                confessionjpeg :  {tags:[],src:'images/thumbnails/confession.jpeg',link:'https://alexlafetra.github.io/https://alexlafetra.github.io/contradictions.jpeg/'},
-                liquidpng :  {tags:['web','tool'],src:'images/thumbnails/liquidpng.gif',link:'https://alexlafetra.github.io/liquidpng/'},
-                drawtxt : {tags:['ascii','web','tool'],src:'images/thumbnails/ascii_sketchbook.png',link:'https://alexlafetra.github.io/draw.txt/'},
-                wire_handdrawn : {tags:['ascii','web','tool'],src:'images/thumbnails/barbed_wire_handdrawn.png',link:'https://alexlafetra.github.io/draw.txt/'},
-                thermalprinterfighter : {tags:['web','tool'],src:'images/thumbnails/printer.png',link:'https://alexlafetra.github.io/thermalprinterfighter/'},
-                flipbook : {tags:['web','tool','tamo'],src:'images/thumbnails/border_animated_white.gif',link:'https://alexlafetra.github.io/flipbook/'},
-                gentrificationflowfield : {tags:['web','tool'],src:'images/thumbnails/border_animated_white.gif',link:'https://alexlafetra.github.io/flipbook/'},
+                confessionjpeg :  {title:'confession.jpeg',tags:[],src:'images/thumbnails/confession.jpeg',link:'https://alexlafetra.github.io/https://alexlafetra.github.io/contradictions.jpeg/'},
+                liquidpng :  {title:'liquid.png',tags:['web','tool'],src:'images/thumbnails/liquidpng.gif',link:'https://alexlafetra.github.io/liquidpng/'},
+                drawtxt : {title:'draw.txt',tags:['ascii','web','tool'],src:'images/thumbnails/ascii_sketchbook.png',link:'https://alexlafetra.github.io/draw.txt/'},
+                wire_handdrawn : {title:'',tags:['ascii','web','tool'],src:'images/thumbnails/barbed_wire_handdrawn.png',link:'https://alexlafetra.github.io/draw.txt/'},
+                thermalprinterfighter : {title:'thermal printer fighter',tags:['web','tool'],src:'images/thumbnails/printer.png',link:'https://alexlafetra.github.io/thermalprinterfighter/'},
+                flipbook : {title:'flipbook',tags:['web','tool','tamo'],src:'images/thumbnails/border_animated_white.gif',link:'https://alexlafetra.github.io/flipbook/'},
+                gentrificationflowfield : {title:'gentrification flow field',tags:['web','tool'],src:'images/thumbnails/border_animated_white.gif',link:'https://alexlafetra.github.io/flipbook/'},
                 // hardware
-                tamo :  {tags:['hardware','pcb','tamo'],src:'images/thumbnails/tamo_rotating_small.gif',link:'https://alexlafetra.github.io/draw.txt/'},
+                tamo :  {title:'tamo',tags:['hardware','pcb','tamo'],src:'images/thumbnails/tamo_rotating_small.gif',link:'https://alexlafetra.github.io/draw.txt/'},
                 tamo_handdrawn :  {tags:['tamo','image'],src:'images/thumbnails/tamo_pixels.jpg',link:'https://alexlafetra.github.io/draw.txt/'},
-                matchmadeinheaven :  {tags:['image','hardware','pcb','tamo'],src:'images/thumbnails/match_made_in_heaven.jpeg',link:'https://alexlafetra.github.io/draw.txt/'},
-                stepchild :  {tags:['unsound','hardware','pcb'],src:'images/thumbnails/ascii_sketchbook.png',link:'https://alexlafetra.github.io/draw.txt/'},
+                stepchild :  {title:'stepchild',tags:['unsound','hardware','pcb'],src:'images/thumbnails/ascii_sketchbook.png',link:'https://alexlafetra.github.io/draw.txt/'},
                 //paintings/visual art
+                matchmadeinheaven :  {title:'match made in heaven \n2025',tags:['image','hardware','pcb','tamo'],src:'images/thumbnails/match_made_in_heaven.jpeg',link:'https://alexlafetra.github.io/draw.txt/'},
                 lookingverylifelike :  {tags:['image'],src:'images/thumbnails/lookingverylifelike_close_crop.jpg',link:'https://alexlafetra.github.io/images.html/'},
                 walnut :  {tags:['image'],src:'images/thumbnails/walnut_small.jpeg',link:'https://alexlafetra.github.io/images.html/'},
             }
@@ -86,12 +82,15 @@
         function show(which){
             const img = document.getElementById('center_image');
             const link = document.getElementById('center_link');
+            const title = document.getElementById('center_title');
             if(which.src)
                 img.src = which.src;
             if(which.link)
                 link.href = which.link;
-            if(which.text)
-                text
+            if(which.title)
+                title.innerText = which.title;
+            else
+                title.innerText = ' ';
         }
 
         let velocity = 0;
@@ -156,13 +155,21 @@
         window.ontouchend = playText;
         window.onmousedown = slowText;
         window.onmouseup = playText;
+
+        const flockSize = 'normal';
      </script>
+    <!-- this is the code linking the boids background-->
+    <script language="javascript" type="text/javascript" src="/p5.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/flock.js"></script>
 </head>
 <body>
     <div id = "content_holder">
-        <a id = "center_link">
-            <img id = "center_image">
-        </a>
+        <div id = "content_wrapper">
+            <span id = "center_title"></span>
+            <a id = "center_link">
+                <img id = "center_image">
+            </a>
+        </div>
         <!-- <img src = "public/border_animated_white.gif" style = "mix-blend-mode:difference; height:100vh; top:0; position:fixed; image-rendering: pixelated;"> -->
     </div>
     <svg id = "menu_svg" viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">

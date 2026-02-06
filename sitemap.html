@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="home.css">
+    <script language="javascript" type="text/javascript" src="/p5.min.js"></script>
     <script>
         function toggleIndex(){
             const index = document.getElementById('page_container');
@@ -11,7 +12,9 @@
             const list = document.getElementById("list");
             list.style.display = 'none';
         }
+        const flockSize = 'small';
     </script>
+    <script language="javascript" type="text/javascript" src="/flock.js"></script>
     <style>
         #page_container{
             display:grid;
@@ -41,6 +44,9 @@
 <div id = "page_container" style = "grid-template-columns: 500px auto auto;">
     <div id = "list">
         <div class = "title">alex lafetra thompson</div>
+        <a href = "https://alexlafetra.github.io/">
+        <main></main>
+        </a>
         <div class = "title" onclick = "toggleIndex()">site map</div>
 
         <br/>
