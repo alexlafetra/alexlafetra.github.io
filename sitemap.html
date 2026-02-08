@@ -3,14 +3,103 @@
     <title>Alex LaFetra</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="/index.css">
     <script language="javascript" type="text/javascript" src="/p5.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/journal.js"></script>
     <script>
-        function toggleIndex(){
-            const index = document.getElementById('page_container');
-            index.style.gridTemplateColumns = "auto auto";
-            const list = document.getElementById("list");
-            list.style.display = 'none';
+        function buildSideList(){
+            for(const entry of list){
+                const parentDiv = document.getElementById(entry.section);
+                const newElement = document.createElement('div');
+                if(entry.thumbnail){
+                    newElement.onmouseout = clearMouseImage;
+                    newElement.onmouseenter = () => {setMouseImage(entry.thumbnail)};
+                }
+                newElement.onclick = () => {
+                    const otherElements = document.getElementsByClassName('link');
+                    for(let l of otherElements){
+                        l.style.color = null;
+                        l.style.fontStyle = null;
+                    }
+                    const thisElement = document.getElementById(entry.title);
+                    thisElement.style.color = 'blue';
+                    thisElement.style.fontStyle = 'italic';
+                    load(entry);
+                };
+                newElement.innerText = entry.title;
+                newElement.id = entry.title;
+                newElement.className = 'link';
+                parentDiv.appendChild(newElement);
+            }
+        }
+        const mouseCoords = {
+            x:0,
+            y:0
+        };
+        function setMouseImage(src){
+            const img = document.getElementById('mouse_image');
+            img.style.visibility = 'visible';
+            img.src = src;
+        }
+        function handleMouseMove(){
+            const container = document.getElementById('mouse_image_container');
+            container.style.left = mouseCoords.x;
+            container.style.top = mouseCoords.y;
+        }
+        function clearMouseImage(){
+            const img = document.getElementById('mouse_image');
+            img.style.visibility = 'hidden';
+        }
+
+        function load(item){
+            //clear out old content
+            const container = document.getElementById("center_container");
+            container.innerHTML = null;
+
+            //visual art pieces just have image galleries
+            if(item.visualArt){
+                const key = item.visualArt;
+                const images = visual_art[`${key}`];
+                for(let img of images){
+                    const newImg = document.createElement('img');
+                    newImg.src = img;
+                    container.appendChild(newImg);
+                }
+            }
+            //web pieces have images/videos and a short description
+            else if(item.onlineWork){
+                const key = item.onlineWork;
+                const content = online_work[`${key}`];
+                for(let item of content){
+                    let newElement;
+                    switch(item.type){
+                        case 'title':
+                            newElement = document.createElement('div');
+                            newElement.className = 'content_title';
+                            newElement.innerText = item.content;
+                            break;
+                        case 'text':
+                            newElement = document.createElement('div');
+                            newElement.className = 'content_text';
+                            newElement.innerText = item.content;
+                            break;
+                        case 'image':
+                            newElement = document.createElement('img');
+                            newElement.className = 'content_image';
+                            newElement.src = item.content;
+                            if(item.width)
+                                newElement.width = item.width;
+                            break;
+                        case 'link':
+                            newElement = document.createElement('a');
+                            newElement.className = 'content_link';
+                            newElement.innerText = item.content;
+                            newElement.href = item.address;
+                            break;
+                    }
+                    container.appendChild(newElement);
+                }
+            }
         }
         function handleKeyPress(e){
             const textBox = document.getElementById('password_box');
@@ -31,67 +120,43 @@
             }
             textBox.style.color = 'red';
         }
+        window.onmousemove = (e) => {
+            mouseCoords.x = e.clientX;
+            mouseCoords.y = e.clientY;
+            handleMouseMove(e);
+        }
         window.onkeydown = handleKeyPress;
+        window.onload = buildSideList;
         const flockSize = 'small';
     </script>
     <script language="javascript" type="text/javascript" src="/flock.js"></script>
-    <style>
-        #page_container{
-            display:grid;
-            font-size:20px;
-            padding:20px;
-            transition:0.2s;
-        }
-        .heading{
-            font-style: italic;
-        }
-        .subheading{
-            font-style: italic;
-            color:rgb(108, 108, 108);
-        }
-        .link{
-            color:rgb(77, 14, 14);
-            padding-left: 20px;;
-        }
-        .link:hover{
-            color:blue;
-            cursor:pointer;
-        }
-     </style>
 </head>
 <body>
-<div id = "mouse_image_container"></div>
-<div id = "page_container" style = "grid-template-columns: 500px auto auto;">
-    <div id = "list">
+<div id = "mouse_image_container"><img id = "mouse_image"></div>
+<div id = "page_container">
+    <div id = "title_container">
         <div class = "title" id = "password_box">alex lafetra thompson</div>
-        <a href = "https://alexlafetra.github.io/">
         <main></main>
-        </a>
-        <div class = "title" onclick = "toggleIndex()">site map</div>
-
-        <br/>
-        <div class = "heading">/websites</div>
-        <div class = "link">thermal printer fighter</div>
-        <div class = "link">draw.txt</div>
-        <div class = "link">confession.jpeg</div>
-        <div class = "link">liquid.png</div>
-        <div class = "link">flipbook</div>
-        <div class = "link">gentrification flow field</div>
-
+    </div>
+    <div id = "list_container">
+        <div class = "title">site map</div>
         <br/>
         <div class = "heading">/visual</div>
-        <div class = "subheading">loose ends ~~ 2026</div>
-        <div class = "link">third chamber stung</div>
-        <div class = "link">match made in heaven</div>
-
+        <div id = "visual"></div>
+        <br>
+        <div class = "heading">/websites</div>
+        <div id = "web"></div>
         <br/>
         <div class = "heading">/hardware</div>
-        <div class = "link">stepchild midi sequencer</div>
-        <div class = "link">open source tamagotchi</div>
+        <div id = "hardware"> </div>
 
         <br/>
         <div class = "heading">/wip</div>
+        <div id = "wip"></div>
 
+    </div>
+    <div id = 'center_container'>
+        <img src = "/images/thumbnails/tamo_pixels.jpg">
     </div>
 </div>
 </body>
