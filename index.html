@@ -3,209 +3,161 @@
     <title>Alex LaFetra</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="home.css">
-
-    <script>
-        /*
-
-        Slideshow code
-
-        */
-        const slideshow = {
-            currentImage : 0,
-            delay : 1000,
-            callbackID : undefined,
-            filter : undefined,
-            //object holding all the page links/images/descriptions
-            slides : {
-                // about : {tags:[],src:'images/thumbnails/ascii_sketchbook.png',link:'https://alexlafetra.github.io/draw.txt/'},
-                // index :  {tags:[],src:'images/thumbnails/confession.jpeg',link:'https://alexlafetra.github.io/draw.txt/'},
-                
-                // websites/software
-                confessionjpeg :  {title:'confession.jpeg',tags:[],src:'images/thumbnails/confession.jpeg',link:'https://alexlafetra.github.io/https://alexlafetra.github.io/contradictions.jpeg/'},
-                liquidpng :  {title:'liquid.png',tags:['web','tool'],src:'images/thumbnails/liquidpng.gif',link:'https://alexlafetra.github.io/liquidpng/'},
-                drawtxt : {title:'draw.txt',tags:['ascii','web','tool'],src:'images/thumbnails/ascii_sketchbook.png',link:'https://alexlafetra.github.io/draw.txt/'},
-                wire_handdrawn : {title:'',tags:['ascii','web','tool'],src:'images/thumbnails/barbed_wire_handdrawn.png',link:'https://alexlafetra.github.io/draw.txt/'},
-                thermalprinterfighter : {title:'thermal printer fighter',tags:['web','tool'],src:'images/thumbnails/printer.png',link:'https://alexlafetra.github.io/thermalprinterfighter/'},
-                flipbook : {title:'flipbook',tags:['web','tool','tamo'],src:'images/thumbnails/border_animated_white.gif',link:'https://alexlafetra.github.io/flipbook/'},
-                gentrificationflowfield : {title:'gentrification flow field',tags:['web','tool'],src:'images/thumbnails/border_animated_white.gif',link:'https://alexlafetra.github.io/flipbook/'},
-                // hardware
-                tamo :  {title:'tamo',tags:['hardware','pcb','tamo'],src:'images/thumbnails/tamo_rotating_small.gif',link:'https://alexlafetra.github.io/draw.txt/'},
-                tamo_handdrawn :  {tags:['tamo','image'],src:'images/thumbnails/tamo_pixels.jpg',link:'https://alexlafetra.github.io/draw.txt/'},
-                stepchild :  {title:'stepchild',tags:['unsound','hardware','pcb'],src:'images/thumbnails/ascii_sketchbook.png',link:'https://alexlafetra.github.io/draw.txt/'},
-                //paintings/visual art
-                matchmadeinheaven :  {title:'match made in heaven \n2025',tags:['image','hardware','pcb','tamo'],src:'images/thumbnails/match_made_in_heaven.jpeg',link:'https://alexlafetra.github.io/draw.txt/'},
-                lookingverylifelike :  {tags:['image'],src:'images/thumbnails/lookingverylifelike_close_crop.jpg',link:'https://alexlafetra.github.io/images.html/'},
-                walnut :  {tags:['image'],src:'images/thumbnails/walnut_small.jpeg',link:'https://alexlafetra.github.io/images.html/'},
-            }
-        }
-        //locks the slideshow to one image
-        function showCenterImage(title){
-            clearTimeout(slideshow.callbackID);
-            let item = slideshow.slides[title];
-            show(item);
-        }
-        function onlyShowImagesWithTag(tag){
-            slideshow.filter = tag;
-            slideshow.delay = 500;
-            clearTimeout(slideshow.callbackID);
-            runSlideshow();
-        }
-        function resetSlideshow(){
-            clearTimeout(slideshow.callbackID);
-            slideshow.filter = undefined;
-            slideshow.delay = 1000;
-            runSlideshow();
-        }
-        //cycles through objects in the imageSrc object
-        function runSlideshow(){
-            let slideKeyName;
-            const list = Object.entries(slideshow.slides);
-            if(slideshow.filter){
-                const filteredList = list.filter((item) => {return (item[1].tags.indexOf(slideshow.filter) != -1)});
-                console.log(filteredList,slideshow.currentImage);
-                if(!filteredList.length)
-                    return;
-                slideshow.currentImage ++;
-                slideshow.currentImage %= filteredList.length;
-                slideKeyName = filteredList[slideshow.currentImage][0];
-            }
-            else{
-                slideshow.currentImage ++;
-                slideshow.currentImage %= list.length;
-                slideKeyName = list[slideshow.currentImage][0];
-            }
-            show(slideshow.slides[slideKeyName]);
-            slideshow.callbackID = setTimeout(runSlideshow, slideshow.delay);
-        }
-        //injects the image/link/text into the center box
-        function show(which){
-            const img = document.getElementById('center_image');
-            const link = document.getElementById('center_link');
-            const title = document.getElementById('center_title');
-            if(which.src)
-                img.src = which.src;
-            if(which.link)
-                link.href = which.link;
-            if(which.title)
-                title.innerText = which.title;
-            else
-                title.innerText = ' ';
-        }
-
-        let velocity = 0;
-        let offset = 0;
-        const playingVelocity = 0.1;
-        const pausedVelocity = 0.0;
-        let targetVelocity = playingVelocity;
-
-        //js-based text animation
-        function animateText(){
-            const path = document.getElementById('center_text_path');
-            const easing = 0.2;
-            
-            velocity += (targetVelocity - velocity) * easing;
-            offset = (offset + velocity) % 100;
-            path.setAttribute("startOffset", (100-offset) + "%");
-
-
-            requestAnimationFrame(animateText);
-        }
-
-        function slowText(){
-            targetVelocity = pausedVelocity;
-        }
-        function playText(){
-            targetVelocity = playingVelocity;
-        }
-
-        const menuText = ""
-        function rebuildSVG(){
-            const svg  = document.getElementById('menu_svg');
-            const path = document.getElementById('center_path');
-
-            const w = window.innerWidth;
-            const h = window.innerHeight;
-
-            svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-
-            const r = 50;
-            const inset = 100;
-            const pathData =  `
-
-                M${inset},${r+inset}
-                a ${r} ${r} 90 0 1 ${r},-${r}
-                h ${w-2*(inset+r)}
-                a ${r} ${r} 90 0 1 ${r},${r}
-                v ${h-2*(inset+r)}
-                a ${r} ${r} 90 0 1 -${r},${r}
-                h -${w-2*(inset+r)}
-                a ${r} ${r} 90 0 1 -${r},-${r}
-                v -${h-2*(inset+r)}
-            `;
-            path.setAttribute('d',pathData);
-        }
-        window.onload = () => {
-            rebuildSVG();
-            animateText();
-            runSlideshow();
-        };
-        window.onresize = rebuildSVG;
-        window.ontouchstart = slowText;
-        window.ontouchend = playText;
-        window.onmousedown = slowText;
-        window.onmouseup = playText;
-
-        const flockSize = 'normal';
-     </script>
-    <!-- this is the code linking the boids background-->
+    <link rel="stylesheet" href="/index.css">
     <script language="javascript" type="text/javascript" src="/p5.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/journal.js"></script>
+    <script>
+        function buildSideList(){
+            for(const entry of list){
+                const parentDiv = document.getElementById(entry.section);
+                const newElement = document.createElement('div');
+                if(entry.thumbnail){
+                    newElement.onmouseout = clearMouseImage;
+                    newElement.onmouseenter = () => {setMouseImage(entry.thumbnail)};
+                }
+                newElement.onclick = () => {
+                    const otherElements = document.getElementsByClassName('link');
+                    for(let l of otherElements){
+                        l.style.color = null;
+                        l.style.fontStyle = null;
+                    }
+                    const thisElement = document.getElementById(entry.title);
+                    thisElement.style.color = 'blue';
+                    thisElement.style.fontStyle = 'italic';
+                    load(entry);
+                };
+                newElement.innerText = entry.title;
+                newElement.id = entry.title;
+                newElement.className = 'link';
+                parentDiv.appendChild(newElement);
+            }
+        }
+        const mouseCoords = {
+            x:0,
+            y:0
+        };
+        function setMouseImage(src){
+            const img = document.getElementById('mouse_image');
+            img.style.visibility = 'visible';
+            img.src = src;
+        }
+        function handleMouseMove(){
+            const container = document.getElementById('mouse_image_container');
+            container.style.left = mouseCoords.x;
+            container.style.top = mouseCoords.y;
+        }
+        function clearMouseImage(){
+            const img = document.getElementById('mouse_image');
+            img.style.visibility = 'hidden';
+        }
+
+        function load(item){
+            //clear out old content
+            const container = document.getElementById("center_container");
+            container.innerHTML = null;
+
+            //visual art pieces just have image galleries
+            if(item.visualArt){
+                const key = item.visualArt;
+                const images = visual_art[`${key}`];
+                for(let img of images){
+                    const newImg = document.createElement('img');
+                    newImg.src = img;
+                    container.appendChild(newImg);
+                }
+            }
+            //web pieces have images/videos and a short description
+            else if(item.onlineWork){
+                const key = item.onlineWork;
+                const content = online_work[`${key}`];
+                for(let item of content){
+                    let newElement;
+                    switch(item.type){
+                        case 'title':
+                            newElement = document.createElement('div');
+                            newElement.className = 'content_title';
+                            newElement.innerText = item.content;
+                            break;
+                        case 'text':
+                            newElement = document.createElement('div');
+                            newElement.className = 'content_text';
+                            newElement.innerText = item.content;
+                            break;
+                        case 'image':
+                            newElement = document.createElement('img');
+                            newElement.className = 'content_image';
+                            newElement.src = item.content;
+                            if(item.width)
+                                newElement.width = item.width;
+                            break;
+                        case 'link':
+                            newElement = document.createElement('a');
+                            newElement.className = 'content_link';
+                            newElement.innerText = item.content;
+                            newElement.href = item.address;
+                            break;
+                    }
+                    container.appendChild(newElement);
+                }
+            }
+        }
+        function handleKeyPress(e){
+            const textBox = document.getElementById('password_box');
+            if(e.key == 'Enter'){
+                const password = textBox.innerText;
+                textBox.innerText = 'alex lafetra thompson';
+                textBox.style.color = 'black';
+                return;
+            }
+            else if(e.key == 'Backspace'){
+                textBox.innerText = textBox.innerText.slice(0,-1);
+            }
+            else if(e.key.length == 1){
+                if(textBox.innerText == 'alex lafetra thompson')
+                    textBox.innerText = e.key;
+                else
+                    textBox.innerText += e.key;
+            }
+            textBox.style.color = 'red';
+        }
+        window.onmousemove = (e) => {
+            mouseCoords.x = e.clientX;
+            mouseCoords.y = e.clientY;
+            handleMouseMove(e);
+        }
+        window.onkeydown = handleKeyPress;
+        window.onload = buildSideList;
+        const flockSize = 'small';
+    </script>
     <script language="javascript" type="text/javascript" src="/flock.js"></script>
 </head>
 <body>
-    <div id = "content_holder">
-        <div id = "content_wrapper">
-            <span id = "center_title"></span>
-            <a id = "center_link">
-                <img id = "center_image">
-            </a>
-        </div>
-        <!-- <img src = "public/border_animated_white.gif" style = "mix-blend-mode:difference; height:100vh; top:0; position:fixed; image-rendering: pixelated;"> -->
+<div id = "mouse_image_container"><img id = "mouse_image"></div>
+<div id = "page_container">
+    <div id = "title_container">
+        <div class = "title" id = "password_box">alex lafetra thompson</div>
+        <main></main>
     </div>
-    <svg id = "menu_svg" viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
-        <!-- wrapping the path in a <defs> element to hide it -->
-        <defs>
-        <path
-            id="center_path"
-            fill="none"
-            stroke="red"
-            d = ""
-        />
-        </defs>
-        <text>
-            <textPath id = "center_text_path" href="#center_path" onmouseenter="slowText()" onmouseleave="playText()">
+    <div id = "list_container">
+        <div class = "title">site map</div>
+        <br/>
+        <div class = "heading">/visual</div>
+        <div id = "visual"></div>
+        <br>
+        <div class = "heading">/websites</div>
+        <div id = "web"></div>
+        <br/>
+        <div class = "heading">/hardware</div>
+        <div id = "hardware"> </div>
 
-                <a href="/about.html">
-                    <tspan onmouseenter = 'onlyShowImagesWithTag("web")' onmouseleave = "resetSlideshow()" class="word">alex lafetra thompson</tspan>
-                </a>
-                <tspan>_</tspan>
-                <a href="/sitemap.html">
-                    <tspan onmouseenter = 'onlyShowImagesWithTag("image")' onmouseleave = "resetSlideshow()" class="word">index</tspan>
-                </a>
-                <tspan>_</tspan>
-                <a href="/online.html">
-                    <tspan onmouseenter = 'onlyShowImagesWithTag("web")' onmouseleave = "resetSlideshow()" class="word">web</tspan>
-                </a>
-                <tspan>_</tspan>
-                <a href="https://alexlafetra.github.io/stepchild/">
-                    <tspan onmouseenter = 'onlyShowImagesWithTag("stepchild")' onmouseleave = "resetSlideshow()" class = "word">stepchild</tspan>
-                </a>
-                <tspan>_</tspan>
-                <a href="/opentamagotchi.html">
-                    <tspan onmouseenter = 'onlyShowImagesWithTag("stepchild")' onmouseleave = "resetSlideshow()" class = "word">stepchild</tspan>
-                </a>
-        </textPath>
-        </text>
-    </svg>
+        <br/>
+        <div class = "heading">/wip</div>
+        <div id = "wip"></div>
+
+    </div>
+    <div id = 'center_container'>
+        <img src = "/images/thumbnails/tamo_pixels.jpg">
+    </div>
+</div>
 </body>
 </html>
