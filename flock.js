@@ -22,7 +22,7 @@ function mobileSettings(){
   flockSettings.averageSize = 4;
   flockSettings.perceptionRadius = 10;
   flockSettings.maxSpeed = 2;
-  return {w:60,h:300};
+  return {w:80,h:300};
 }
 function mainSiteSettings(){
   flockSettings.averageSize = 5;
@@ -90,6 +90,8 @@ function windowResized() {
     else if(windowWidth>600 && width < 200){
       dim = mainSiteSettings();
     }
+    else
+      return;
     resizeCanvas(dim.w,dim.h);
   }
 }

@@ -15,6 +15,8 @@
                     newElement.onmouseout = clearMouseImage;
                     newElement.ontouchend = clearMouseImage;
                     newElement.ontouchcancel = clearMouseImage;
+                    newElement.onmouseup = clearMouseImage;
+                    newElement.ontouchstart = () => {setMouseImage(entry.thumbnail)};
                     newElement.onmouseenter = () => {setMouseImage(entry.thumbnail)};
                 }
                 newElement.onclick = () => {
@@ -63,7 +65,17 @@
             //visual art pieces just have image galleries
             if(item.visualArt){
                 const key = item.visualArt;
-                const images = visual_art[`${key}`];
+                let images = [];
+                if(key == 'all'){
+                    const list = Object.entries(visual_art);
+                    for(let entry of list){
+                        for(let image of entry[1]){
+                            images.push(image);
+                        }
+                    }
+                }
+                else
+                    images = visual_art[`${key}`];
                 for(let img of images){
                     const newImg = document.createElement('img');
                     newImg.src = img;
@@ -138,9 +150,21 @@
 <body>
 <div id = "mouse_image_container"><img id = "mouse_image"></div>
 <div id = "page_container">
+    <div id = "bio">
+        <img id = "selfie" src = '/images/selfie.jpeg'>
+        <div id = "blurb">
+            alex lafetra thompson is a visual artist 
+            who grew up in the east bay and now lives in new york city.
+            <div id = "bio_links">
+                <a href = "https://www.instagram.com/alexlafetra/">instagram</a>
+                <a href = "https://alexlafetra.github.io/cv.html/">cv</a>
+            </div>
+        </div>
+    </div>
     <div id = "title_container">
         <div class = "title" id = "password_box">alex lafetra thompson</div>
         <main id = "title_canvas"></main>
+        <img id = "title_animation" src = '/images/thumbnails/porcini.gif'>
     </div>
     <br/>
     <div id = "list_container">

@@ -1,3 +1,28 @@
+@font-face{
+    font-family:receipt;
+    src : url('/MerchantCopy.ttf');
+}
+
+html,body{
+    margin:0;
+}
+#bio{
+    z-index:1;
+    position:absolute;
+    bottom:20px;
+    left:20px;
+    display:flex;
+    gap:10px;
+    font-family: receipt;
+    width:200px;
+}
+#bio_links{
+    padding-top:20px;
+}
+#selfie{
+    max-width:100%;
+    width:100px;
+}
 #mouse_image_container{
     position:fixed;
     pointer-events: none;
@@ -25,6 +50,14 @@
     width:fit-content;
     /* height:fit-content; */
 }
+#title_animation{
+    image-rendering: pixelated;
+    position:absolute;
+    left:160px;
+    top:280px;
+    width:64px;
+    mix-blend-mode: difference;
+}
 #list_container{
     grid-area: links;
     font-size:12px;
@@ -41,6 +74,7 @@
     background-color: rgb(200, 219, 255);
     height:fit-content;
     width:fit-content;
+    pointer-events: none;
 }
 .link{
     color:rgb(77, 14, 14);
@@ -65,13 +99,30 @@
     top:0;
     left:260px;
     bottom:0;
+    padding-top:150px;
     /* grid-area: content; */
 }
 #center_container img{
     max-width:500px;
     padding:20px;
 }
+
 @media all and (max-width: 600px) {
+    #bio{
+        position:absolute;
+        top:380px;
+        height:120px;
+        left:20px;
+        display:flex;
+        gap:10px;
+        font-family: receipt;
+        width:80px;
+        flex-direction: column;
+    }
+    #title_animation{
+        top:640px;
+        left:20px;
+    }
     #page_container{
         grid-template-columns: fit-content fit-content;
         grid-template-rows: auto auto;
@@ -81,6 +132,8 @@
     }
     #list_container{
         writing-mode: vertical-rl;
+        transform-origin: top right;
+        transform: rotate(180deg) translate(260px,-220px);
         z-index:1;
     }
     .link{

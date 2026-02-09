@@ -1,4 +1,4 @@
- const visual_art = {
+const visual_art = {
     // 2026
     date_2026: [
         '/images/visual/2026/is_that_a_star_is_that_a_drone.jpeg',
@@ -128,25 +128,30 @@ const list = [
     },
     // vis art
     {
-        title:'2026',
+        title:'paintings',
         section:'visual',
-        visualArt:"date_2026"
+        visualArt:'all'
     },
-    {
-        title:'loose ends',
-        section:'visual',
-        visualArt:"loose_ends"
-    },
-    {
-        title:'2025',
-        section:'visual',
-        visualArt:"date_2025"
-    },
-    {
-        title:'2024',
-        section:'visual',
-        visualArt:"date_2024"
-    },
+    // {
+    //     title:'2026',
+    //     section:'visual',
+    //     visualArt:"date_2026"
+    // },
+    // {
+    //     title:'loose ends',
+    //     section:'visual',
+    //     visualArt:"loose_ends"
+    // },
+    // {
+    //     title:'2025',
+    //     section:'visual',
+    //     visualArt:"date_2025"
+    // },
+    // {
+    //     title:'2024',
+    //     section:'visual',
+    //     visualArt:"date_2024"
+    // },
     // hardware
     {
         title:'stepchild midi sequencer',
@@ -161,6 +166,10 @@ const list = [
     {
         title:'remote control briefcase',
         section:'hardware',
-        thumbnail:'/images/thumbnails/tamo_rotating_small.gif'
+        thumbnail:'/images/thumbnails/briefcase.gif'
     }
 ]
+
+const cv_resume = {
+
+}
