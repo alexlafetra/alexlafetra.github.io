@@ -5,7 +5,7 @@ let canvas;
 const flockSettings = {
   mouseMultiplier:      2,
   cohesionMultiplier:   1.0,
-  tiltMultiplier:       1.5,
+  tiltMultiplier:       1.0,
   separationMultiplier: 1.2,
   alignmentMultiplier:  1,
   avoidanceMultiplier:  10,
