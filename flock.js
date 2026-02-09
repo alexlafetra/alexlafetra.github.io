@@ -18,13 +18,29 @@ const flockSettings = {
 };
 
 const bgColor = [255,255,255,0];
-
+function mobileSettings(){
+  flockSettings.averageSize = 4;
+  flockSettings.perceptionRadius = 10;
+  flockSettings.maxSpeed = 2;
+  return {w:60,h:300};
+}
+function mainSiteSettings(){
+  flockSettings.averageSize = 5;
+  flockSettings.perceptionRadius = 20;
+  flockSettings.maxSpeed = 3;
+  return {w:200,h:200};
+}
 function setup(){
   if(flockSize == 'small'){
-    canvas = createCanvas(200,200);
-    flockSettings.averageSize = 5;
-    flockSettings.maxSpeed = 3;
-    flockSettings.perceptionRadius = 20;
+    let dim;
+    //mobile
+    if(windowWidth < 600){
+      dim = mobileSettings();
+    }
+    else{
+      dim = mainSiteSettings();
+    }
+    canvas = createCanvas(dim.w,dim.h);
   }
   else
     canvas = createCanvas(windowWidth+flockSettings.averageSize*2, windowHeight+flockSettings.averageSize*2);
@@ -65,6 +81,17 @@ function initFlock(){
 function windowResized() {
   if(flockSize == 'normal')
    resizeCanvas(windowWidth+flockSettings.averageSize*2, windowHeight+flockSettings.averageSize*2);
+  else{
+    let dim;
+    //mobile
+    if(windowWidth < 600 && width == 200){
+      dim = mobileSettings();
+    }
+    else if(windowWidth>600 && width < 200){
+      dim = mainSiteSettings();
+    }
+    resizeCanvas(dim.w,dim.h);
+  }
 }
 
 //asking for user permission to get access to motion info

@@ -13,6 +13,8 @@
                 const newElement = document.createElement('div');
                 if(entry.thumbnail){
                     newElement.onmouseout = clearMouseImage;
+                    newElement.ontouchend = clearMouseImage;
+                    newElement.ontouchcancel = clearMouseImage;
                     newElement.onmouseenter = () => {setMouseImage(entry.thumbnail)};
                 }
                 newElement.onclick = () => {
@@ -20,9 +22,11 @@
                     for(let l of otherElements){
                         l.style.color = null;
                         l.style.fontStyle = null;
+                        l.style.backgroundColor = null;
                     }
                     const thisElement = document.getElementById(entry.title);
-                    thisElement.style.color = 'blue';
+                    thisElement.style.color = 'white';
+                    thisElement.style.backgroundColor = 'blue';
                     thisElement.style.fontStyle = 'italic';
                     load(entry);
                 };
@@ -136,11 +140,10 @@
 <div id = "page_container">
     <div id = "title_container">
         <div class = "title" id = "password_box">alex lafetra thompson</div>
-        <main></main>
+        <main id = "title_canvas"></main>
     </div>
+    <br/>
     <div id = "list_container">
-        <div class = "title">site map</div>
-        <br/>
         <div class = "heading">/visual</div>
         <div id = "visual"></div>
         <br>
@@ -149,10 +152,10 @@
         <br/>
         <div class = "heading">/hardware</div>
         <div id = "hardware"> </div>
-
         <br/>
+        <!-- <br/>
         <div class = "heading">/wip</div>
-        <div id = "wip"></div>
+        <div id = "wip"></div> -->
 
     </div>
     <div id = 'center_container'>

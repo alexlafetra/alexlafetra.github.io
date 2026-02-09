@@ -1,19 +1,23 @@
  const visual_art = {
     // 2026
     date_2026: [
-        '/images/visual/2026/star_small.png',
-        '/images/visual/2026/barbed_wire_handdrawn.png'
+        '/images/visual/2026/is_that_a_star_is_that_a_drone.jpeg',
+        '/images/visual/2026/barbed_wire_handdrawn.png',
+
     ],
     loose_ends : [
-        '/images/visual/loose_ends/match_made_in_heaven.jpeg',
-        '/images/visual/loose_ends/third_chamber_stung.jpeg'
+        // '/images/visual/loose_ends/match_made_in_heaven.jpeg',
+        '/images/visual/loose_ends/third_chamber_stung.png',
+        '/images/visual/loose_ends/third_chamber_stung_heart_isolated.png',
     ],
     //2025
     date_2025: [
         // walnut
         '/images/visual/2025/walnut_broke_through_a_window.jpeg',
         // roly poly
-        '/images/visual/2025/rolypoly.png'
+        '/images/visual/2025/ro_po.jpeg',
+        //looking very life like!!
+        '/images/visual/2025/looking_very_life_like.jpeg'
     ]
 }
 const online_work = {
@@ -122,6 +126,7 @@ const list = [
         section:'web',
         onlineWork : 'gentrificationFlowField'
     },
+    // vis art
     {
         title:'2026',
         section:'visual',
@@ -142,12 +147,20 @@ const list = [
         section:'visual',
         visualArt:"date_2024"
     },
+    // hardware
     {
         title:'stepchild midi sequencer',
-        section:'hardware'
+        section:'hardware',
+        thumbnail:'/images/thumbnails/stepchild.gif'
     },
     {
         title:'open source tamagotchi',
-        section:'hardware'
+        section:'hardware',
+        thumbnail:'/images/thumbnails/tamo_rotating_small.gif'
+    },
+    {
+        title:'remote control briefcase',
+        section:'hardware',
+        thumbnail:'/images/thumbnails/tamo_rotating_small.gif'
     }
 ]
