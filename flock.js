@@ -46,9 +46,8 @@ function setup(){
     canvas = createCanvas(windowWidth+flockSettings.averageSize*2, windowHeight+flockSettings.averageSize*2);
   //every time the canvas is pressed, it'll try and request access
   canvas.mousePressed(requestAccess);
-  canvas.mousePressed(requestAccess);
-  canvas.style('left',`${-flockSettings.averageSize}px`);
-  canvas.style('top',`${-flockSettings.averageSize}px`);
+  // canvas.style('left',`${-flockSettings.averageSize}px`);
+  // canvas.style('top',`${-flockSettings.averageSize}px`);
   flockSettings.pallette = floor(random(0,5));
 
   background(bgColor); //for giving em trails

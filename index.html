@@ -127,6 +127,11 @@
             }
             else if(e.key == 'Backspace'){
                 textBox.innerText = textBox.innerText.slice(0,-1);
+                if(textBox.innerText == ''){
+                    textBox.innerText = 'alex lafetra thompson';
+                    textBox.style.color = 'black';
+                }
+
             }
             else if(e.key.length == 1){
                 if(textBox.innerText == 'alex lafetra thompson')
